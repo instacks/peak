@@ -91,7 +91,8 @@ body.docs {
   }
 }
 
-@media (width >= 1280px) {
+/* The table of contents only from 1440px: below that, examples need the width more */
+@media (width >= 1440px) {
   .docs-layout:has(> .docs-aside) {
     grid-template-columns: 15rem minmax(0, 1fr) 11rem;
   }
@@ -108,7 +109,7 @@ body.docs {
   }
 }
 
-@media (width >= 1280px) {
+@media (width >= 1440px) {
   .docs-aside {
     display: block;
   }
@@ -243,8 +244,9 @@ body.docs {
   clear: both;
 }
 
-.docs-preview > :last-child,
-.docs-preview > :last-child > :last-child {
+/* Not on dialogs and popovers: they sit in the top layer, and a dialog centers itself with margin: auto */
+.docs-preview > :last-child:not(dialog, [popover]),
+.docs-preview > :last-child:not(dialog, [popover]) > :last-child:not(dialog, [popover]) {
   margin-block-end: 0;
 }
 
@@ -415,7 +417,24 @@ body.docs {
   font-size: 0.875rem;
 }
 
-/* Customizer */
+/*
+ * Customizer: controls and preview side by side need the room, so below 1440px the page list
+ * moves into the drawer (the menu button) on this page.
+ */
+@media (1024px <= width < 1440px) {
+  body[data-page="customize"] .docs-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body[data-page="customize"] .docs-sidebar {
+    display: none;
+  }
+
+  body[data-page="customize"] .docs-menu-button {
+    display: inline-block;
+  }
+}
+
 .docs-customize {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -425,7 +444,7 @@ body.docs {
 
 @media (width >= 1024px) {
   .docs-customize {
-    grid-template-columns: 22rem minmax(0, 1fr);
+    grid-template-columns: 20rem minmax(0, 1fr);
   }
 
   .docs-customize-controls {

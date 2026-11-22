@@ -73,6 +73,11 @@ hgroup > :first-child:not(h1, h2, h3, h4, h5, h6):has(+ :is(h1, h2, h3, h4, h5, 
   text-transform: uppercase;
 }
 
+/* Like the classless eyebrow in an hgroup: the heading follows it closely, not a paragraph's space away */
+.peak-eyebrow + :is(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: 0;
+}
+
 .peak-eyebrow.secondary {
   color: var(--peak-secondary);
 }

@@ -135,6 +135,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.equal(s.eyebrow.color, s.tokens.primary);
     assert.ok(Math.abs(s.eyebrow.size - 0.75 * s.tokens.rootSize) < 0.05, "0.75rem");
     assert.equal(s["eyebrow-class"].color, s.tokens.secondary, ".peak-eyebrow.secondary");
+    const gap = await page.evaluate(() => document.getElementById("after-eyebrow").getBoundingClientRect().top - document.getElementById("eyebrow-class").getBoundingClientRect().bottom);
+    assert.ok(gap < 0.5 * s.tokens.rootSize, `a heading follows .peak-eyebrow closely (${gap}px)`);
     assert.equal(s.subtitle.color, s.tokens.muted, "Blades' subtitle rule still applies");
     assert.ok(Math.abs(s.subtitle.size - s.tokens.rootSize) < 0.05, "subtitle 1rem");
     assert.equal(s["subtitle-heading"].size, s.h2.size);

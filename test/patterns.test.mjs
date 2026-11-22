@@ -114,6 +114,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const end = (await rect(page, "acc-1")).height;
     assert.ok(mid < end - 5, `grows over time: ${mid} → ${end}`);
     assert.ok((await rect(page, "acc-panel")).height > 0);
+    // The item's padding is the space below an open item; its last paragraph adds none
+    assert.equal(await style(page, "acc-last", "marginBottom"), "0px");
     await page.click("#dropdown > summary");
     await page.waitForTimeout(400);
     assert.ok((await rect(page, "dropdown-link")).height > 0, "the dropdown's menu isn't clipped");
@@ -271,6 +273,32 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await still.waitForTimeout(30);
     assert.ok(Math.abs((await rect(still, "drawer-panel")).right - 1280) < 1, "no slide with reduced motion");
     await still.close();
+  });
+
+  test(`${file}: site title with a logo: logo, title, subtitle and links on one line`, async () => {
+    const page = await open(file);
+    const mid = async (id) => {
+      const r = await rect(page, id);
+      return (r.top + r.bottom) / 2;
+    };
+    const logo = await mid("logo-img");
+    for (const id of ["logo-text", "logo-subtitle", "logo-link"]) {
+      const m = await mid(id);
+      assert.ok(Math.abs(m - logo) < 3, `${id} centered on the logo: ${m} vs ${logo}`);
+    }
+    await page.close();
+
+    // On a phone the subtitle wraps; the logo and the title text keep their room
+    const phone = await open(file, { width: 360 });
+    await phone.evaluate(() => document.getElementById("logo-header").querySelector("nav > ul:last-child").insertAdjacentHTML("beforeend", "<li><a href='#'>About us</a></li><li><a href='#'>Contact</a></li>"));
+    const t = await phone.evaluate(() => {
+      const title = document.getElementById("logo-title");
+      return { scroll: title.scrollWidth, client: title.clientWidth, img: document.getElementById("logo-img").getBoundingClientRect().width, imgHeight: document.getElementById("logo-img").getBoundingClientRect().height, textRight: document.getElementById("logo-text").getBoundingClientRect().right, subLeft: document.getElementById("logo-subtitle").getBoundingClientRect().left };
+    });
+    assert.ok(t.scroll <= t.client + 1, `title not squeezed: ${JSON.stringify(t)}`);
+    assert.ok(Math.abs(t.img - t.imgHeight) < 1, `the square logo stays square: ${t.img}×${t.imgHeight}`);
+    assert.ok(t.subLeft >= t.textRight - 1, `subtitle after the title, not over it: ${JSON.stringify(t)}`);
+    await phone.close();
   });
 
   test(`${file}: toast in the inline-end bottom corner, with its status edge`, async () => {

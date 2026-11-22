@@ -38,7 +38,7 @@ site/pages/*.html       documentation pages: front matter + HTML with <peak-exam
 site/assets/            docs chrome only (docs.css, docs.js, images); the pages are styled by Peak
 scripts/docs.mjs        builds the docs into _site/ (gitignored); .github/workflows/docs.yml
                         publishes it on GitHub Pages from main
-docs/PLAN.md            plan, known issues (B1…B19), implementation notes (§8)
+docs/PLAN.md            plan, known issues (B1…B20), implementation notes (§8)
 .github/workflows/      ci.yml (tests), release.yml (npm publish on a v* tag), docs.yml (Pages)
 dist/                   build output (gitignored; published to npm with tokens.json)
 ```

@@ -169,3 +169,20 @@ test("the scheme switch turns the docs dark; examples render live", async () => 
   assert.match(example.code, /<span class="peak-badge">Primary<\/span>/);
   await page.close();
 });
+
+test("dialogs in examples open centered, whatever the docs' example styles do", async () => {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await page.goto(url("dialogs.html"));
+  for (const [button, id] of [["Open dialog", "dialog-basic"], ["Wide dialog", "dialog-wide"]]) {
+    await page.click(`text=${button}`);
+    await page.waitForTimeout(400);
+    const r = await page.evaluate((id) => {
+      const b = document.querySelector(`#${id} > article`).getBoundingClientRect();
+      return { top: b.top, bottom: innerHeight - b.bottom };
+    }, id);
+    assert.ok(Math.abs(r.top - r.bottom) < 2, `${id} centered: ${JSON.stringify(r)}`);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(300);
+  }
+  await page.close();
+});

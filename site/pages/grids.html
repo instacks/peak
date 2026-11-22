@@ -36,7 +36,7 @@ description: Layouts that adapt to the space they get, not to the viewport. None
   columns instead, so a short last row keeps the same item width:
 </p>
 <peak-example>
-  <div class="peak-grid-auto fill" style="--peak-grid-min: 10rem">
+  <div class="peak-grid-auto fill" style="--peak-grid-min: 7rem">
     <div class="docs-box">One</div>
     <div class="docs-box">Two</div>
   </div>
@@ -46,23 +46,25 @@ description: Layouts that adapt to the space they get, not to the viewport. None
 <p>
   <code>.peak-grid</code> has at most <code>--peak-cols</code> equal columns (3 by default), none
   narrower than <code>--peak-grid-min</code>. With less room it drops to fewer columns by itself.
-  Items can span: <code>.peak-span-2</code>, <code>.peak-span-3</code> (when the grid has that many
-  columns) and <code>.peak-span-full</code>.
+  Items can span: <code>.peak-span-2</code>, <code>.peak-span-3</code> (once the grid has that many
+  columns) and <code>.peak-span-full</code>. Make the window narrower: the spans give way as the
+  columns go.
 </p>
 <peak-example>
-  <div class="peak-grid" style="--peak-cols: 4; --peak-grid-min: 8rem">
-    <div class="docs-box peak-span-2">span 2</div>
+  <div class="peak-grid">
+    <div class="docs-box peak-span-2">.peak-span-2</div>
     <div class="docs-box">1</div>
     <div class="docs-box">1</div>
     <div class="docs-box">1</div>
-    <div class="docs-box peak-span-3">span 3</div>
-    <div class="docs-box peak-span-full">full</div>
+    <div class="docs-box">1</div>
+    <div class="docs-box peak-span-full">.peak-span-full</div>
   </div>
 </peak-example>
 <p>
-  Spans switch on with a container query at the width where the grid has that many columns with the
-  default 15rem minimum; with a much larger minimum a span can add a column.
-  <code>.peak-span-full</code> is always safe.
+  A container query can't read <code>--peak-grid-min</code>, so spans switch on at the widths where
+  the grid has 2 and 3 columns with the default 15rem minimum (31rem and 47rem). With a smaller
+  minimum the grid gets its extra columns before the spans switch on; with a larger one a span
+  can add a column. <code>.peak-span-full</code> is always safe.
 </p>
 
 <h3>Blades' grid</h3>
@@ -110,7 +112,7 @@ description: Layouts that adapt to the space they get, not to the viewport. None
   </div>
 </peak-example>
 <peak-example>
-  <div class="peak-with-sidebar sticky">
+  <div class="peak-with-sidebar sticky" style="--peak-sidebar-width: 12rem">
     <div class="docs-box" style="min-block-size: 10rem">Content first</div>
     <div class="peak-sidebar docs-box">.peak-sidebar at the end</div>
   </div>

@@ -65,9 +65,34 @@
   gap: 0.5rem;
 }
 
+/*
+ * Pico's img { max-width: 100% } makes a logo shrinkable to nothing in a flex row, and the title
+ * text then slid under the subtitle on narrow screens. The logo keeps its size; the title never
+ * gets narrower than its content, and the subtitle wraps instead.
+ */
 .site-title > :is(img, svg) {
+  flex: none;
   block-size: var(--peak-logo-size);
   inline-size: auto;
+  max-inline-size: none;
+}
+
+.site-nav li > .site-title {
+  flex: none;
+}
+
+.site-subtitle {
+  min-inline-size: 0;
+}
+
+/*
+ * With a logo, the title is an inline-flex box whose first item is an image, so its baseline is
+ * the image's bottom edge: the subtitle beside it, aligned to that baseline, sat low. Centering
+ * the item puts title, logo and subtitle on one line, as the links beside them are.
+ */
+.site-nav li:has(> .site-title > :is(img, svg)) {
+  display: flex;
+  align-items: center;
 }
 
 /*
