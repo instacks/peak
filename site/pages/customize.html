@@ -1,0 +1,87 @@
+---
+title: Customizer
+group: Getting started
+order: 3
+wide: true
+toc: false
+description: Move the sliders and the whole site follows, these docs included. Copy the CSS when you like what you see. Your theme stays in this browser and applies to every page of the docs until you reset it.
+---
+
+<div class="docs-customize">
+  <div class="docs-customize-controls">
+    <div class="docs-customize-actions">
+      <button type="button" class="secondary outline" id="customizer-reset">Reset all</button>
+      <a href="tokens.html" role="button" class="secondary outline">Token reference</a>
+    </div>
+    <peak-customizer></peak-customizer>
+  </div>
+
+  <div class="docs-customize-preview">
+    <p class="peak-eyebrow">Start from a preset</p>
+    <div class="peak-cluster" style="--peak-gap: 0.5rem; margin-block-end: 2rem">
+      <button type="button" class="secondary outline" data-preset='{}'>Default</button>
+      <button type="button" class="secondary outline" data-preset='{"--peak-hue":"30","--peak-chroma":"0.15","--peak-neutral-hue":"60","--peak-neutral-chroma":"0.016","--peak-accent-hue":"160","--peak-radius":"0.75rem","--peak-font-family":"Avenir, Montserrat, Corbel, \"URW Gothic\", source-sans-pro, sans-serif"}'>Warm</button>
+      <button type="button" class="secondary outline" data-preset='{"--peak-hue":"155","--peak-chroma":"0.12","--peak-neutral-chroma":"0.02","--peak-font-family":"\"Iowan Old Style\", \"Palatino Linotype\", \"URW Palladio L\", P052, serif","--peak-heading-font-weight":"600","--peak-accent-hue":"80"}'>Forest</button>
+      <button type="button" class="secondary outline" data-preset='{"--peak-hue":"265","--peak-chroma":"0.2","--peak-radius":"0rem","--peak-density":"0.85","--peak-spacing":"0.75rem","--peak-type-ratio":"1.1","--peak-neutral-chroma":"0"}'>Sharp</button>
+      <button type="button" class="secondary outline" data-preset='{"--peak-hue":"350","--peak-chroma":"0.17","--peak-font-family":"Charter, \"Bitstream Charter\", \"Sitka Text\", Cambria, serif","--peak-type-ratio":"1.3","--peak-heading-tracking":"-0.02em","--peak-display-weight":"800","--peak-neutral-hue":"40","--peak-neutral-chroma":"0.01"}'>Editorial</button>
+    </div>
+
+    <section class="peak-card flat">
+      <hgroup>
+        <p>Preview</p>
+        <h2 class="peak-display">Everything follows</h2>
+      </hgroup>
+      <p class="peak-lead">Colors, type, spacing, corners and motion all come from the inputs on the left.</p>
+      <div class="peak-cluster">
+        <button>Primary</button>
+        <button class="secondary">Secondary</button>
+        <button class="contrast">Contrast</button>
+        <button class="outline">Outline</button>
+      </div>
+    </section>
+
+    <div class="peak-grid-auto" style="--peak-grid-min: 14rem; margin-block-end: 2rem">
+      <article>
+        <header><span class="peak-badge accent">New</span> <span class="peak-badge success dot">Live</span></header>
+        <h3>A card</h3>
+        <p>With a <a href="#customizer">link</a>, <mark>a mark</mark> and <code>code</code>.</p>
+        <footer><small class="peak-text-muted">Footer</small></footer>
+      </article>
+      <article>
+        <h3>A form</h3>
+        <input type="email" placeholder="Email" aria-label="Email">
+        <select aria-label="Plan"><option>Free</option><option>Pro</option></select>
+        <label><input type="checkbox" role="switch" checked> Newsletter</label>
+      </article>
+      <article>
+        <h3>Stats</h3>
+        <dl class="peak-stats">
+          <div><dt>Downloads</dt><dd>1,284</dd></div>
+          <div><dt>Rating</dt><dd>4.9</dd></div>
+        </dl>
+        <progress value="70" max="100"></progress>
+      </article>
+    </div>
+
+    <aside class="peak-callout info"><strong>Contrast stays</strong><p>Lightness is pinned per scheme, so every slider position keeps body text and buttons readable. Switch to dark in the header to check.</p></aside>
+    <aside class="peak-callout warning"><strong>Exact colors</strong><p>The "Exact colors" group replaces derived colors with fixed ones. Those are outside the contrast guarantee.</p></aside>
+
+    <div class="peak-accordion">
+      <details name="preview-acc" open><summary>Accordion</summary><p>Opens and closes with the transition duration and easing.</p></details>
+      <details name="preview-acc"><summary>Second item</summary><p>Only one is open at a time.</p></details>
+    </div>
+
+    <div class="peak-cluster" style="margin-block-end: 2rem">
+      <label class="peak-chip"><input type="checkbox" checked> Chip</label>
+      <label class="peak-chip"><input type="checkbox"> Filter</label>
+      <span class="peak-badge">Badge</span>
+      <span class="peak-badge secondary solid">Solid</span>
+      <span class="peak-badge danger outline">Outline</span>
+      <span class="peak-avatar" role="img" aria-label="Ada Lovelace">AL</span>
+    </div>
+
+    <h2 id="your-css">Your CSS</h2>
+    <p>Only the inputs you changed. Put it in your stylesheet, after Peak.</p>
+    <div class="docs-code" data-lang="css"><button type="button" class="docs-copy secondary outline" aria-label="Copy code">Copy</button><pre><code id="customizer-css" class="language-css"></code></pre></div>
+  </div>
+</div>

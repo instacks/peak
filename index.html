@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Peak CSS — Semantic HTML test page</title>
+    <link rel="stylesheet" href="dist/peak.css" />
+  </head>
+  <body id="top">
+    <header class="container">
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><strong>Peak CSS</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#typography">Typography</a></li>
+          <li><a href="#content">Content</a></li>
+          <li><a href="#forms">Forms</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Semantic HTML test page</h1>
+        <p>A small showcase for the elements styled by <code>peak.css</code>.</p>
+      </hgroup>
+    </header>
+
+    <main class="container">
+      <section id="typography" aria-labelledby="typography-heading">
+        <h2 id="typography-heading">Typography</h2>
+        <article>
+          <header>
+            <h3>Headings and text</h3>
+            <p>Use semantic elements to give content structure and meaning.</p>
+          </header>
+          <p>
+            This paragraph includes <a href="#content">a link</a>,
+            <strong>important text</strong>, <em>emphasis</em>,
+            <mark>highlighted text</mark>, <small>small print</small>, and
+            <abbr title="HyperText Markup Language">HTML</abbr>.
+          </p>
+          <blockquote>
+            <p>Good defaults make well-structured content easier to read.</p>
+            <footer>— A CSS principle</footer>
+          </blockquote>
+          <p>
+            Inline code: <code>const peak = true;</code>. Keyboard input:
+            <kbd>Ctrl</kbd> + <kbd>S</kbd>.
+          </p>
+          <pre><code>&lt;main&gt;
+  &lt;article&gt;Semantic content&lt;/article&gt;
+&lt;/main&gt;</code></pre>
+        </article>
+      </section>
+
+      <section id="content" aria-labelledby="content-heading">
+        <h2 id="content-heading">Content and landmarks</h2>
+        <div class="grid">
+          <article>
+            <header>
+              <h3>Lists and disclosure</h3>
+            </header>
+            <ul>
+              <li>Unordered list item</li>
+              <li>
+                Nested content
+                <ol>
+                  <li>First ordered item</li>
+                  <li>Second ordered item</li>
+                </ol>
+              </li>
+            </ul>
+            <details>
+              <summary>Show more details</summary>
+              <p>This content expands and collapses using native HTML.</p>
+            </details>
+          </article>
+
+          <article>
+            <header>
+              <h3>Figure and aside</h3>
+            </header>
+            <figure>
+              <svg
+                viewBox="0 0 640 180"
+                role="img"
+                aria-labelledby="figure-title figure-description"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title id="figure-title">Peak color swatches</title>
+                <desc id="figure-description">
+                  Three adjacent blocks in light, brand, and dark colors.
+                </desc>
+                <rect width="640" height="180" rx="12" fill="var(--peak-bg)" />
+                <rect x="16" y="16" width="196" height="148" rx="8" fill="var(--peak-border)" />
+                <rect x="222" y="16" width="196" height="148" rx="8" fill="var(--peak-primary)" />
+                <rect x="428" y="16" width="196" height="148" rx="8" fill="var(--peak-text)" />
+              </svg>
+              <figcaption>Swatches using Peak theme tokens.</figcaption>
+            </figure>
+            <aside>
+              <p>
+                <strong>Aside:</strong> supporting content related to this
+                section.
+              </p>
+            </aside>
+          </article>
+        </div>
+
+        <article>
+          <header>
+            <h3>Table</h3>
+          </header>
+          <figure>
+            <table>
+              <caption>Example feature comparison</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Feature</th>
+                  <th scope="col">Native HTML</th>
+                  <th scope="col">Peak styling</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Structure</th>
+                  <td>Semantic elements</td>
+                  <td>Consistent defaults</td>
+                </tr>
+                <tr>
+                  <th scope="row">Behavior</th>
+                  <td>Built into the browser</td>
+                  <td>Zero JavaScript</td>
+                </tr>
+              </tbody>
+            </table>
+          </figure>
+        </article>
+
+        <article>
+          <header>
+            <h3>Native popover</h3>
+          </header>
+          <button type="button" popovertarget="sample-popover">
+            Toggle popover
+          </button>
+          <div id="sample-popover" popover>
+            <p>This popover uses native HTML and requires no JavaScript.</p>
+          </div>
+          <span data-peak-anchor>
+            <button type="button" class="secondary" popovertarget="anchored-popover">
+              Anchored popover
+            </button>
+            <div id="anchored-popover" popover>
+              <p>Opens next to its button with <code>data-peak-anchor</code>.</p>
+            </div>
+          </span>
+          <button type="button" class="contrast" popovertarget="actions-menu">Actions</button>
+          <ul id="actions-menu" popover>
+            <li><a href="#content">Edit</a></li>
+            <li><a href="#content">Duplicate</a></li>
+            <li><a href="#content">Archive</a></li>
+          </ul>
+          <p>
+            Tooltips:
+            <span data-tooltip="Above">top</span>,
+            <span data-tooltip="Below" data-placement="bottom">bottom</span>,
+            <span data-tooltip="Left" data-placement="left">left</span>,
+            <span data-tooltip="Right" data-placement="right">right</span>.
+          </p>
+          <details class="dropdown" data-peak-anchor>
+            <summary>Legacy dropdown, anchored</summary>
+            <ul>
+              <li><a href="#content">One</a></li>
+              <li><a href="#content">Two</a></li>
+            </ul>
+          </details>
+        </article>
+
+        <article>
+          <header>
+            <h3>Dialogs</h3>
+          </header>
+          <p>Both fade and scale in and out; Escape or a click outside closes the second.</p>
+          <button type="button" command="show-modal" commandfor="sample-dialog">Open dialog</button>
+          <button type="button" class="secondary" command="show-modal" commandfor="sample-dialog-any">
+            Open closedby="any"
+          </button>
+          <dialog id="sample-dialog">
+            <article>
+              <header>
+                <button aria-label="Close" rel="prev" command="close" commandfor="sample-dialog"></button>
+                <h3>Classic dialog</h3>
+              </header>
+              <p>Pico paints the overlay on the dialog itself.</p>
+              <footer>
+                <button type="button" command="close" commandfor="sample-dialog">Close</button>
+              </footer>
+            </article>
+          </dialog>
+          <dialog id="sample-dialog-any" closedby="any">
+            <article>
+              <header>
+                <button aria-label="Close" rel="prev" command="close" commandfor="sample-dialog-any"></button>
+                <h3>closedby="any"</h3>
+              </header>
+              <p>The overlay is on <code>::backdrop</code>.</p>
+            </article>
+          </dialog>
+        </article>
+
+        <article data-theme="dark">
+          <header>
+            <h3>Nested dark theme</h3>
+          </header>
+          <p>A <code>data-theme="dark"</code> section keeps Peak's palette. <a href="#content">A link</a>.</p>
+          <button type="button">Button</button>
+        </article>
+
+        <article data-peak-scope style="--peak-hue: 30">
+          <header>
+            <h3>Scoped hue</h3>
+          </header>
+          <p><code>data-peak-scope</code> with <code>--peak-hue: 30</code>. <a href="#content">A link</a>.</p>
+          <button type="button">Button</button>
+          <ins>Inserted</ins> <del>Deleted</del>
+        </article>
+      </section>
+
+      <section id="forms" aria-labelledby="forms-heading">
+        <h2 id="forms-heading">Form controls</h2>
+        <form action="#" method="get">
+          <fieldset>
+            <legend>Contact details</legend>
+            <div class="grid">
+              <label>
+                Name
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your name"
+                  autocomplete="name"
+                  required
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </label>
+            </div>
+            <label>
+              Topic
+              <select name="topic">
+                <option value="">Choose a topic</option>
+                <option value="feedback">Feedback</option>
+                <option value="support">Support</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label>
+              Message
+              <textarea
+                name="message"
+                placeholder="Write a short message"
+                rows="4"
+              ></textarea>
+            </label>
+            <label>
+              <input type="checkbox" name="updates" />
+              Send me occasional updates
+            </label>
+            <div class="grid">
+              <label>
+                Preferred date
+                <input type="date" name="date" />
+              </label>
+              <label>
+                Accent color
+                <input type="color" name="accent" value="#645bce" />
+              </label>
+            </div>
+            <label>
+              Satisfaction
+              <input type="range" name="satisfaction" min="0" max="10" value="7" />
+            </label>
+            <label>
+              Attachment
+              <input type="file" name="attachment" />
+            </label>
+            <button type="submit">Submit form</button>
+            <button type="reset" class="secondary">Reset</button>
+          </fieldset>
+        </form>
+
+        <article>
+          <header>
+            <h3>Status indicators</h3>
+          </header>
+          <label for="progress">Build progress</label>
+          <progress id="progress" value="7" max="10">70%</progress>
+          <label for="meter">Theme contrast</label>
+          <meter id="meter" min="0" max="100" low="30" high="75" optimum="90" value="82">
+            82%
+          </meter>
+        </article>
+      </section>
+    </main>
+
+    <footer class="container">
+      <small>
+        Peak CSS semantic HTML test page ·
+        <a href="#top">Back to top</a>
+      </small>
+    </footer>
+  </body>
+</html>

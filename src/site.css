@@ -1,0 +1,254 @@
+/*
+ * Site chrome: header, navigation, sidebar, breadcrumb and footer classes (docs:
+ * site/pages/navigation.html). Class-based only, so a page that doesn't use them is unaffected.
+ * The names are kept stable for themes and custom CSS written against them.
+ *
+ * No `body > …` selectors: in the scoped build the nav can be a scope root of its own, and
+ * selectors inside @scope can't reach ancestors outside the root.
+ */
+
+/* Blades drops Pico's body > main padding */
+.site-main {
+  padding-block: var(--pico-block-spacing-vertical);
+}
+
+.site-nav :is(ul, ol) {
+  flex-wrap: wrap;
+}
+
+.site-nav :is(a, summary)[aria-current="page"] {
+  font-weight: bold;
+}
+
+.site-title {
+  font-weight: bold;
+  letter-spacing: var(--peak-heading-tracking);
+  text-decoration: none;
+}
+
+.site-subtitle {
+  margin-inline-start: 0.5rem;
+  font-weight: normal;
+  color: var(--pico-muted-color);
+}
+
+.nav-sticky {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+  background-color: var(--pico-background-color);
+}
+
+/*
+ * HTML in titles: an <i> before the text, holding an emoji, an image, an SVG or an icon-font
+ * glyph. Blades lays out links that contain an <i> (inline-flex with a gap) and sizes images in
+ * it, but not dropdown labels (summary) or SVGs. Pico makes dropdown menu links display: block,
+ * which drops Blades' gap (its <i> floats), so those get a margin instead.
+ */
+.site-nav summary > i,
+.site-nav details li a > i {
+  margin-inline-end: 0.375ch;
+  font-style: normal;
+}
+
+.site-nav i > :is(img, svg) {
+  display: inline-block;
+  block-size: 1.25em;
+  inline-size: auto;
+  vertical-align: -0.25em;
+}
+
+/* An image or SVG in the site title is a logo next to the text */
+.site-title:has(> :is(img, svg)) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.site-title > :is(img, svg) {
+  block-size: var(--peak-logo-size);
+  inline-size: auto;
+}
+
+/*
+ * Footer: after <main>, a rule above it, muted and a little smaller. Its own padding, since
+ * Blades has no body > footer spacing. When Peak applies only to stacks with the class peak, the
+ * footer is a scope root itself, and inside @scope a plain .site-footer only matches descendants:
+ * hence :scope.site-footer (which never matches in the global build, where :scope is :root).
+ */
+.site-footer,
+:scope.site-footer {
+  padding-block: calc(var(--pico-spacing) * 2);
+  border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
+  color: var(--pico-muted-color);
+  font-size: 0.9em;
+}
+
+:is(.site-footer, :scope.site-footer) > :last-child {
+  margin-block-end: 0;
+}
+
+/* Skip link: off-screen until it has keyboard focus, then a button in the top corner */
+.peak-skip-link {
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  border-radius: var(--pico-border-radius);
+  background-color: var(--peak-primary-fill);
+  color: var(--peak-on-primary);
+  text-decoration: none;
+}
+
+.peak-skip-link:not(:focus) {
+  clip-path: inset(50%);
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* The sidebar (Sidebar › Sidebar nav) lines up with main's padding */
+.site-sidebar,
+:scope.site-sidebar {
+  padding-block: var(--pico-block-spacing-vertical);
+}
+
+.site-breadcrumb {
+  margin-block-end: var(--pico-typography-spacing-vertical);
+  font-size: 0.875em;
+}
+
+/*
+ * Light/dark switch: <select class="peak-scheme">. The CSS alone switches the scheme for the page
+ * the select is on (every Peak color is a light-dark()); peak-scheme.js also sets data-theme and
+ * remembers the choice. Auto ("") leaves the scheme to the page.
+ */
+:scope:has(select.peak-scheme option[value="light"]:checked) {
+  color-scheme: light;
+}
+
+:scope:has(select.peak-scheme option[value="dark"]:checked) {
+  color-scheme: dark;
+}
+
+.site-nav select.peak-scheme {
+  inline-size: auto;
+  margin: 0;
+  padding-block: calc(var(--pico-form-element-spacing-vertical) * 0.5);
+}
+
+/* Nav alignment: links right after the title instead of at the far end */
+.site-nav[data-nav-align="start"] {
+  justify-content: flex-start;
+  gap: calc(var(--pico-nav-element-spacing-horizontal) * 4);
+}
+
+/*
+ * Nav styles: a surface or the page color, with a rule below, running to the viewport edges like a
+ * band (spread shadows clipped to the header's height plus the rule: no 100vw, no horizontal
+ * scrollbar). Both shadows are shifted up by their spread, so the background ends at the header's
+ * bottom edge and the rule, shifted one border width less, shows only below it.
+ */
+:is(.site-header, :scope.site-header):is([data-nav-style="surface"], [data-nav-style="bordered"]) {
+  --_peak-nav-bg: var(--peak-bg);
+  background-color: var(--_peak-nav-bg);
+  box-shadow:
+    0 -100vmax 0 100vmax var(--_peak-nav-bg),
+    0 calc(var(--pico-border-width) - 100vmax) 0 100vmax var(--pico-muted-border-color);
+  clip-path: inset(0 -100vmax calc(var(--pico-border-width) * -1));
+}
+
+:is(.site-header, :scope.site-header)[data-nav-style="surface"] {
+  --_peak-nav-bg: var(--peak-surface);
+}
+
+/* Footer links and the back-to-top link */
+.site-footer-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0 0 calc(var(--pico-spacing) * 0.75);
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer-nav li {
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer-nav a {
+  color: inherit;
+}
+
+.site-footer-nav a[aria-current="page"] {
+  color: var(--pico-color);
+}
+
+.site-footer-text {
+  margin-block-end: 0;
+}
+
+.site-back-to-top {
+  margin-block: calc(var(--pico-spacing) * 0.5) 0;
+}
+
+/*
+ * Dropdown type popover: the sub-menu's button, drawn as a nav link with Pico's chevron, which
+ * turns while the menu is open. The link color comes from data-link-style, as Pico's
+ * .secondary/.contrast classes would turn a button into a filled one.
+ */
+.site-nav .site-dropdown-toggle {
+  --_peak-link: var(--pico-primary);
+  --_peak-link-hover: var(--pico-primary-hover);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  margin: calc(var(--pico-nav-link-spacing-vertical) * -1) calc(var(--pico-nav-link-spacing-horizontal) * -1);
+  padding: var(--pico-nav-link-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
+  border: 0;
+  border-radius: var(--pico-border-radius);
+  background: none;
+  box-shadow: none;
+  color: var(--_peak-link);
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-nav .site-dropdown-toggle[data-link-style="secondary"] {
+  --_peak-link: var(--pico-secondary);
+  --_peak-link-hover: var(--pico-secondary-hover);
+}
+
+.site-nav .site-dropdown-toggle[data-link-style="contrast"] {
+  --_peak-link: var(--pico-contrast);
+  --_peak-link-hover: var(--pico-contrast-hover);
+}
+
+.site-nav .site-dropdown-toggle:is(:hover, :focus-visible) {
+  color: var(--_peak-link-hover);
+}
+
+.site-nav .site-dropdown-toggle:focus-visible {
+  outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+  outline-offset: 0;
+}
+
+.site-nav .site-dropdown-toggle[aria-current="page"] {
+  font-weight: bold;
+}
+
+.site-nav .site-dropdown-toggle::after {
+  content: "";
+  inline-size: 1rem;
+  block-size: 1rem;
+  background: var(--pico-icon-chevron) center / 1rem no-repeat;
+  transition: transform var(--pico-transition);
+}
+
+.site-nav .site-dropdown-toggle:has(+ :popover-open)::after {
+  transform: rotate(180deg);
+}

@@ -1,0 +1,83 @@
+/*
+ * Chip (docs: site/pages/badges.html): bigger than a badge and meant to be interacted with.
+ *   <a class="peak-chip" href="…">Tag</a>                          a link
+ *   <label class="peak-chip"><input type="checkbox"> Tag</label>   selectable (filters)
+ *   <span class="peak-chip">Tag <button aria-label="Remove">×</button></span>
+ * Put several in a .peak-cluster.
+ */
+.peak-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375em;
+  min-block-size: 2rem;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  border: var(--pico-border-width) solid var(--peak-border-strong);
+  border-radius: 999px;
+  background-color: var(--peak-surface);
+  color: var(--peak-text);
+  font-size: 0.875em;
+  font-weight: var(--pico-font-weight);
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+:is(a, label, button).peak-chip {
+  cursor: pointer;
+}
+
+:is(a, label, button).peak-chip:hover {
+  background-color: var(--peak-surface-sunken);
+}
+
+/* Selectable: the checkbox stays in the page for keyboards and screen readers, but isn't drawn */
+.peak-chip > input:is([type="checkbox"], [type="radio"]) {
+  position: absolute;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+}
+
+.peak-chip:has(> input:checked) {
+  border-color: var(--peak-primary);
+  background-color: var(--peak-primary-tint);
+  color: var(--peak-primary-hover);
+}
+
+.peak-chip:has(> input:checked)::before {
+  content: "✓";
+}
+
+.peak-chip:has(> input:focus-visible),
+a.peak-chip:focus-visible {
+  outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+  outline-offset: 2px;
+}
+
+/* Remove button: a 24px target (WCAG 2.5.8), Pico's button look taken off */
+.peak-chip > button {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  margin-block: 0;
+  margin-inline: 0 -0.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.peak-chip > button:hover {
+  background-color: var(--peak-surface-sunken);
+}

@@ -1,0 +1,29 @@
+@layer blades, peak.tokens, peak.base, peak.layout, peak.components, peak.utilities;
+
+/* Scoped build: scripts/build-scoped.mjs wraps all of this in @scope (.peak) to (.peak-ignore)
+   and adds src/inputs.css unscoped. */
+@import "../node_modules/@anyblades/blades/css/blades.css" layer(blades);
+@import "./tokens.css" layer(peak.tokens);
+@import "./scoped.css" layer(peak.base);
+@import "./typography.css" layer(peak.base);
+@import "./site.css" layer(peak.layout);
+@import "./layout.css" layer(peak.layout);
+@import "./stacks.css" layer(peak.layout);
+@import "./popover-anchor.css" layer(peak.components);
+@import "./components/card.css" layer(peak.components);
+@import "./components/badge.css" layer(peak.components);
+@import "./components/table.css" layer(peak.components);
+@import "./components/accordion.css" layer(peak.components);
+@import "./components/tabs.css" layer(peak.components);
+@import "./components/chip.css" layer(peak.components);
+@import "./components/callout.css" layer(peak.components);
+@import "./components/pagination.css" layer(peak.components);
+@import "./components/dialog.css" layer(peak.components);
+@import "./components/toast.css" layer(peak.components);
+@import "./components/stats.css" layer(peak.components);
+@import "./components/steps.css" layer(peak.components);
+@import "./components/avatar.css" layer(peak.components);
+@import "./nav.css" layer(peak.components);
+@import "./starting-style.css" layer(peak.components);
+@import "./utilities.css" layer(peak.utilities);
+@import "./media.css" layer(peak.utilities);

@@ -1,0 +1,35 @@
+# Builds Peak and runs the test suite in headless Chromium on every push and pull request.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Playwright isn't a dependency (CLAUDE.md, "Verifying changes"): the tests find a global copy
+      # through NODE_PATH, as in cloud sessions
+      - run: npm install --global playwright@1
+      - run: playwright install --with-deps chromium
+      - run: echo "NODE_PATH=$(npm root --global)" >> "$GITHUB_ENV"
+      - run: npm test
+      - name: Modern syntax survived the build
+        run: |
+          test "$(grep -c 'lightningcss-light' dist/peak.css)" = 0
+          for s in 'light-dark(' 'oklch(from' 'position-area' 'allow-discrete' '@starting-style' ':dir('; do
+            grep -qF "$s" dist/peak.css || { echo "missing in dist/peak.css: $s"; exit 1; }
+          done
+      - run: npm pack --dry-run

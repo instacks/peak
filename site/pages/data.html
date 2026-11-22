@@ -1,0 +1,46 @@
+---
+title: Stats and steps
+group: Components
+order: 8
+description: Big numbers with labels, and a numbered sequence of steps with the current one marked.
+---
+
+<h2>Stats</h2>
+<p>
+  <code>.peak-stats</code> on a description list: big numbers with labels, in as many columns as fit
+  (at least 10rem each). The label comes first in the markup, so screen readers read
+  "Downloads: 1,284", and the number first on screen. Numbers use tabular figures.
+</p>
+<peak-example>
+  <dl class="peak-stats">
+    <div><dt>Downloads</dt><dd>1,284</dd></div>
+    <div><dt>Active sites</dt><dd>312</dd></div>
+    <div><dt>Rating</dt><dd>4.9</dd></div>
+    <div><dt>Response time</dt><dd>2h</dd></div>
+  </dl>
+</peak-example>
+<p>In cards:</p>
+<peak-example preview-class="sunken">
+  <dl class="peak-stats" style="--peak-gap: 1rem">
+    <div class="peak-card"><dt>Revenue</dt><dd>€ 12.4k</dd></div>
+    <div class="peak-card"><dt>Orders</dt><dd>284</dd></div>
+    <div class="peak-card"><dt>Refunds</dt><dd>3</dd></div>
+  </dl>
+</peak-example>
+
+<h2>Steps</h2>
+<p>
+  <code>.peak-steps</code> on an ordered list: numbered circles joined by a line. Mark the current
+  step with <code>aria-current="step"</code>; the steps before it show as done (✓).
+</p>
+<peak-example>
+  <ol class="peak-steps">
+    <li><strong>Download</strong><br><small class="peak-text-muted">Get the add-on from your account.</small></li>
+    <li aria-current="step"><strong>Install</strong><br><small class="peak-text-muted">Double-click the file.</small></li>
+    <li><strong>Activate</strong><br><small class="peak-text-muted">Enter your license key.</small></li>
+  </ol>
+</peak-example>
+<p>Without <code>aria-current</code>, all steps look alike: a plain numbered sequence.</p>
+
+<h2>Tables</h2>
+<p>Table refinements (group rows, code in cells) are on <a href="elements.html#tables">Content elements</a>.</p>

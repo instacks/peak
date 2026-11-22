@@ -1,0 +1,141 @@
+---
+title: Menus, popovers and tooltips
+group: Components
+order: 5
+description: Built on the native popover attribute and CSS anchor positioning. They open in the top layer, close on Esc or a click outside, and flip at the viewport edges.
+---
+
+<h2>How they're placed</h2>
+<p>
+  Where the browser supports CSS anchor positioning, a menu sits below its button and flips above
+  or to the other side when there's no room. Elsewhere, menus open centered over a lightly dimmed
+  page, like a small dialog. Either way they open and close with a short fade and slide (none with
+  reduced motion).
+</p>
+
+<h2>Menus</h2>
+<p>
+  A <code>&lt;ul popover&gt;</code> (or <code>&lt;menu popover&gt;</code>) opened by a button is a menu,
+  styled by Blades and anchored by Peak. Put the button and the list in the same
+  <code>&lt;li&gt;</code>, or wrap them in an element with <code>data-peak-anchor</code>, so the menu
+  anchors to its own button even when several menus share a page.
+</p>
+<peak-example preview-class="tall">
+  <div class="peak-cluster">
+    <span data-peak-anchor>
+      <button popovertarget="menu-actions">Actions</button>
+      <ul id="menu-actions" popover>
+        <li><a href="#menus">Edit</a></li>
+        <li><a href="#menus">Duplicate</a></li>
+        <li><a href="#menus">Archive</a></li>
+      </ul>
+    </span>
+    <span data-peak-anchor>
+      <button popovertarget="menu-more" class="secondary outline">More</button>
+      <ul id="menu-more" popover>
+        <li><a href="#menus">Share</a></li>
+        <li><a href="#menus">Export as PDF</a></li>
+      </ul>
+    </span>
+  </div>
+</peak-example>
+<p>In a <code>&lt;nav&gt;</code> the list items are the anchors already:</p>
+<peak-code lang="html">
+  <nav>
+    <ul>
+      <li>
+        <button popovertarget="products" class="secondary">Products</button>
+        <ul id="products" popover>
+          <li><a href="/poster/">Poster CMS</a></li>
+          <li><a href="/gallery/">Gallery</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</peak-code>
+
+<h3>Dropdowns from details</h3>
+<p>
+  Pico's <code>&lt;details class="dropdown"&gt;</code> keeps working as before: absolutely positioned,
+  no flipping. Add <code>data-peak-anchor</code> to anchor and flip it like a popover menu. It's
+  opt-in because an ancestor with a transform or filter (common in animated page builders) would
+  become its containing block. For new markup prefer the popover menu above.
+</p>
+<peak-example preview-class="tall visible">
+  <div class="grid">
+    <details class="dropdown">
+      <summary>Pico dropdown</summary>
+      <ul>
+        <li><a href="#dropdowns-from-details">One</a></li>
+        <li><a href="#dropdowns-from-details">Two</a></li>
+      </ul>
+    </details>
+    <details class="dropdown" data-peak-anchor>
+      <summary>Anchored dropdown</summary>
+      <ul>
+        <li><a href="#dropdowns-from-details">One</a></li>
+        <li><a href="#dropdowns-from-details">Two</a></li>
+      </ul>
+    </details>
+  </div>
+</peak-example>
+
+<h2>Popovers</h2>
+<p>
+  Any other element with <code>popover</code> is a panel on the raised surface, centered by the
+  browser. Add <code>data-peak-anchor</code> to the popover, or to a wrapper around the trigger and
+  the popover, to place it under its trigger instead.
+</p>
+<peak-example>
+  <div class="peak-cluster">
+    <button popovertarget="pop-centered" class="secondary">Centered popover</button>
+    <div id="pop-centered" popover>
+      <h4>Centered</h4>
+      <p>The browser's default place. Press Esc or click outside to close.</p>
+    </div>
+    <span data-peak-anchor>
+      <button popovertarget="pop-anchored" class="secondary">Anchored popover</button>
+      <div id="pop-anchored" popover>
+        <p>Placed under its button, flipping at the edges.</p>
+      </div>
+    </span>
+  </div>
+</peak-example>
+<p>
+  The popover is at most 32rem wide. <code>--peak-popover-offset</code> sets how far it slides while
+  it fades in (0.25rem; negative slides up).
+</p>
+
+<h2>Tooltips</h2>
+<p>
+  Pico's <code>data-tooltip</code> works as before. Where the browser supports anchor positioning,
+  Peak places the bubble with it, so it flips at the viewport edges and isn't cut off by a
+  scrolling container. <code>data-placement</code>: <code>top</code> (default), <code>bottom</code>,
+  <code>left</code>, <code>right</code>.
+</p>
+<peak-example preview-class="visible">
+  <div class="peak-cluster" style="padding-block: 1.5rem">
+    <button class="secondary outline" data-tooltip="On top">Top</button>
+    <button class="secondary outline" data-tooltip="Below" data-placement="bottom">Bottom</button>
+    <button class="secondary outline" data-tooltip="To the left" data-placement="left">Left</button>
+    <button class="secondary outline" data-tooltip="To the right" data-placement="right">Right</button>
+    <span data-tooltip="Works on text too">Hover this text</span>
+  </div>
+</peak-example>
+
+<h3>Hint popovers</h3>
+<p>
+  A native alternative: <code>popover="hint"</code> with <code>role="tooltip"</code>, styled like a
+  tooltip and anchored above its trigger. Opening it on hover and focus needs
+  <code>interestfor</code> (Chromium only so far); elsewhere a <code>popovertarget</code> opens it
+  on click.
+</p>
+<peak-example preview-class="visible">
+  <div style="padding-block-start: 2rem" data-peak-anchor>
+    <button interestfor="hint-save" popovertarget="hint-save" class="secondary">Save</button>
+    <span id="hint-save" popover="hint" role="tooltip">Saves a copy to your account</span>
+  </div>
+</peak-example>
+
+<h2>Dialogs</h2>
+<p>Modal dialogs and drawers have their own page: <a href="dialogs.html">Dialogs and drawers</a>.</p>

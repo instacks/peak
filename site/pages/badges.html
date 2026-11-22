@@ -1,0 +1,97 @@
+---
+title: Badges, chips and avatars
+group: Components
+order: 2
+description: Small labels for status and counts, interactive chips for tags and filters, and round avatars with pictures or initials.
+---
+
+<h2>Badges</h2>
+<p>
+  <code>.peak-badge</code> is a small pill label. Colors: default (primary), <code>.secondary</code>,
+  <code>.contrast</code>, <code>.accent</code>, <code>.success</code>, <code>.warning</code>,
+  <code>.danger</code>, <code>.info</code>. Each pair of text and background is contrast-tested.
+</p>
+<peak-example>
+  <div class="peak-cluster" style="--peak-gap: 0.5rem">
+    <span class="peak-badge">Primary</span>
+    <span class="peak-badge secondary">Secondary</span>
+    <span class="peak-badge contrast">Contrast</span>
+    <span class="peak-badge accent">Accent</span>
+    <span class="peak-badge success">Success</span>
+    <span class="peak-badge warning">Warning</span>
+    <span class="peak-badge danger">Danger</span>
+    <span class="peak-badge info">Info</span>
+  </div>
+</peak-example>
+
+<h3>Solid, outline and dot</h3>
+<p><code>.solid</code> uses the filled color, <code>.outline</code> drops the background, <code>.dot</code> adds a status dot.</p>
+<peak-example>
+  <div class="peak-cluster" style="--peak-gap: 0.5rem">
+    <span class="peak-badge solid">Solid</span>
+    <span class="peak-badge success solid">Paid</span>
+    <span class="peak-badge danger solid">Overdue</span>
+    <span class="peak-badge outline">Outline</span>
+    <span class="peak-badge secondary outline">Draft</span>
+    <span class="peak-badge success dot">Online</span>
+    <span class="peak-badge warning dot">Degraded</span>
+    <span class="peak-badge danger dot">Offline</span>
+  </div>
+</peak-example>
+
+<h3>In text and headings</h3>
+<p>A badge sizes itself relative to the surrounding text.</p>
+<peak-example>
+  <h3>Poster CMS <span class="peak-badge accent">New</span></h3>
+  <p>Inbox <span class="peak-badge solid">12</span></p>
+</peak-example>
+
+<h2>Chips</h2>
+<p>
+  <code>.peak-chip</code> is larger than a badge and meant to be interacted with. As a link, it's a
+  tag; around a checkbox or radio, it's a filter (the input stays accessible but isn't drawn); with a
+  button inside, it's removable.
+</p>
+<peak-example>
+  <div class="peak-cluster" style="--peak-gap: 0.5rem">
+    <a class="peak-chip" href="#chips">Link chip</a>
+    <label class="peak-chip"><input type="checkbox" checked> Selected</label>
+    <label class="peak-chip"><input type="checkbox"> Not selected</label>
+    <span class="peak-chip">Removable <button type="button" aria-label="Remove">×</button></span>
+  </div>
+</peak-example>
+<p>
+  Radios make a single choice; wrap them in a <code>&lt;fieldset&gt;</code> with a legend for screen
+  readers:
+</p>
+<peak-example>
+  <fieldset class="peak-cluster" style="--peak-gap: 0.5rem">
+    <legend class="peak-visually-hidden">Sort by</legend>
+    <label class="peak-chip"><input type="radio" name="sort" checked> Newest</label>
+    <label class="peak-chip"><input type="radio" name="sort"> Popular</label>
+    <label class="peak-chip"><input type="radio" name="sort"> Price</label>
+  </fieldset>
+</peak-example>
+<p>The remove button is a 24px target (WCAG 2.5.8). Removing the chip needs your own script.</p>
+
+<h2>Avatars</h2>
+<p>
+  <code>.peak-avatar</code> is a round picture or initials. Give initials <code>role="img"</code> and a
+  label. <code>--peak-avatar-size</code> sets the size (2.5rem).
+</p>
+<peak-example>
+  <div class="peak-cluster">
+    <span class="peak-avatar" role="img" aria-label="Ada Lovelace">AL</span>
+    <span class="peak-avatar" style="--peak-avatar-size: 3.5rem" role="img" aria-label="Grace Hopper">GH</span>
+    <span class="peak-avatar"><img src="assets/favicon.svg" alt="Peak"></span>
+  </div>
+</peak-example>
+<p><code>.peak-avatar-group</code> overlaps a row of avatars, with a ring in the page color between them.</p>
+<peak-example>
+  <div class="peak-avatar-group" role="group" aria-label="Team">
+    <span class="peak-avatar" role="img" aria-label="Ada Lovelace">AL</span>
+    <span class="peak-avatar" role="img" aria-label="Grace Hopper">GH</span>
+    <span class="peak-avatar" role="img" aria-label="Alan Turing">AT</span>
+    <span class="peak-avatar" role="img" aria-label="12 more">+12</span>
+  </div>
+</peak-example>

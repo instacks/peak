@@ -1,0 +1,80 @@
+/*
+ * Dialog sizes and the drawer (docs: site/pages/dialogs.html), on Blades' modal <dialog><article>:
+ *   <dialog class="peak-wide">  up to 64rem      <dialog class="peak-full">  the whole viewport
+ *   <dialog class="peak-drawer"> a full-height panel at the inline end (.start: inline start)
+ * Selectors are a step more specific than starting-style.css's `dialog > article`, which comes
+ * later in this layer.
+ */
+dialog.peak-wide > article {
+  max-inline-size: min(64rem, 100%);
+}
+
+/*
+ * With closedby, Blades' modern modal makes the dialog itself the box: fit-content height, centered
+ * by margin: auto, at most 700px wide. The sizes and the drawer need the dialog's box back: the
+ * viewport for full and drawer (the drawer's panel is placed inside it), 64rem for wide.
+ */
+dialog.peak-wide:modal[closedby] {
+  inline-size: min(64rem, 100% - var(--pico-spacing) * 2);
+}
+
+dialog:is(.peak-full, .peak-drawer):modal[closedby] {
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100%;
+  max-block-size: none;
+  margin: 0;
+}
+
+dialog.peak-full > article {
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100%;
+  max-block-size: none;
+  margin: 0;
+  border-radius: 0;
+}
+
+dialog.peak-drawer {
+  --_peak-drawer-from: 100%;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+dialog.peak-drawer.start {
+  --_peak-drawer-from: -100%;
+  justify-content: flex-start;
+}
+
+dialog.peak-drawer:dir(rtl) {
+  --_peak-drawer-from: -100%;
+}
+
+dialog.peak-drawer.start:dir(rtl) {
+  --_peak-drawer-from: 100%;
+}
+
+dialog.peak-drawer > article {
+  inline-size: min(var(--peak-drawer-width, 24rem), 100%);
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Slides in from its edge instead of the dialog's scale (same property, so they don't compound) */
+@media (prefers-reduced-motion: no-preference) {
+  dialog.peak-drawer > article {
+    transform: translateX(var(--_peak-drawer-from));
+  }
+
+  dialog.peak-drawer[open] > article {
+    transform: none;
+  }
+
+  @starting-style {
+    dialog.peak-drawer:modal > article {
+      transform: translateX(var(--_peak-drawer-from));
+    }
+  }
+}

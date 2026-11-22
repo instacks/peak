@@ -1,0 +1,53 @@
+/*
+ * Toast (docs: site/pages/callouts.html): a popover in the inline-end bottom corner.
+ *   <div id="saved" class="peak-toast success" popover="manual" role="status">
+ *     Saved. <button popovertarget="saved" popovertargetaction="hide">Close</button>
+ *   </div>
+ * popover="manual" stays until it's closed (a plain popover closes on the next click elsewhere).
+ * Showing it after an action, or hiding it after a delay, needs script: showPopover()/hidePopover().
+ * Variants as the callout, as a colored start edge. One toast at a time: a second one in the same
+ * corner covers the first.
+ */
+[popover].peak-toast {
+  --_peak-toast-edge: var(--peak-primary);
+  /* starting-style.css slides popovers down by this offset; a negative one slides it up */
+  --peak-popover-offset: -0.5rem;
+  position: fixed;
+  inset: auto;
+  inset-block-end: var(--pico-spacing);
+  inset-inline-end: var(--pico-spacing);
+  max-inline-size: min(24rem, 100vw - 2 * var(--pico-spacing));
+  margin: 0;
+  border-inline-start: 0.25rem solid var(--_peak-toast-edge);
+}
+
+[popover].peak-toast.secondary {
+  --_peak-toast-edge: var(--peak-secondary);
+}
+
+[popover].peak-toast.accent {
+  --_peak-toast-edge: var(--peak-accent-fill);
+}
+
+[popover].peak-toast.success {
+  --_peak-toast-edge: var(--peak-success);
+}
+
+[popover].peak-toast.warning {
+  --_peak-toast-edge: var(--peak-warning);
+}
+
+[popover].peak-toast.danger {
+  --_peak-toast-edge: var(--peak-danger);
+}
+
+[popover].peak-toast.info {
+  --_peak-toast-edge: var(--peak-info);
+}
+
+[popover].peak-toast > button {
+  margin-block: 0;
+  margin-inline-start: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.875em;
+}

@@ -1,0 +1,164 @@
+/*
+ * Entry and exit transitions for <dialog> and [popover] (docs/PLAN.md §3).
+ *
+ * - `allow-discrete` goes inside the `transition` shorthand. Lightning CSS moves a
+ *   `transition-behavior` longhand above the shorthand, which then resets it.
+ * - Each @starting-style block comes after the rules it modifies: it adds no specificity.
+ * - Peak's open-state rules beat Blades' @starting-style (later layer), so every property set here
+ *   on an open state gets its own Peak @starting-style.
+ * - `overlay` is Chromium-only. Elsewhere the exit runs outside the top layer, where Pico's
+ *   `position: fixed; z-index: 999` usually keeps it on top, or it is instant.
+ * - Blades' reduced-motion rule (`!important`, earlier layer) zeroes all of this, except on
+ *   ::backdrop, which its `*` selector doesn't match; see the end of the file.
+ */
+
+/* -------------------------------------------------------------------------------------------------
+ * <dialog>
+ *
+ * Transitions are declared on `dialog`, not `dialog:modal`: :modal stops matching as soon as
+ * close() runs, so rules scoped to it can't run an exit (Blades' entry-only behavior).
+ * Entry is keyed to :modal, not [open]: @starting-style also applies on the first style pass, so
+ * `<dialog open>` in the markup would fade in on page load.
+ * ---------------------------------------------------------------------------------------------- */
+
+dialog {
+  opacity: 0;
+  transition:
+    opacity var(--pico-transition),
+    overlay var(--pico-transition) allow-discrete,
+    display var(--pico-transition) allow-discrete;
+}
+
+dialog[open] {
+  opacity: 1;
+}
+
+/*
+ * A closing [closedby] dialog no longer matches Blades' `dialog:modal[closedby]`, so it would fall
+ * back to the classic look and paint Pico's full-screen overlay on itself while it fades.
+ * Its box geometry matches the classic layout, so only the overlay needs clearing.
+ */
+dialog[closedby]:not([open]) {
+  background: none;
+  backdrop-filter: none;
+}
+
+@starting-style {
+  dialog:modal {
+    opacity: 0;
+  }
+}
+
+/* Same property as Blades (transform, not scale), so the two don't compound */
+@media (prefers-reduced-motion: no-preference) {
+  dialog > article {
+    transform: scale(var(--peak-dialog-scale, 0.96));
+    transition: transform var(--pico-transition);
+  }
+
+  dialog[open] > article {
+    transform: none;
+  }
+
+  @starting-style {
+    dialog:modal > article {
+      transform: scale(var(--peak-dialog-scale, 0.96));
+    }
+  }
+}
+
+/*
+ * ::backdrop fades with opacity rather than its color: classic dialogs keep the UA backdrop, and a
+ * closing [closedby] dialog keeps Blades' overlay color and blur instead of snapping to the UA one.
+ */
+dialog::backdrop {
+  transition:
+    opacity var(--pico-transition),
+    overlay var(--pico-transition) allow-discrete,
+    display var(--pico-transition) allow-discrete;
+}
+
+dialog[closedby]::backdrop {
+  background: var(--pico-modal-overlay-background-color);
+  backdrop-filter: var(--pico-modal-overlay-backdrop-filter);
+}
+
+dialog:not([open])::backdrop {
+  opacity: 0;
+}
+
+@starting-style {
+  dialog:modal::backdrop {
+    opacity: 0;
+  }
+}
+
+/*
+ * Pico's modal JS animates with keyframes while these classes are on the root; skip the
+ * transitions then so the two don't run at once.
+ * In the scoped build this only matches when .peak is on <html>, where the script puts its classes.
+ * Known limit: its close() runs after it removes .modal-is-closing, so the exit transition still
+ * runs once after its own animation. Pages using that script can set `dialog { transition: none }`.
+ */
+:scope:is(.modal-is-opening, .modal-is-closing) :is(dialog, dialog > article),
+:scope:is(.modal-is-opening, .modal-is-closing) dialog::backdrop {
+  transition: none;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * [popover]
+ *
+ * Covers Blades' `:is(ul, menu)[popover]` menus too: Peak's open-state opacity beats Blades'
+ * @starting-style, so Peak repeats it here.
+ * ---------------------------------------------------------------------------------------------- */
+
+[popover] {
+  opacity: 0;
+  transition:
+    opacity var(--pico-transition),
+    translate var(--pico-transition),
+    overlay var(--pico-transition) allow-discrete,
+    display var(--pico-transition) allow-discrete;
+}
+
+[popover]:popover-open {
+  opacity: 1;
+}
+
+@starting-style {
+  [popover]:popover-open {
+    opacity: 0;
+  }
+}
+
+/*
+ * A small slide toward the resting position. Not direction-aware: after a flip-block the menu
+ * still slides down, which the short offset keeps unobtrusive.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  [popover] {
+    translate: 0 calc(var(--peak-popover-offset, 0.25rem) * -1);
+  }
+
+  [popover]:popover-open {
+    translate: none;
+  }
+
+  @starting-style {
+    [popover]:popover-open {
+      translate: 0 calc(var(--peak-popover-offset, 0.25rem) * -1);
+    }
+  }
+}
+
+[popover="hint"] {
+  --pico-transition: calc(var(--peak-duration) * 0.6) var(--peak-easing);
+}
+
+/* Blades' reduced-motion rule matches `*`, ::before and ::after, but not ::backdrop */
+@media (prefers-reduced-motion: reduce) {
+  dialog::backdrop,
+  [popover]::backdrop {
+    transition: none;
+  }
+}

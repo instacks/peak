@@ -1,0 +1,88 @@
+/*
+ * Tabs, CSS only (docs: site/pages/accordion.html):
+ *   <div class="peak-tabs">
+ *     <details name="t" open><summary>One</summary>…</details>
+ *     <details name="t"><summary>Two</summary>…</details>
+ *   </div>
+ * `name` makes the details exclusive. Each one is display: contents, so its summary and its
+ * ::details-content become items of the tabs grid: summaries in row 1, the panels stacked in row
+ * 2 across every column (closed panels are hidden by the browser). Where ::details-content isn't
+ * supported this is an exclusive accordion.
+ *
+ * The grid needs one column per tab plus a filler, and CSS can't count children, so :has() sets
+ * the count up to 8 tabs.
+ */
+@supports selector(::details-content) {
+  .peak-tabs {
+    --_peak-tabs: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--_peak-tabs), max-content) 1fr;
+    margin-block-end: var(--pico-spacing);
+  }
+
+  .peak-tabs:has(> details:nth-of-type(2)) {
+    --_peak-tabs: 2;
+  }
+
+  .peak-tabs:has(> details:nth-of-type(3)) {
+    --_peak-tabs: 3;
+  }
+
+  .peak-tabs:has(> details:nth-of-type(4)) {
+    --_peak-tabs: 4;
+  }
+
+  .peak-tabs:has(> details:nth-of-type(5)) {
+    --_peak-tabs: 5;
+  }
+
+  .peak-tabs:has(> details:nth-of-type(6)) {
+    --_peak-tabs: 6;
+  }
+
+  .peak-tabs:has(> details:nth-of-type(7)) {
+    --_peak-tabs: 7;
+  }
+
+  .peak-tabs:has(> details:nth-of-type(8)) {
+    --_peak-tabs: 8;
+  }
+
+  .peak-tabs > details {
+    display: contents;
+  }
+
+  .peak-tabs > details > summary {
+    position: relative;
+    z-index: 1;
+    grid-row: 1;
+    margin: 0 0 calc(var(--pico-border-width) * -1);
+    padding: calc(var(--pico-spacing) * 0.5) var(--pico-spacing);
+    border-block-end: calc(var(--pico-border-width) * 2) solid transparent;
+    line-height: var(--pico-line-height);
+    white-space: nowrap;
+  }
+
+  .peak-tabs > details > summary::after {
+    display: none;
+  }
+
+  .peak-tabs > details[open] > summary {
+    margin-block-end: calc(var(--pico-border-width) * -1);
+    border-block-end-color: var(--pico-primary);
+    color: var(--pico-primary);
+    /* Clicking the open tab would close it and leave no panel */
+    pointer-events: none;
+  }
+
+  .peak-tabs > details::details-content {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    padding-block-start: var(--pico-spacing);
+    border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
+  }
+
+  .peak-tabs > details:not([open])::details-content {
+    display: none;
+  }
+}

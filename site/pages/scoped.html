@@ -1,0 +1,53 @@
+---
+title: Scoped build
+group: Reference
+order: 4
+description: Peak for pages it doesn't own alone. The scoped build styles only what's inside .peak and leaves .peak-ignore alone.
+---
+
+<h2>When to use it</h2>
+<p>
+  Use the global build (<code>peak.min.css</code>) when Peak styles the whole page. Use the scoped
+  build (<code>peak.scoped.min.css</code>) when other code shares the page and shouldn't be restyled:
+  widgets, embeds, page-builder blocks from other vendors, an existing site you're moving to Peak
+  part by part.
+</p>
+<peak-code lang="html">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@instacks/peak/dist/peak.scoped.min.css">
+
+  <body>
+    <header class="peak">…</header>
+    <main class="peak">
+      …
+      <div class="peak-ignore">A third-party widget, left alone</div>
+    </main>
+  </body>
+</peak-code>
+
+<h2>How it works</h2>
+<p>
+  Every rule of Peak and Blades is wrapped in <code>@scope (.peak) to (.peak-ignore)</code>: it
+  matches inside a <code>.peak</code> element and stops at a <code>.peak-ignore</code> boundary.
+</p>
+<ul>
+  <li>Inputs work the same: set them on <code>:root</code>, <code>.peak</code>, <code>[data-theme]</code> or <code>[data-peak-scope]</code>. Their defaults are the only rules outside the scope.</li>
+  <li>Inherited properties (color, font) still flow into <code>.peak-ignore</code>, as CSS inheritance does; nothing else does.</li>
+  <li><code>.peak</code> on <code>&lt;html&gt;</code> makes the whole page Peak, like the global build.</li>
+  <li><code>rem</code> refers to <code>&lt;html&gt;</code>. On a nested <code>.peak</code>, the fluid root size is off, so text, headings and spacing stay in proportion to the page.</li>
+</ul>
+
+<h2>Browser support</h2>
+<p>
+  <code>@scope</code> is in Chrome and Edge 118+, Safari 17.4+ and Firefox 146+. Older browsers
+  ignore the whole scoped stylesheet; for a public site that must support them, use the global
+  build.
+</p>
+
+<h2>In page builders</h2>
+<p>
+  Peak's layout and component classes work on a page builder's container blocks too: put the class
+  (<code>peak-grid-auto</code>, <code>peak-card</code>, <code>peak-band</code>…) in the block's class
+  field. For Stacks 6, where each block sits in <code>.out &gt; .stacks_in</code> wrappers whose
+  unlayered CSS would override Peak, Peak includes targeted overrides for those wrappers, so grids,
+  clusters, cards, bands and heroes lay out as on a plain page.
+</p>

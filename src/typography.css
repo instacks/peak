@@ -1,0 +1,204 @@
+/*
+ * Typography on top of Blades (docs: site/pages/typography.html): element defaults, and the opt-in
+ * text patterns .peak-eyebrow, .peak-display and .peak-lead. Color and size utilities are in
+ * utilities.css; heading sizes, weights and fonts are bridged in tokens.css.
+ */
+
+/* Inherited, so the root is enough. Only WebKit and Chromium on macOS honour it. */
+:where(:scope, :host) {
+  -webkit-font-smoothing: var(--peak-font-smoothing);
+}
+
+:is(h1, h2, h3, h4, h5, h6) {
+  text-wrap: balance;
+}
+
+/*
+ * Tracking grows with the size: h2–h4 get the input, h1 4/3 of it (.peak-display 5/3), and the
+ * small h5/h6 none. The input is an em length, so it scales with each heading's own size.
+ */
+h1 {
+  letter-spacing: calc(var(--peak-heading-tracking) * 4 / 3);
+}
+
+:is(h2, h3, h4) {
+  letter-spacing: var(--peak-heading-tracking);
+}
+
+/*
+ * Blades styles the last child of every hgroup as a muted 1rem subtitle (--pico-color,
+ * --pico-font-weight: unset, font-size: 1rem). After an eyebrow line, the heading is that last
+ * child, so it gets its own size and color back. The weight already comes back from the heading
+ * weight in tokens.css, which is in a later layer than Blades' rule.
+ */
+hgroup > :is(h1, h2, h3, h4, h5, h6):not(:first-child):last-child {
+  font-size: var(--pico-font-size);
+}
+
+hgroup > h1:not(:first-child):last-child {
+  --pico-color: var(--pico-h1-color);
+}
+
+hgroup > h2:not(:first-child):last-child {
+  --pico-color: var(--pico-h2-color);
+}
+
+hgroup > h3:not(:first-child):last-child {
+  --pico-color: var(--pico-h3-color);
+}
+
+hgroup > h4:not(:first-child):last-child {
+  --pico-color: var(--pico-h4-color);
+}
+
+hgroup > h5:not(:first-child):last-child {
+  --pico-color: var(--pico-h5-color);
+}
+
+hgroup > h6:not(:first-child):last-child {
+  --pico-color: var(--pico-h6-color);
+}
+
+/*
+ * Eyebrow (kicker): a short line above a heading. Classless as the first child of an hgroup when
+ * a heading follows it; .peak-eyebrow anywhere else.
+ */
+hgroup > :first-child:not(h1, h2, h3, h4, h5, h6):has(+ :is(h1, h2, h3, h4, h5, h6)),
+.peak-eyebrow {
+  margin-block: 0 0.25rem;
+  color: var(--peak-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.peak-eyebrow.secondary {
+  color: var(--peak-secondary);
+}
+
+.peak-eyebrow.contrast {
+  color: var(--peak-contrast);
+}
+
+/* Display headline: above h1, fluid between the two inputs, on any element */
+.peak-display {
+  --pico-font-size: clamp(var(--peak-display-size-min), 1rem + 4vw, var(--peak-display-size-max));
+  --pico-font-weight: var(--peak-display-weight, var(--peak-heading-font-weight));
+  --pico-color: var(--pico-h1-color);
+  margin-block: 0 var(--pico-typography-spacing-vertical);
+  color: var(--pico-color);
+  font-family: var(--peak-font-family-heading, var(--peak-font-family, var(--pico-font-family-sans-serif)));
+  font-size: var(--pico-font-size);
+  font-weight: var(--pico-font-weight);
+  /* Display sizes need tighter leading than the heading line height */
+  line-height: 1.05;
+  letter-spacing: calc(var(--peak-heading-tracking) * 5 / 3);
+  text-wrap: balance;
+}
+
+/* Lead paragraph: one step of the type scale up, muted, at a readable width */
+.peak-lead {
+  max-inline-size: var(--peak-measure);
+  color: var(--peak-muted);
+  font-size: calc(1em * var(--peak-type-ratio));
+  text-wrap: pretty;
+}
+
+section {
+  margin-block-end: var(--peak-section-spacing, var(--pico-block-spacing-vertical));
+}
+
+/* Blades already scrolls pre; this caps its height when the input is set */
+pre {
+  max-block-size: var(--peak-code-max-height, none);
+}
+
+/*
+ * Scroll shadows: a shade along each edge that has more code beyond it. Covers in the code
+ * background scroll with the content (local) and sit over shades fixed to the box (scroll), so
+ * at either end the cover hides the shade. Covers first: a background layer listed earlier is
+ * drawn on top. Pico gives pre > code no background, so the layers show through.
+ */
+pre {
+  --_peak-pre-bg: var(--pico-code-background-color);
+  background:
+    linear-gradient(to right, var(--_peak-pre-bg) 30%, transparent) left center / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--_peak-pre-bg) 30%, transparent) right center / 2.5rem 100% no-repeat local,
+    linear-gradient(to bottom, var(--_peak-pre-bg) 30%, transparent) center top / 100% 2.5rem no-repeat local,
+    linear-gradient(to top, var(--_peak-pre-bg) 30%, transparent) center bottom / 100% 2.5rem no-repeat local,
+    radial-gradient(farthest-side at left center, var(--_peak-scroll-shadow), transparent) left center / 0.75rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at right center, var(--_peak-scroll-shadow), transparent) right center / 0.75rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at center top, var(--_peak-scroll-shadow), transparent) center top / 100% 0.75rem no-repeat scroll,
+    radial-gradient(farthest-side at center bottom, var(--_peak-scroll-shadow), transparent) center bottom / 100% 0.75rem no-repeat scroll,
+    var(--_peak-pre-bg);
+}
+
+figure figcaption {
+  font-size: 0.75em;
+}
+
+/*
+ * Prose: running text from a CMS or a long article (Poster CMS output, a blog post). A readable
+ * line length, media that fit the column, and tables that scroll instead of widening the page.
+ */
+.peak-prose {
+  max-inline-size: var(--peak-measure);
+  text-wrap: pretty;
+}
+
+.peak-prose.center {
+  margin-inline: auto;
+}
+
+.peak-prose > :first-child {
+  margin-block-start: 0;
+}
+
+.peak-prose :is(img, video, iframe, svg) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.peak-prose :is(img, video) {
+  border-radius: var(--pico-border-radius);
+}
+
+.peak-prose table {
+  display: block;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+.peak-prose li > :is(ul, ol) {
+  margin-block: 0.25em 0;
+}
+
+/*
+ * Heading anchors: <h2 id="setup">Setup <a class="peak-anchor" href="#setup"
+ * aria-label="Link to this section">#</a></h2>. Shown on hover and keyboard focus, always on
+ * touch screens (no hover).
+ */
+.peak-anchor {
+  margin-inline-start: 0.375em;
+  color: var(--peak-muted);
+  font-weight: var(--pico-font-weight);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--pico-transition);
+}
+
+:is(h1, h2, h3, h4, h5, h6):is(:hover, :focus-within) > .peak-anchor {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .peak-anchor {
+    opacity: 1;
+  }
+}
+
+/* A target jumped to stays clear of the theme's sticky header */
+:scope:has(.nav-sticky) [id] {
+  scroll-margin-block-start: 5rem;
+}

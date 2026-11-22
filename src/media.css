@@ -1,0 +1,96 @@
+/*
+ * Forced colors (Windows High Contrast) and print (docs/PLAN.md §7.3). In peak.utilities, so these
+ * win over every component.
+ */
+
+/*
+ * Forced colors replace every color with the user's system palette and drop shadows. Shapes that
+ * only had a shadow get a border; focus rings, which Pico draws as shadows, become outlines; and
+ * states shown only by a background color use the system's highlight colors. System colors
+ * (Highlight, CanvasText) are kept by the browser in this mode.
+ */
+@media (forced-colors: active) {
+  :is(article, .peak-card, [popover], dialog > article, .peak-badge, .peak-avatar) {
+    border: 1px solid CanvasText;
+  }
+
+  .peak-callout {
+    border: 1px solid CanvasText;
+    border-inline-start-width: 0.25rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  :is(
+    .peak-pagination li > [aria-current="page"],
+    .peak-chip:has(> input:checked),
+    .peak-badge.solid
+  ) {
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+
+  .peak-steps > li[aria-current="step"]::before {
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+
+  .peak-tabs > details[open] > summary,
+  .peak-sidebar-nav a[aria-current="page"] {
+    border-color: Highlight;
+    color: Highlight;
+  }
+
+  .peak-badge.dot::before {
+    background-color: CanvasText;
+  }
+}
+
+/*
+ * Print: the light scheme on white (also for a dark page), no site chrome, no shadows or bands,
+ * cards and figures kept on one page, and the address of each external link in prose.
+ */
+@media print {
+  :scope,
+  [data-theme] {
+    color-scheme: light;
+  }
+
+  :is(.site-header, :scope.site-header, .site-sidebar, :scope.site-sidebar),
+  :is(.peak-skip-link, .site-menu-toggle, .site-scheme, .site-footer-nav, .site-back-to-top, .site-breadcrumb) {
+    display: none;
+  }
+
+  :is(article, .peak-card, .peak-callout, .peak-toast) {
+    box-shadow: none;
+    border: 1px solid var(--peak-border);
+  }
+
+  .peak-band {
+    background: none;
+    box-shadow: none;
+    clip-path: none;
+  }
+
+  :is(article, .peak-card, .peak-callout, figure, pre, blockquote, tr, img) {
+    break-inside: avoid;
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) {
+    break-after: avoid;
+  }
+
+  .peak-prose a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    color: var(--peak-muted);
+    font-size: 0.875em;
+    overflow-wrap: anywhere;
+  }
+}

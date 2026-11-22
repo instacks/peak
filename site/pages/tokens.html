@@ -1,0 +1,120 @@
+---
+title: Tokens
+group: Reference
+order: 1
+description: Every input you can set, with its default and tested range, and the derived tokens you can read.
+---
+
+<h2 id="inputs">Inputs</h2>
+<p>
+  Set these on <code>:root</code>, or on an element with <code>data-peak-scope</code> or
+  <code>data-theme</code> (see <a href="theming.html">Theming</a>). Ranges are what the contrast tests
+  cover; values outside them work but aren't checked. "Unset" inputs have no default: they fall back
+  to another input until you set them. Try them in the <a href="customize.html">customizer</a>.
+</p>
+<peak-inputs></peak-inputs>
+
+<h2 id="derived-tokens">Derived tokens</h2>
+<p>
+  Computed from the inputs for both color schemes. Read them in your own CSS with
+  <code>var()</code>; don't set them (set the inputs instead). Swatches are live.
+</p>
+
+<h3>Surfaces and text</h3>
+<peak-swatches names="--peak-bg --peak-surface --peak-surface-raised --peak-surface-sunken --peak-card-bg --peak-border --peak-border-strong --peak-text --peak-heading --peak-muted"></peak-swatches>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Token</th><th scope="col">Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>--peak-bg</code></td><td>Page background</td></tr>
+      <tr><td><code>--peak-surface</code></td><td>Cards, inputs, menus</td></tr>
+      <tr><td><code>--peak-surface-raised</code></td><td>Popovers and things above a surface</td></tr>
+      <tr><td><code>--peak-surface-sunken</code></td><td>Bands, flat cards, wells, hover backgrounds</td></tr>
+      <tr><td><code>--peak-card-bg</code></td><td>Card background (the surface)</td></tr>
+      <tr><td><code>--peak-border</code>, <code>--peak-border-strong</code></td><td>Rules and outlines; the strong one for controls</td></tr>
+      <tr><td><code>--peak-text</code>, <code>--peak-heading</code>, <code>--peak-muted</code></td><td>Body text, headings, captions and hints</td></tr>
+      <tr><td><code>--peak-shadow</code></td><td>Shadow of cards, menus and dialogs</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Roles</h3>
+<p>Primary, secondary and contrast each come with the same set:</p>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Token</th><th scope="col">Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>--peak-primary</code></td><td>Text color: links, the current item</td></tr>
+      <tr><td><code>--peak-primary-hover</code></td><td>Hovered links; text on the tint</td></tr>
+      <tr><td><code>--peak-primary-fill</code></td><td>Button and solid badge background</td></tr>
+      <tr><td><code>--peak-primary-hover-bg</code></td><td>Hovered button background</td></tr>
+      <tr><td><code>--peak-primary-tint</code></td><td>Light background: badges, callouts, selected chips</td></tr>
+      <tr><td><code>--peak-primary-subtle</code></td><td>A faint wash</td></tr>
+      <tr><td><code>--peak-primary-focus</code></td><td>Focus ring (opaque)</td></tr>
+      <tr><td><code>--peak-primary-underline</code></td><td>Link underline</td></tr>
+      <tr><td><code>--peak-on-primary</code></td><td>Text on the fill</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  Replace <code>primary</code> with <code>secondary</code> or <code>contrast</code> for the others
+  (contrast has no fill or tint of its own: it is the fill). <code>--peak-primary-inverse</code> is
+  Pico's name for <code>--peak-on-primary</code>.
+</p>
+<peak-swatches names="--peak-primary --peak-primary-fill --peak-primary-tint --peak-secondary --peak-secondary-fill --peak-secondary-tint --peak-contrast --peak-on-contrast"></peak-swatches>
+
+<h3>Accent and status</h3>
+<ul>
+  <li><code>--peak-accent</code> (text), <code>-hover</code>, <code>-fill</code>, <code>-hover-bg</code>, <code>-subtle</code>, and <code>--peak-on-accent</code>.</li>
+  <li><code>--peak-success</code>, <code>--peak-warning</code>, <code>--peak-danger</code>, <code>--peak-info</code>, each with <code>-hover</code>, <code>-subtle</code>, <code>-border</code> and <code>--peak-on-*</code>. Warning is a fill, not a text color.</li>
+</ul>
+<peak-swatches names="--peak-accent --peak-accent-fill --peak-accent-subtle --peak-success --peak-warning --peak-danger --peak-info --peak-danger-subtle"></peak-swatches>
+
+<h3>Type scale</h3>
+<p>
+  <code>--peak-h1</code> … <code>--peak-h6</code>: heading sizes, <code>h6</code> = 1rem and each level
+  up × <code>--peak-type-ratio</code>.
+</p>
+<peak-example>
+  <p style="font-size: var(--peak-h1); margin: 0">--peak-h1</p>
+  <p style="font-size: var(--peak-h3); margin: 0">--peak-h3</p>
+  <p style="font-size: var(--peak-h6); margin: 0">--peak-h6</p>
+</peak-example>
+
+<h3>Space scale</h3>
+<p>Multiples of <code>--peak-spacing</code> for your own components:</p>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Size</th></tr></thead>
+    <tbody>
+      <tr><td><code>--peak-space-3xs</code></td><td>× 0.25</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-3xs); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-2xs</code></td><td>× 0.5</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-2xs); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-xs</code></td><td>× 0.75</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-xs); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-s</code></td><td>× 1</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-s); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-m</code></td><td>× 1.5</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-m); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-l</code></td><td>× 2</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-l); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-xl</code></td><td>× 3</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-xl); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-2xl</code></td><td>× 4</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-2xl); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+      <tr><td><code>--peak-space-3xl</code></td><td>× 6</td><td><span class="docs-swatch" style="inline-size: var(--peak-space-3xl); block-size: 0.75rem; background: var(--peak-primary)"></span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Component knobs</h2>
+<p>Custom properties read by single components, with a fallback when unset:</p>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Property</th><th scope="col">Default</th><th scope="col">Read by</th></tr></thead>
+    <tbody>
+      <tr><td><code>--peak-gap</code></td><td>the spacing</td><td>Grids, cluster, switcher, media object, sidebar layout, stats</td></tr>
+      <tr><td><code>--peak-cols</code></td><td><code>3</code></td><td><a href="grids.html#column-grid"><code>.peak-grid</code></a></td></tr>
+      <tr><td><code>--peak-switch-at</code></td><td><code>40rem</code></td><td><a href="grids.html#switcher"><code>.peak-switcher</code></a></td></tr>
+      <tr><td><code>--peak-sticky-offset</code></td><td>the spacing</td><td><a href="grids.html#sidebar-layout"><code>.peak-with-sidebar.sticky</code></a></td></tr>
+      <tr><td><code>--peak-avatar-size</code></td><td><code>2.5rem</code></td><td><a href="badges.html#avatars"><code>.peak-avatar</code></a></td></tr>
+      <tr><td><code>--peak-drawer-width</code></td><td><code>24rem</code></td><td><a href="dialogs.html#drawer"><code>.peak-drawer</code></a></td></tr>
+      <tr><td><code>--peak-dialog-scale</code></td><td><code>0.96</code></td><td>Dialog entry zoom (<a href="dialogs.html#modal-dialog">Dialogs</a>)</td></tr>
+      <tr><td><code>--peak-popover-offset</code></td><td><code>0.25rem</code></td><td>Popover entry slide (<a href="overlays.html#popovers">Popovers</a>)</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Properties starting with <code>--_peak-</code> are internal and may change in any release.</p>

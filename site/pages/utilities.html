@@ -1,0 +1,80 @@
+---
+title: Utilities
+group: Reference
+order: 2
+description: A deliberately small set of single-purpose classes. They live in the last Peak layer, so they win over components whatever the specificity.
+---
+
+<h2>Text colors</h2>
+<p>
+  <code>.peak-text-primary</code>, <code>-secondary</code>, <code>-contrast</code>,
+  <code>-accent</code>, <code>-muted</code>, <code>-success</code>, <code>-danger</code>,
+  <code>-info</code>. There's no warning text color: warning is too light for text.
+</p>
+<peak-example>
+  <p>
+    <span class="peak-text-primary">Primary</span> ·
+    <span class="peak-text-secondary">Secondary</span> ·
+    <span class="peak-text-contrast">Contrast</span> ·
+    <span class="peak-text-accent">Accent</span> ·
+    <span class="peak-text-muted">Muted</span> ·
+    <span class="peak-text-success">Success</span> ·
+    <span class="peak-text-danger">Danger</span> ·
+    <span class="peak-text-info">Info</span>
+  </p>
+</peak-example>
+
+<h2>Heading sizes</h2>
+<p>
+  <code>.peak-h1</code>, <code>.peak-h2</code>, <code>.peak-h3</code>, <code>.peak-h4</code>,
+  <code>.peak-h5</code> and <code>.peak-h6</code> give any element a heading's size. See
+  <a href="typography.html#visual-size-apart-from-level">Typography</a>.
+</p>
+<peak-example>
+  <p class="peak-h4">Paragraph at h4 size</p>
+</peak-example>
+
+<h2>Tabular numbers</h2>
+<p><code>.peak-tabular</code>: digits of equal width, for columns of numbers and counters.</p>
+<peak-example>
+  <p class="peak-tabular">€ 1,111.11<br>€ 8,888.88</p>
+</peak-example>
+
+<h2>Visually hidden</h2>
+<p>
+  <code>.peak-visually-hidden</code> hides an element on screen but keeps it for screen readers: a
+  legend for a row of chips, a label for an icon button. It shows again when something inside it
+  has focus.
+</p>
+<peak-example>
+  <button><span aria-hidden="true">🔍</span><span class="peak-visually-hidden">Search</span></button>
+</peak-example>
+
+<h2>Scoping</h2>
+<ul>
+  <li><code>.peak</code> and <code>.peak-ignore</code> choose where the <a href="scoped.html">scoped build</a> applies.</li>
+  <li><code>data-peak-scope</code> starts a new set of inputs (<a href="theming.html#one-section">Theming</a>).</li>
+  <li><code>data-peak-anchor</code> anchors a popover or dropdown to its trigger (<a href="overlays.html">Menus and popovers</a>).</li>
+</ul>
+
+<h2>From Blades and Pico</h2>
+<p>These keep working as their documentation describes:</p>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Class or attribute</th><th scope="col">Does</th></tr></thead>
+    <tbody>
+      <tr><td><code>.container</code>, <code>.container-fluid</code></td><td>Page width (<a href="layout.html#container">Container</a>)</td></tr>
+      <tr><td><code>.grid</code></td><td>Equal columns from 768px</td></tr>
+      <tr><td><code>.columns</code></td><td>Text columns of at least 25 characters</td></tr>
+      <tr><td><code>.overflow-auto</code></td><td>Scrolls its content (wrap wide tables)</td></tr>
+      <tr><td><code>.striped</code></td><td>Striped table rows</td></tr>
+      <tr><td><code>.secondary</code>, <code>.contrast</code>, <code>.outline</code></td><td>Button and link variants</td></tr>
+      <tr><td><code>.timeline</code>, <code>.has-timeline</code></td><td>Timeline from a description list</td></tr>
+      <tr><td><code>.dropdown</code></td><td>Dropdown from <code>&lt;details&gt;</code></td></tr>
+      <tr><td><code>data-theme</code></td><td>Light or dark for an element and its content</td></tr>
+      <tr><td><code>data-tooltip</code>, <code>data-placement</code></td><td>Tooltips</td></tr>
+      <tr><td><code>data-compact</code></td><td>Denser forms and flatter cards</td></tr>
+      <tr><td><code>aria-busy</code>, <code>aria-invalid</code>, <code>role="switch"</code>, <code>role="group"</code></td><td>Loading, validation, switches, button groups</td></tr>
+    </tbody>
+  </table>
+</div>

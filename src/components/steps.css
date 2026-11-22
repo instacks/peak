@@ -1,0 +1,69 @@
+/*
+ * Steps (docs: site/pages/data.html): a numbered vertical sequence joined by a line.
+ *   <ol class="peak-steps">
+ *     <li>Download</li>
+ *     <li aria-current="step">Install</li>
+ *     <li>Activate</li>
+ *   </ol>
+ * aria-current="step" marks the current step; the steps before it show as done (✓).
+ */
+.peak-steps {
+  margin-block: 0 var(--pico-typography-spacing-vertical);
+  padding: 0;
+  counter-reset: peak-step;
+  list-style: none;
+}
+
+.peak-steps > li {
+  position: relative;
+  min-block-size: 1.75rem;
+  margin: 0;
+  padding-block-end: var(--pico-spacing);
+  padding-inline-start: 2.75rem;
+  counter-increment: peak-step;
+  list-style: none;
+}
+
+.peak-steps > li::before {
+  content: counter(peak-step);
+  display: grid;
+  place-items: center;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border: var(--pico-border-width) solid var(--peak-border-strong);
+  border-radius: 50%;
+  background-color: var(--peak-surface);
+  color: var(--peak-muted);
+  font-size: 0.875em;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* The line to the next step */
+.peak-steps > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-block: 2rem 0.25rem;
+  inset-inline-start: calc(0.875rem - var(--pico-border-width));
+  border-inline-start: calc(var(--pico-border-width) * 2) solid var(--peak-border);
+}
+
+.peak-steps > li[aria-current="step"] {
+  font-weight: 600;
+}
+
+.peak-steps > li[aria-current="step"]::before {
+  border-color: var(--peak-primary-fill);
+  background-color: var(--peak-primary-fill);
+  color: var(--peak-on-primary);
+}
+
+.peak-steps > li:has(~ li[aria-current="step"])::before {
+  content: "✓";
+  border-color: var(--peak-primary);
+  background-color: var(--peak-primary-tint);
+  color: var(--peak-primary-hover);
+}

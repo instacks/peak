@@ -1,0 +1,83 @@
+---
+title: Introduction
+group: Getting started
+order: 1
+description: A modern CSS layer on top of Blades CSS. A few inputs generate the whole palette, type and spacing; semantic HTML looks right without classes, and Peak's classes add layouts and components without JavaScript.
+---
+
+<peak-example preview-class="sunken">
+  <section class="peak-hero">
+    <hgroup>
+      <p>Semantic HTML, modern CSS</p>
+      <h1 class="peak-display">Peak your <span class="peak-text-primary">pages</span></h1>
+    </hgroup>
+    <p class="peak-lead">Write HTML. Set a hue. Peak derives an accessible palette for light and dark, fluid type and a spacing rhythm, and styles cards, menus, dialogs, tabs and more with native browser features.</p>
+    <div class="peak-cluster">
+      <a href="getting-started.html" role="button">Get started</a>
+      <a href="customize.html" role="button" class="secondary outline">Open the customizer</a>
+    </div>
+  </section>
+</peak-example>
+
+<h2>What Peak is</h2>
+<p>
+  Peak is a CSS-only layer for <a href="https://blades.dev/">Blades CSS</a>, a maintained fork of
+  <a href="https://picocss.com/">Pico CSS</a>. Blades gives every HTML element a good default look;
+  Peak keeps that and adds three things:
+</p>
+<ul>
+  <li><strong>A token system.</strong> About sixty <code>--peak-*</code> inputs (a hue, a chroma, a radius, a type ratio…) generate every color, size and space. Lightness is pinned per color scheme, so any slider position keeps WCAG contrast. See <a href="theming.html">Theming</a>.</li>
+  <li><strong>Layouts and components.</strong> Grids that need no breakpoints, sidebars, bands, heroes, cards, badges, chips, callouts, tabs, toasts, drawers, steps and more, all as <code>.peak-*</code> classes. See <a href="layout.html">Layout</a> and <a href="cards.html">Components</a>.</li>
+  <li><strong>Modern platform features.</strong> Native popovers with anchor positioning, <code>&lt;dialog&gt;</code> with entry and exit transitions, animated <code>&lt;details&gt;</code>, container queries, <code>light-dark()</code> and relative OKLCH colors. No JavaScript is needed for any component.</li>
+</ul>
+
+<h2>At a glance</h2>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 16rem">
+    <article>
+      <header><span class="peak-badge accent">New</span></header>
+      <h3>Tokens, not themes</h3>
+      <p>Change <code>--peak-hue</code> and the whole palette follows, in light and dark.</p>
+      <footer><a class="peak-card-link" href="theming.html">Theming →</a></footer>
+    </article>
+    <article>
+      <header><span class="peak-badge success dot">Zero JS</span></header>
+      <h3>Native components</h3>
+      <p>Menus, tooltips, dialogs and tabs from <code>popover</code>, <code>&lt;dialog&gt;</code> and <code>&lt;details&gt;</code>.</p>
+      <footer><a class="peak-card-link" href="overlays.html">Menus and popovers →</a></footer>
+    </article>
+    <article>
+      <header><span class="peak-badge info dot">Accessible</span></header>
+      <h3>Contrast built in</h3>
+      <p>Every text and background pair is tested across the whole range of every input.</p>
+      <footer><a class="peak-card-link" href="accessibility.html">Accessibility →</a></footer>
+    </article>
+  </div>
+</peak-example>
+
+<h2>Principles</h2>
+<ul>
+  <li><strong>HTML first.</strong> An <code>&lt;article&gt;</code> is a card, a <code>&lt;details name&gt;</code> group is an exclusive accordion, a <code>ul[popover]</code> is a menu. Classes are for what HTML can't say.</li>
+  <li><strong>Never fight the user.</strong> Peak lives in cascade layers after Blades. Your own unlayered CSS always wins, whatever its specificity. See <a href="getting-started.html#cascade-layers">Cascade layers</a>.</li>
+  <li><strong>Inputs are the API.</strong> The <code>--peak-*</code> custom properties are public and stable; renaming one is a breaking change. Everything else is internal.</li>
+  <li><strong>Progressive enhancement.</strong> Anchor positioning, <code>@starting-style</code> and animated <code>&lt;details&gt;</code> are used where the browser has them. Without them, menus open centered and closing is instant, but everything works.</li>
+  <li><strong>Respect preferences.</strong> Reduced motion, more contrast, reduced transparency, forced colors and print each get their own treatment.</li>
+</ul>
+
+<h2>Browser support</h2>
+<p>
+  Chrome and Edge 123+, Firefox 128+, Safari 18+. Newer features (anchor positioning,
+  <code>::details-content</code>, <code>interestfor</code>, <code>overlay</code>) are progressive
+  enhancements. The <a href="scoped.html">scoped build</a> needs <code>@scope</code>: Chrome/Edge 118+,
+  Safari 17.4+, Firefox 146+.
+</p>
+
+<h2>Relation to Blades and Pico</h2>
+<p>
+  Peak imports Blades whole into <code>@layer blades</code> and never patches it. Everything Blades and
+  Pico document still works: their classes (<code>.container</code>, <code>.grid</code>,
+  <code>.secondary</code>, <code>.outline</code>…), attributes (<code>aria-busy</code>,
+  <code>aria-invalid</code>, <code>data-tooltip</code>, <code>role="switch"</code>) and
+  <code>--pico-*</code> variables. Peak sets the <code>--pico-*</code> variables from its tokens, so
+  prefer the <code>--peak-*</code> inputs; a <code>--pico-*</code> variable you set yourself still wins.
+</p>

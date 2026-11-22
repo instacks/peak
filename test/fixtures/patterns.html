@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peak layout patterns and components</title>
+    <link rel="stylesheet" href="../../dist/peak.css" />
+    <style>
+      .stacks_in>p{margin-top:0}.stacks_in,.stacks_top{border:0;display:block;margin:0;overflow:hidden;padding:0;position:relative}
+    </style>
+  </head>
+  <body>
+    <main class="container" id="main">
+      <div class="peak-grid" id="grid"><div class="peak-span-2" id="span-2">a</div><div>b</div><div>c</div><div>d</div><div class="peak-span-full" id="span-full">e</div></div>
+      <div class="peak-grid" id="grid-4" style="--peak-cols: 4; --peak-grid-min: 12rem"><div>a</div><div>b</div><div>c</div><div>d</div><div>e</div></div>
+
+      <div class="peak-with-sidebar" id="sidebar-layout"><aside id="aside"><nav><ul><li>One</li></ul></nav></aside><div id="content"><p>Content that is long enough to fill the remaining width of the layout.</p></div></div>
+      <div class="peak-with-sidebar sticky" id="sidebar-end"><div id="content-2"><p>Content first.</p></div><aside id="aside-2">Aside last</aside></div>
+
+      <div class="peak-media" id="media"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='%23888'/%3E%3C/svg%3E" width="80" height="80" alt="" id="media-img" /><div id="media-text"><h3>Title</h3><p>Text beside the image.</p></div></div>
+
+      <div class="peak-tabs" id="tabs">
+        <details name="t" open id="tab-1"><summary id="sum-1">One</summary><p id="panel-1">Panel one</p></details>
+        <details name="t" id="tab-2"><summary id="sum-2">Two</summary><p id="panel-2">Panel two</p></details>
+        <details name="t" id="tab-3"><summary id="sum-3">Three</summary><p id="panel-3">Panel three</p></details>
+      </div>
+
+      <div class="peak-accordion" id="accordion">
+        <details name="a" id="acc-1"><summary>First</summary><p id="acc-panel">Accordion content.</p><p>More content to make it taller.</p></details>
+        <details name="a" id="acc-2"><summary>Second</summary><p>Second content.</p></details>
+      </div>
+      <details class="dropdown" id="dropdown"><summary>Dropdown</summary><ul><li><a href="#" id="dropdown-link">Item</a></li></ul></details>
+
+      <p class="peak-cluster" id="chips">
+        <a class="peak-chip" href="#" id="chip-link">Link</a>
+        <label class="peak-chip" id="chip-check"><input type="checkbox" id="chip-input" /> Filter</label>
+        <span class="peak-chip" id="chip-remove">Tag <button type="button" aria-label="Remove" id="chip-button">×</button></span>
+      </p>
+
+      <aside class="peak-callout" id="callout-primary"><strong>Note</strong><p>Primary callout.</p></aside>
+      <aside class="peak-callout secondary" id="callout-secondary"><strong>Note</strong><p>Secondary.</p></aside>
+      <aside class="peak-callout accent" id="callout-accent"><strong>New</strong><p>Accent.</p></aside>
+      <aside class="peak-callout success" id="callout-success"><strong>Done</strong><p>Success.</p></aside>
+      <aside class="peak-callout warning" id="callout-warning"><strong>Careful</strong><p>Warning.</p></aside>
+      <aside class="peak-callout danger" id="callout-danger"><strong>Error</strong><p>Danger.</p></aside>
+      <aside class="peak-callout info" id="callout-info"><strong>Info</strong><p>Info.</p></aside>
+
+      <dialog class="peak-drawer" id="drawer"><article id="drawer-panel"><h2>Drawer</h2><p>Panel</p></article></dialog>
+      <dialog class="peak-drawer start" id="drawer-start"><article id="drawer-start-panel"><p>Start</p></article></dialog>
+      <dialog class="peak-drawer" dir="rtl" id="drawer-rtl"><article id="drawer-rtl-panel"><p>RTL</p></article></dialog>
+      <dialog class="peak-wide" id="wide"><article id="wide-panel"><p>Wide</p></article></dialog>
+      <dialog class="peak-full" id="full"><article id="full-panel"><p>Full</p></article></dialog>
+      <dialog class="peak-drawer" id="drawer-cb" closedby="any"><article id="drawer-cb-panel"><p>Drawer, closedby</p></article></dialog>
+      <dialog class="peak-drawer start" id="drawer-start-cb" closedby="any"><article id="drawer-start-cb-panel"><p>Start, closedby</p></article></dialog>
+      <dialog class="peak-wide" id="wide-cb" closedby="any"><article id="wide-cb-panel"><p>Wide, closedby</p></article></dialog>
+      <dialog class="peak-full" id="full-cb" closedby="any"><article id="full-cb-panel"><p>Full, closedby</p></article></dialog>
+      <div class="peak-toast success" popover="manual" role="status" id="toast">Saved. <button type="button" popovertarget="toast" popovertargetaction="hide">Close</button></div>
+
+      <dl class="peak-stats" id="stats">
+        <div><dt id="stat-label">Downloads</dt><dd id="stat-value">1,284</dd></div>
+        <div><dt>Rating</dt><dd>4.9</dd></div>
+        <div><dt>Stacks</dt><dd id="stat-3">23</dd></div>
+      </dl>
+      <ol class="peak-steps" id="steps"><li id="step-1">Download</li><li aria-current="step" id="step-2">Install</li><li id="step-3">Activate</li></ol>
+      <p class="peak-avatar-group" id="avatars"><span class="peak-avatar" role="img" aria-label="Ada Lovelace" id="avatar-1">AL</span><span class="peak-avatar" role="img" aria-label="Grace Hopper" id="avatar-2">GH</span></p>
+
+      <nav class="peak-pagination" aria-label="Pages" id="pagination">
+        <ul>
+          <li><a href="#" rel="prev" id="page-prev">Previous</a></li>
+          <li><a href="#" id="page-1">1</a></li>
+          <li><a aria-current="page" id="page-2">2</a></li>
+          <li><span aria-disabled="true" id="page-gap">…</span></li>
+          <li><a href="#" id="page-9">9</a></li>
+        </ul>
+      </nav>
+
+      <div class="peak-switcher" id="switcher"><div id="sw-1">One</div><div id="sw-2">Two</div><div id="sw-3">Three</div></div>
+      <div class="peak-switcher" id="switcher-5"><div id="sw5-1">1</div><div id="sw5-2">2</div><div>3</div><div>4</div><div>5</div></div>
+
+      <div class="peak-grid" style="--peak-cols: 1">
+        <article class="peak-card horizontal" id="h-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23888'/%3E%3C/svg%3E" alt="" id="h-img" /><h3 id="h-title">Horizontal</h3><p>Text next to the image when the card is wide enough.</p></article>
+      </div>
+      <div class="peak-grid" style="--peak-cols: 3; --peak-grid-min: 10rem">
+        <article class="peak-card horizontal" id="h-card-narrow"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23888'/%3E%3C/svg%3E" alt="" id="h-img-narrow" /><h3 id="h-title-narrow">Narrow</h3><p>Stacked.</p></article><div>b</div><div>c</div>
+      </div>
+
+      <div class="out"><div class="stacks_in stack_stack in peak-switcher" id="s-switcher"><div class="out"><div class="stacks_in text_stack" id="s-sw-1"><p>a</p></div></div><div class="out"><div class="stacks_in text_stack" id="s-sw-2"><p>b</p></div></div></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-grid" id="s-grid"><div class="out"><div class="stacks_in text_stack"><p>a</p></div></div><div class="out"><div class="stacks_in text_stack"><p>b</p></div></div></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-with-sidebar sticky" id="s-sidebar"><div class="out"><div class="stacks_in stack_stack in peak-sidebar" id="s-aside"><p>Aside</p></div></div><div class="out"><div class="stacks_in text_stack" id="s-content"><p>Content that is long enough to fill the remaining width of the layout.</p></div></div></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-media" id="s-media"><div class="out"><div class="stacks_in html_stack"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='%23888'/%3E%3C/svg%3E" width="80" height="80" alt="" /></div></div><div class="out"><div class="stacks_in text_stack"><p>Text</p></div></div></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-callout warning" id="s-callout"><div class="out"><div class="stacks_in text_stack"><p>Callout stack</p></div></div></div></div>
+    </main>
+  </body>
+</html>

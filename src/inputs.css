@@ -1,0 +1,223 @@
+/*
+ * Peak inputs: the --peak-* scalars a slider or picker sets (docs/PLAN.md §1.2).
+ * Generated from tokens.json by scripts/tokens.mjs. Edit tokens.json, then run `npm run tokens`.
+ *
+ * Kept out of tokens.css so the scoped build can leave this file unscoped: defaults live on the
+ * document root in both builds, so `:root { --peak-hue: 30 }` works the same way everywhere and
+ * only --peak-* names are set outside the scope.
+ *
+ * Unitless numbers and times with a default are registered, so an invalid slider value falls back
+ * to the initial value instead of invalidating every color derived from it.
+ *
+ * Lengths are NOT registered: an @property initial-value must be computationally independent, so
+ * `1rem` is rejected, and a registered length computes to px where it's declared. On :root that
+ * freezes `rem` at the browser default and stops spacing from following the fluid root font size.
+ * Unregistered lengths stay token streams and resolve where they're used, like --pico-spacing does.
+ */
+
+@property --peak-hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 250;
+}
+
+@property --peak-chroma {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.16;
+}
+
+@property --peak-neutral-chroma {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.012;
+}
+
+@property --peak-ink-chroma {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.012;
+}
+
+@property --peak-secondary-chroma {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.05;
+}
+
+@property --peak-accent-hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 40;
+}
+
+@property --peak-accent-chroma {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.18;
+}
+
+@property --peak-success-hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 150;
+}
+
+@property --peak-warning-hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 80;
+}
+
+@property --peak-danger-hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 27;
+}
+
+@property --peak-info-hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 235;
+}
+
+@property --peak-status-chroma {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.15;
+}
+
+@property --peak-dark-fills {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --peak-type-ratio {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1.15;
+}
+
+@property --peak-line-height {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1.5;
+}
+
+@property --peak-heading-line-height {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1.2;
+}
+
+@property --peak-font-weight {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 400;
+}
+
+@property --peak-heading-font-weight {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 700;
+}
+
+@property --peak-density {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --peak-duration {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 200ms;
+}
+
+/*
+ * Unregistered inputs. These have no default here and are read with a var() fallback, so leaving
+ * them unset keeps a derived default (and, in the scoped build, a default that can refer to
+ * Blades variables that only exist inside the scope):
+ *   --peak-brand                Picker path: takes hue and chroma from any color and overrides the
+ *                               two above. Lightness is still set per scheme
+ *   --peak-neutral-hue          Hue of the neutral tint (surfaces, text, borders, contrast); unset
+ *                               follows the brand hue
+ *   --peak-neutral-hue-dark     Hue of the dark scheme's surfaces and borders, e.g. warm paper in
+ *                               light mode and a cool night in dark mode; unset follows the neutral
+ *                               hue
+ *   --peak-ink-hue              Hue of text, headings, muted text and the contrast color; unset
+ *                               follows the neutral ramp
+ *   --peak-secondary-hue        Makes secondary a color of its own; unset, secondary is the neutral
+ *                               ramp tinted four times as strongly
+ *   --peak-accent-color         Picker path for the accent, like `--peak-brand`: hue and chroma come
+ *                               from the color (chroma capped at 0.25), lightness is set per use
+ *   --peak-bg-light             Exact light-scheme color for `--peak-bg`, the page background;
+ *                               outside the contrast guarantee. Unset: derived
+ *   --peak-bg-dark              Exact dark-scheme color for `--peak-bg`, the page background;
+ *                               outside the contrast guarantee. Unset: derived
+ *   --peak-surface-light        Exact light-scheme color for `--peak-surface`: cards, inputs, menus;
+ *                               outside the contrast guarantee. Unset: derived
+ *   --peak-surface-dark         Exact dark-scheme color for `--peak-surface`: cards, inputs, menus;
+ *                               outside the contrast guarantee. Unset: derived
+ *   --peak-text-light           Exact light-scheme color for `--peak-text`, body text; outside the
+ *                               contrast guarantee. Unset: derived
+ *   --peak-text-dark            Exact dark-scheme color for `--peak-text`, body text; outside the
+ *                               contrast guarantee. Unset: derived
+ *   --peak-heading-light        Exact light-scheme color for `--peak-heading` and every heading
+ *                               level; outside the contrast guarantee. Unset: derived
+ *   --peak-heading-dark         Exact dark-scheme color for `--peak-heading` and every heading
+ *                               level; outside the contrast guarantee. Unset: derived
+ *   --peak-muted-light          Exact light-scheme color for `--peak-muted`: captions, placeholders,
+ *                               hints; outside the contrast guarantee. Unset: derived
+ *   --peak-muted-dark           Exact dark-scheme color for `--peak-muted`: captions, placeholders,
+ *                               hints; outside the contrast guarantee. Unset: derived
+ *   --peak-border-light         Exact light-scheme color for `--peak-border`: rules, card and table
+ *                               borders; outside the contrast guarantee. Unset: derived
+ *   --peak-border-dark          Exact dark-scheme color for `--peak-border`: rules, card and table
+ *                               borders; outside the contrast guarantee. Unset: derived
+ *   --peak-secondary-fill-light Exact light-scheme color for `--peak-secondary-fill`: secondary
+ *                               buttons; outside the contrast guarantee. Unset: derived
+ *   --peak-secondary-fill-dark  Exact dark-scheme color for `--peak-secondary-fill`: secondary
+ *                               buttons; outside the contrast guarantee. Unset: derived
+ *   --peak-font-family          Body font stack; unset uses Blades' system stack
+ *   --peak-font-family-heading  Unset uses `--peak-font-family`
+ *   --peak-font-family-mono     Font stack for code, kbd, pre and samp; unset uses Blades' monospace
+ *                               stack
+ *   --peak-display-weight       Weight of `h1` and `.peak-display`; unset follows
+ *                               `--peak-heading-font-weight`
+ *   --peak-subheading-font-weight Weight of `h4`–`h6`; unset follows `--peak-heading-font-weight`
+ *   --peak-button-font-weight   Weight of buttons; unset follows the body weight
+ *   --peak-code-max-height      Maximum height of `pre`; taller blocks scroll. Unset: no limit
+ *   --peak-section-spacing      Space after each `section`; unset follows `--peak-spacing`
+ */
+:where(:root, :host) {
+  --peak-logo-size: 2rem;
+  --peak-font-size-min: 1rem;
+  --peak-font-size-max: 1.3125rem;
+  --peak-heading-tracking: 0em;
+  --peak-display-size-min: 2.25rem;
+  --peak-display-size-max: 3.5rem;
+  --peak-font-smoothing: auto;
+  --peak-spacing: 1rem;
+  --peak-radius: 0.375rem;
+  --peak-border-width: 0.0625rem;
+  --peak-outline-width: 0.125rem;
+  --peak-container-sm: 510px;
+  --peak-container-md: 700px;
+  --peak-container-lg: 950px;
+  --peak-container-xl: 1200px;
+  --peak-container-2xl: 1450px;
+  --peak-container-max: 1450px;
+  --peak-measure: 65ch;
+  --peak-grid-min: 15rem;
+  --peak-sidebar-width: 16rem;
+  --peak-easing: ease-in-out;
+}
+
+/* Blades' !important rule already zeroes transitions; this keeps JS that reads the token in step */
+@media (prefers-reduced-motion: reduce) {
+  :where(:root, :host) {
+    --peak-duration: 0s;
+  }
+}

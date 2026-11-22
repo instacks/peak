@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peak token fixture</title>
+    <link rel="stylesheet" href="../../dist/peak.css" />
+  </head>
+  <body>
+    <main class="container">
+      <p id="root-text">Root text</p>
+      <button id="root-button">Root button</button>
+      <a id="root-link" href="#">Root link</a>
+      <article id="root-card">Card</article>
+
+      <section id="nested-dark" data-theme="dark">
+        <p id="nested-dark-text">Nested dark</p>
+        <button id="nested-dark-button">Nested dark button</button>
+      </section>
+
+      <section id="nested-light" data-theme="light">
+        <p id="nested-light-text">Nested light</p>
+      </section>
+
+      <section id="author-scheme" style="color-scheme: dark">
+        <p id="author-scheme-text">Author color-scheme: dark</p>
+      </section>
+
+      <div id="scope-hue" data-peak-scope style="--peak-hue: 30">
+        <button id="scope-hue-button">Hue 30</button>
+        <details><summary id="scope-hue-summary">Accordion</summary><p>x</p></details>
+      </div>
+
+      <div id="scope-brand" data-peak-scope style="--peak-brand: #e11d48">
+        <button id="scope-brand-button">Brand picker</button>
+      </div>
+
+      <div id="scope-neutral" data-peak-scope style="--peak-neutral-hue: 90; --peak-neutral-chroma: 0.03">
+        <p id="scope-neutral-text">Warm neutrals</p>
+        <button id="scope-neutral-secondary" class="secondary">Neutral secondary</button>
+      </div>
+
+      <div id="scope-secondary" data-peak-scope style="--peak-secondary-hue: 30; --peak-secondary-chroma: 0.15">
+        <button id="scope-secondary-button" class="secondary">Own secondary</button>
+      </div>
+
+      <div id="scope-fills" data-peak-scope style="--peak-dark-fills: 1">
+        <button id="scope-fills-button">Deep fill</button>
+        <button id="scope-fills-secondary" class="secondary">Deep secondary</button>
+        <a id="scope-fills-link" href="#">Link</a>
+      </div>
+
+      <p><code id="root-code">code</code></p>
+      <div data-peak-scope style="--peak-font-family-mono: Courier, monospace">
+        <code id="scope-mono-code">code</code>
+      </div>
+
+      <div id="scope-spacing" data-peak-scope style="--peak-spacing: 2rem; --peak-radius: 0">
+        <article id="scope-spacing-card">Card</article>
+      </div>
+
+      <div id="compact" data-compact>
+        <button id="compact-button">Compact</button>
+      </div>
+
+      <h1 id="h1">H1</h1>
+      <h2 id="h2">H2</h2>
+      <h3 id="h3">H3</h3>
+      <h4 id="h4">H4</h4>
+      <h5 id="h5">H5</h5>
+      <h6 id="h6">H6</h6>
+    </main>
+  </body>
+</html>

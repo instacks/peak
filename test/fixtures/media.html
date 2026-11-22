@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peak prose, anchors and media preferences</title>
+    <link rel="stylesheet" href="../../dist/peak.css" />
+  </head>
+  <body class="container">
+    <header class="site-header nav-sticky" id="header"><nav class="site-nav"><ul><li><a class="site-title" href="#">Site</a></li></ul></nav></header>
+    <main class="site-main">
+      <article class="peak-prose" id="prose">
+        <h2 id="setup">Setup <a class="peak-anchor" href="#setup" aria-label="Link to this section" id="anchor">#</a></h2>
+        <p id="para">Text with an <a href="https://example.com/docs" id="external">external link</a> and an <a href="#setup" id="internal">internal one</a>.</p>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2000' height='200'/%3E" alt="" id="wide-img" />
+        <table id="wide-table"><tr><td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td><td>bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</td><td>cccccccccccccccccccccccccccccc</td></tr></table>
+        <p class="peak-text-muted" id="muted">Muted</p>
+      </article>
+      <pre id="code"><code>const veryLongLine = "this line is much wider than a phone screen, so the code block scrolls sideways";
+
+
+</code></pre>
+      <article class="peak-card" id="card"><p>Card</p></article>
+      <p><span class="peak-badge" id="badge">Badge</span> <button id="button">Button</button></p>
+      <nav class="peak-pagination" aria-label="Pages"><ul><li><a href="#">1</a></li><li><a aria-current="page" id="current-page">2</a></li></ul></nav>
+      <div style="height: 2000px"></div>
+    </main>
+  </body>
+</html>

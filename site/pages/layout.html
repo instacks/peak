@@ -1,0 +1,108 @@
+---
+title: Page structure
+group: Layout
+order: 1
+description: Containers, sections, full-width bands and heroes. The building blocks of a page, before any grid.
+---
+
+<h2>Container</h2>
+<p>
+  <code>.container</code> centers content at a fixed width per breakpoint;
+  <code>.container-fluid</code> spans the full width with side padding. Peak makes the widths
+  inputs:
+</p>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Viewport</th><th scope="col">Input</th><th scope="col">Default</th></tr></thead>
+    <tbody>
+      <tr><td>&lt; 576px</td><td colspan="2">Full width with padding</td></tr>
+      <tr><td>≥ 576px</td><td><code>--peak-container-sm</code></td><td><code>510px</code></td></tr>
+      <tr><td>≥ 768px</td><td><code>--peak-container-md</code></td><td><code>700px</code></td></tr>
+      <tr><td>≥ 1024px</td><td><code>--peak-container-lg</code></td><td><code>950px</code></td></tr>
+      <tr><td>≥ 1280px</td><td><code>--peak-container-xl</code></td><td><code>1200px</code></td></tr>
+      <tr><td>≥ 1536px</td><td><code>--peak-container-2xl</code></td><td><code>1450px</code></td></tr>
+      <tr><td>any</td><td><code>--peak-container-max</code></td><td><code>1450px</code>, caps every step</td></tr>
+    </tbody>
+  </table>
+</div>
+<peak-code lang="html">
+  <header class="container">…</header>
+  <main class="container">…</main>
+  <footer class="container">…</footer>
+</peak-code>
+
+<h2>Sections</h2>
+<p>
+  Every <code>&lt;section&gt;</code> gets space below it: <code>--peak-section-spacing</code> when set,
+  otherwise Blades' block spacing. <code>.peak-section</code> does the same for elements that can't be
+  a <code>&lt;section&gt;</code>.
+</p>
+<peak-code lang="css">
+  :root {
+    --peak-section-spacing: 5rem;
+  }
+</peak-code>
+
+<h2>Band</h2>
+<p>
+  <code>.peak-band</code> is a section whose background runs to the edges of the viewport while its
+  content stays in the container. No <code>100vw</code> tricks: no horizontal scrollbar, nothing to
+  flip in right-to-left pages. The default background is the sunken surface.
+</p>
+<peak-example>
+  <section class="peak-band">
+    <h3>A sunken band</h3>
+    <p>The background reaches the viewport edges.</p>
+  </section>
+</peak-example>
+<p>Variants:</p>
+<ul>
+  <li><code>.surface</code>: the surface color (white in light mode).</li>
+  <li><code>.primary</code>: the primary fill, with light text.</li>
+  <li><code>.contrast</code>: the contrast color, with inverted text.</li>
+  <li><code>[data-theme="dark"]</code> (or light): the page background of that scheme, with everything inside in that scheme.</li>
+</ul>
+<peak-example>
+  <section class="peak-band primary">
+    <h3 style="color: inherit">Primary band</h3>
+    <p>Text on the primary fill.</p>
+  </section>
+  <section class="peak-band" data-theme="dark">
+    <h3>A dark band</h3>
+    <p>Everything inside uses the dark scheme. <a href="#band">A link</a>.</p>
+    <button>Button</button>
+  </section>
+</peak-example>
+<p>Without a container around it, a band is as wide as its parent; its padding is <code>--peak-section-spacing</code>.</p>
+
+<h2>Hero</h2>
+<p>
+  <code>.peak-hero</code>: generous space above and below, at most about two lines of h1 wide.
+  <code>.center</code> centers it, its lead and any cluster of buttons inside. Combine it with
+  <code>.peak-display</code>, an eyebrow and <code>.peak-lead</code>.
+</p>
+<peak-example>
+  <section class="peak-hero center">
+    <hgroup>
+      <p>Version 2</p>
+      <h1 class="peak-display">Build pages that peak</h1>
+    </hgroup>
+    <p class="peak-lead">A centered hero with an eyebrow, a display headline, a lead paragraph and actions.</p>
+    <div class="peak-cluster">
+      <a href="#hero" role="button">Get started</a>
+      <a href="#hero" role="button" class="secondary outline">Learn more</a>
+    </div>
+  </section>
+</peak-example>
+<p>Put a hero in a band for a full-width colored header:</p>
+<peak-code lang="html">
+  <section class="peak-band">
+    <section class="peak-hero">…</section>
+  </section>
+</peak-code>
+
+<h2>Page chrome</h2>
+<p>
+  Header, navigation, sidebar and footer have their own classes (<code>.site-header</code>,
+  <code>.site-main</code>, <code>.site-footer</code>…); see <a href="navigation.html">Navigation</a>.
+</p>

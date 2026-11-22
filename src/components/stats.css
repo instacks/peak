@@ -1,0 +1,37 @@
+/*
+ * Stats (docs: site/pages/data.html): big numbers with labels, in as many columns as fit.
+ *   <dl class="peak-stats">
+ *     <div><dt>Downloads</dt><dd>1,284</dd></div>
+ *   </dl>
+ * The label comes first in the markup (dt before dd), the number first on screen.
+ */
+.peak-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+  gap: var(--peak-gap, var(--pico-spacing));
+  margin-block: 0 var(--pico-typography-spacing-vertical);
+}
+
+.peak-stats > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.peak-stats dt {
+  order: 1;
+  margin: 0;
+  color: var(--peak-muted);
+  font-size: 0.875em;
+  font-weight: var(--pico-font-weight);
+}
+
+.peak-stats dd {
+  margin: 0;
+  color: var(--pico-h2-color);
+  font-family: var(--peak-font-family-heading, var(--peak-font-family, var(--pico-font-family-sans-serif)));
+  font-size: var(--peak-h2);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--peak-heading-font-weight);
+  line-height: 1.15;
+  letter-spacing: var(--peak-heading-tracking);
+}

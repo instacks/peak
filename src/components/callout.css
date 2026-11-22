@@ -1,0 +1,66 @@
+/*
+ * Callout (docs: site/pages/callouts.html): a tinted note with a colored edge.
+ *   <aside class="peak-callout warning"><strong>Heads up</strong><p>…</p></aside>
+ * Variants as the badge: default (primary), .secondary, .accent, .success, .warning, .danger,
+ * .info. A first strong or heading is the title, in the edge color. Text and title colors are the
+ * contrast-tested pairs on each tint (test/contrast.test.mjs).
+ */
+.peak-callout {
+  --_peak-callout-edge: var(--peak-primary);
+  --_peak-callout-title: var(--peak-primary-hover);
+  --_peak-callout-bg: var(--peak-primary-tint);
+  margin-block: 0 var(--pico-typography-spacing-vertical);
+  padding: var(--pico-spacing) calc(var(--pico-spacing) * 1.25);
+  border-inline-start: 0.25rem solid var(--_peak-callout-edge);
+  border-radius: var(--pico-border-radius);
+  background-color: var(--_peak-callout-bg);
+  color: var(--peak-text);
+}
+
+.peak-callout > :first-child:is(strong, b, h1, h2, h3, h4, h5, h6) {
+  display: block;
+  margin-block: 0 0.25rem;
+  color: var(--_peak-callout-title);
+  font-size: 1em;
+}
+
+.peak-callout > :last-child {
+  margin-block-end: 0;
+}
+
+.peak-callout.secondary {
+  --_peak-callout-edge: var(--peak-secondary);
+  --_peak-callout-title: var(--peak-secondary-hover);
+  --_peak-callout-bg: var(--peak-secondary-tint);
+}
+
+.peak-callout.accent {
+  --_peak-callout-edge: var(--peak-accent-fill);
+  --_peak-callout-title: var(--peak-accent);
+  --_peak-callout-bg: var(--peak-accent-subtle);
+}
+
+.peak-callout.success {
+  --_peak-callout-edge: var(--peak-success);
+  --_peak-callout-title: var(--peak-success);
+  --_peak-callout-bg: var(--peak-success-subtle);
+}
+
+/* Warning isn't a text color: the title keeps the page text */
+.peak-callout.warning {
+  --_peak-callout-edge: var(--peak-warning);
+  --_peak-callout-title: var(--peak-text);
+  --_peak-callout-bg: var(--peak-warning-subtle);
+}
+
+.peak-callout.danger {
+  --_peak-callout-edge: var(--peak-danger);
+  --_peak-callout-title: var(--peak-danger);
+  --_peak-callout-bg: var(--peak-danger-subtle);
+}
+
+.peak-callout.info {
+  --_peak-callout-edge: var(--peak-info);
+  --_peak-callout-title: var(--peak-info);
+  --_peak-callout-bg: var(--peak-info-subtle);
+}

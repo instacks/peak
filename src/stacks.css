@@ -1,0 +1,92 @@
+/*
+ * Peak's layout classes on Stacks container stacks (docs: site/pages/scoped.html).
+ *
+ * Stacks wraps every stack in div.out > div.stacks_in and puts the class from the class field on
+ * the inner div. Its site CSS styles that div, unlayered:
+ *   .stacks_in { border: 0; display: block; margin: 0; overflow: hidden; padding: 0; position: relative }
+ * Unlayered declarations beat every Peak layer, so a Peak class there would lose its display,
+ * margins and padding, and overflow: hidden would clip card shadows, the hover lift and focus
+ * rings. A layered !important beats unlayered normal declarations; it's used only on these
+ * .stacks_in combinations, for the properties Stacks sets.
+ */
+.stacks_in.peak-grid-auto {
+  display: grid !important;
+}
+
+.stacks_in.peak-cluster {
+  display: flex !important;
+}
+
+.stacks_in.peak-section {
+  margin-block-end: var(--peak-section-spacing, var(--pico-block-spacing-vertical)) !important;
+}
+
+.stacks_in.peak-card {
+  margin-block-end: var(--pico-block-spacing-vertical) !important;
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal) !important;
+  overflow: visible !important;
+}
+
+.stacks_in.peak-band {
+  padding-block: var(--peak-section-spacing, calc(var(--pico-block-spacing-vertical) * 2)) !important;
+}
+
+.stacks_in.peak-hero {
+  padding-block: calc(var(--peak-spacing) * 4) calc(var(--peak-spacing) * 2.5) !important;
+}
+
+/* Items of a Peak layout: nothing they draw outside their box gets clipped */
+.stacks_in:is(.peak-grid-auto, .peak-cluster),
+.stacks_in:is(.peak-grid-auto, .peak-cluster) > .out > .stacks_in {
+  overflow: visible !important;
+}
+
+/* In a grid, each item's wrappers stretch to the row, so a card in it can too */
+.stacks_in.peak-grid-auto > .out {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.stacks_in.peak-grid-auto > .out > .stacks_in {
+  display: flex !important;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* A card stack in a grid: no margin (Stacks' margin: 0 is overridden on .peak-card above) */
+.stacks_in.peak-grid-auto > .out > .stacks_in.peak-card {
+  margin-block: 0 !important;
+}
+
+.stacks_in.peak-grid {
+  display: grid !important;
+}
+
+.stacks_in:is(.peak-with-sidebar, .peak-media) {
+  display: flex !important;
+}
+
+/* overflow: hidden on an ancestor would also stop a sticky sidebar from sticking */
+.stacks_in:is(.peak-grid, .peak-with-sidebar, .peak-media),
+.stacks_in:is(.peak-grid, .peak-with-sidebar, .peak-media) > .out > .stacks_in {
+  overflow: visible !important;
+}
+
+.stacks_in.peak-media {
+  margin-block-end: var(--pico-typography-spacing-vertical) !important;
+}
+
+.stacks_in.peak-callout {
+  margin-block-end: var(--pico-typography-spacing-vertical) !important;
+  padding: var(--pico-spacing) calc(var(--pico-spacing) * 1.25) !important;
+}
+
+.stacks_in.peak-switcher {
+  display: flex !important;
+}
+
+.stacks_in.peak-switcher,
+.stacks_in.peak-switcher > .out > .stacks_in {
+  overflow: visible !important;
+}

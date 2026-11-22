@@ -1,0 +1,99 @@
+---
+title: Colors
+group: Foundations
+order: 2
+description: One hue makes the palette. Peak builds every color in OKLCH with fixed lightness per scheme, so contrast holds for any hue and saturation.
+---
+
+<h2>How the palette is built</h2>
+<p>
+  OKLCH describes a color by lightness, chroma (saturation) and hue. Peak keeps the
+  <em>lightness</em> of each role fixed per color scheme and lets you choose hue and chroma. Because
+  lightness decides contrast, every text and background pair stays readable for any hue, chroma,
+  neutral tint and status hue in the tested ranges (WCAG 2: 4.5:1 for text, 3:1 for large text and
+  controls). The test suite sweeps the full range of every color input.
+</p>
+<p>
+  The swatches on this page are live: change the hue in the <a href="customize.html">customizer</a>
+  or switch the scheme in the header, and they follow.
+</p>
+
+<h2>Brand colors</h2>
+<p>
+  <code>--peak-hue</code> and <code>--peak-chroma</code> set the primary color: links, buttons, focus
+  rings, the current item in navigation. <code>--peak-brand</code> takes any color instead and uses
+  its hue and chroma (lightness is still set per scheme).
+</p>
+<peak-swatches names="--peak-primary --peak-primary-hover --peak-primary-fill --peak-primary-tint --peak-primary-subtle --peak-primary-focus"></peak-swatches>
+<peak-code lang="css">
+  :root {
+    --peak-brand: #e4572e;   /* or --peak-hue: 30; --peak-chroma: 0.17; */
+  }
+</peak-code>
+
+<h3>Secondary and contrast</h3>
+<p>
+  Secondary is the neutral ramp, tinted four times as strongly, unless
+  <code>--peak-secondary-hue</code> makes it a color of its own. Contrast is the near-black (near-white
+  in dark mode) of the text ramp.
+</p>
+<peak-swatches names="--peak-secondary --peak-secondary-hover --peak-secondary-fill --peak-secondary-tint --peak-contrast --peak-contrast-hover"></peak-swatches>
+
+<h3>Accent</h3>
+<p>
+  A second hue for highlights used sparingly: badges, icons, a word in a headline.
+  <code>--peak-accent-hue</code> and <code>--peak-accent-chroma</code>, or a picked color with
+  <code>--peak-accent-color</code>.
+</p>
+<peak-swatches names="--peak-accent --peak-accent-hover --peak-accent-fill --peak-accent-subtle"></peak-swatches>
+<peak-example>
+  <p>Stacks that <strong class="peak-text-accent">just work</strong> <span class="peak-badge accent">New</span></p>
+</peak-example>
+
+<h2>Neutrals</h2>
+<p>
+  Surfaces, text and borders come from a neutral ramp. <code>--peak-neutral-chroma</code> tints it
+  toward the brand hue (0 is pure gray); <code>--peak-neutral-hue</code> tints it toward a hue of its
+  own, and <code>--peak-neutral-hue-dark</code> uses another one in dark mode (warm paper by day, a
+  cool night). <code>--peak-ink-hue</code> tints text separately from surfaces.
+</p>
+<peak-swatches names="--peak-bg --peak-surface --peak-surface-raised --peak-surface-sunken --peak-border --peak-border-strong --peak-muted --peak-text --peak-heading"></peak-swatches>
+
+<h2>Status colors</h2>
+<p>
+  Four hues share one chroma (<code>--peak-status-chroma</code>). Success colors valid fields and
+  <code>&lt;ins&gt;</code>, danger invalid fields and <code>&lt;del&gt;</code>, warning
+  <code>&lt;mark&gt;</code>. Warning is a fill color only: it is too light for text on a light page,
+  so there is no <code>.peak-text-warning</code>.
+</p>
+<peak-swatches names="--peak-success --peak-success-subtle --peak-warning --peak-warning-subtle --peak-danger --peak-danger-subtle --peak-info --peak-info-subtle"></peak-swatches>
+<peak-example>
+  <p><ins>Inserted</ins>, <del>deleted</del> and <mark>marked</mark> text.</p>
+  <input type="text" aria-invalid="false" value="Valid" aria-label="Valid">
+  <input type="text" aria-invalid="true" value="Invalid" aria-label="Invalid">
+</peak-example>
+
+<h2>Text on a fill</h2>
+<p>
+  Each fill has an <code>--peak-on-*</code> token for text on it: <code>--peak-on-primary</code>,
+  <code>--peak-on-secondary</code>, <code>--peak-on-contrast</code>, <code>--peak-on-accent</code> and
+  <code>--peak-on-success</code>, <code>-warning</code>, <code>-danger</code>, <code>-info</code>.
+</p>
+<peak-example>
+  <div class="peak-cluster">
+    <span class="peak-badge solid">primary</span>
+    <span class="peak-badge secondary solid">secondary</span>
+    <span class="peak-badge contrast solid">contrast</span>
+    <span class="peak-badge accent solid">accent</span>
+    <span class="peak-badge success solid">success</span>
+    <span class="peak-badge warning solid">warning</span>
+    <span class="peak-badge danger solid">danger</span>
+    <span class="peak-badge info solid">info</span>
+  </div>
+</peak-example>
+
+<h2>Higher contrast</h2>
+<p>
+  With the system setting "increase contrast" (<code>prefers-contrast: more</code>), muted text
+  and borders get stronger automatically. See <a href="accessibility.html">Accessibility</a>.
+</p>

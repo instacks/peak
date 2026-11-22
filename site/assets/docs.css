@@ -1,0 +1,508 @@
+/*
+ * Documentation chrome. Everything else on these pages is Peak (assets/peak.min.css). Unlayered,
+ * like any site's own CSS, so it wins over Peak; class-based (.docs-*), so the examples stay pure
+ * Peak.
+ */
+
+:root {
+  --docs-header-height: 3.75rem;
+  scroll-padding-block-start: calc(var(--docs-header-height) + 1rem);
+}
+
+body.docs {
+  margin: 0;
+}
+
+/* Header: sticky, full width, a rule below (Peak's data-nav-style="bordered") */
+.docs-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+  background-color: var(--peak-bg);
+}
+
+.docs-header .site-nav {
+  min-block-size: var(--docs-header-height);
+}
+
+.docs-header .site-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--peak-heading);
+  font-size: 1.125rem;
+}
+
+.docs-header .site-title img {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.docs-header li:has(> .site-title) {
+  display: flex;
+  align-items: center;
+}
+
+.docs-header .docs-header-link a {
+  font-size: 0.9375rem;
+}
+
+.docs-version {
+  margin-inline-start: 0.5rem;
+  color: var(--peak-muted);
+  font-size: 0.75rem;
+}
+
+.docs-menu-button {
+  padding: 0.25rem 0.625rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.docs-custom-theme {
+  font-size: 0.75rem;
+}
+
+@media (width < 768px) {
+  .docs-header-link,
+  .docs-version {
+    display: none;
+  }
+}
+
+@media (width >= 1024px) {
+  .docs-menu-button {
+    display: none;
+  }
+}
+
+/* Page layout: page list, content, table of contents */
+.docs-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 2rem;
+  max-inline-size: 92rem;
+  margin-inline: auto;
+}
+
+@media (width >= 1024px) {
+  .docs-layout {
+    grid-template-columns: 15rem minmax(0, 1fr);
+  }
+}
+
+@media (width >= 1280px) {
+  .docs-layout:has(> .docs-aside) {
+    grid-template-columns: 15rem minmax(0, 1fr) 11rem;
+  }
+}
+
+.docs-sidebar,
+.docs-aside {
+  display: none;
+}
+
+@media (width >= 1024px) {
+  .docs-sidebar {
+    display: block;
+  }
+}
+
+@media (width >= 1280px) {
+  .docs-aside {
+    display: block;
+  }
+}
+
+.docs-sidebar,
+.docs-aside > nav {
+  position: sticky;
+  inset-block-start: var(--docs-header-height);
+  max-block-size: calc(100dvh - var(--docs-header-height));
+  overflow-y: auto;
+  padding-block: 2rem;
+  overscroll-behavior: contain;
+}
+
+.docs-main {
+  min-inline-size: 0;
+  padding-block: 2rem 0;
+}
+
+.docs-main:focus {
+  outline: none;
+}
+
+.docs-layout:not(.is-wide) .docs-main > :not(.docs-example, .docs-code, .docs-table, .docs-pager, .peak-grid, .peak-grid-auto) {
+  max-inline-size: 48rem;
+}
+
+.docs-page-header {
+  margin-block-end: 2.5rem;
+}
+
+.docs-page-header hgroup {
+  margin-block-end: 0.75rem;
+}
+
+.docs-main > h2 {
+  margin-block-start: 3.5rem;
+  padding-block-start: 1.5rem;
+  border-block-start: var(--pico-border-width) solid var(--peak-border);
+}
+
+.docs-main > h3 {
+  margin-block-start: 2.25rem;
+}
+
+/* Page lists */
+.docs-nav-group {
+  margin-block: 1.5rem 0.375rem;
+  color: var(--peak-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.docs-nav > .docs-nav-group:first-child {
+  margin-block-start: 0;
+}
+
+.docs-nav a {
+  font-size: 0.875rem;
+}
+
+.docs-drawer > article {
+  --peak-drawer-width: 18rem;
+}
+
+.docs-drawer header {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.docs-drawer header button[rel="prev"] {
+  margin: 0;
+}
+
+/* On this page */
+.docs-toc p {
+  margin-block-end: 0.5rem;
+  color: var(--peak-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.docs-toc ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.docs-toc li {
+  display: block;
+  padding: 0.25rem 0;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+
+.docs-toc a {
+  margin: 0;
+  padding: 0;
+  color: var(--peak-muted);
+  text-decoration: none;
+}
+
+.docs-toc a:hover,
+.docs-toc a[aria-current="location"] {
+  color: var(--peak-primary);
+}
+
+/* Examples: a live preview with its source below */
+.docs-example {
+  margin-block: 1.5rem 2rem;
+  border: var(--pico-border-width) solid var(--peak-border);
+  border-radius: var(--pico-border-radius);
+}
+
+.docs-preview {
+  padding: clamp(1rem, 3vw, 2rem);
+  overflow-x: auto;
+  border-radius: var(--pico-border-radius) var(--pico-border-radius) 0 0;
+  background-color: var(--peak-bg);
+}
+
+.docs-preview::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.docs-preview > :last-child,
+.docs-preview > :last-child > :last-child {
+  margin-block-end: 0;
+}
+
+.docs-preview > :first-child {
+  margin-block-start: 0;
+}
+
+/* Tooltips and menus in a preview overflow it; nothing scrolls sideways there */
+.docs-preview.visible {
+  overflow: visible;
+}
+
+.docs-preview.sunken {
+  background-color: var(--peak-surface-sunken);
+}
+
+.docs-preview.flush {
+  padding: 1rem;
+}
+
+.docs-preview.tall {
+  min-block-size: 14rem;
+}
+
+.docs-example > .docs-code pre {
+  margin: 0;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+
+.docs-code {
+  position: relative;
+}
+
+.docs-main > .docs-code {
+  margin-block-end: 1.5rem;
+}
+
+.docs-code pre {
+  max-block-size: 32rem;
+  font-size: 0.8125rem;
+}
+
+.docs-copy {
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-end: 0.5rem;
+  z-index: 1;
+  margin: 0;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity var(--pico-transition);
+}
+
+.docs-code:is(:hover, :focus-within) .docs-copy,
+.docs-copy[data-copied] {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .docs-copy {
+    opacity: 1;
+  }
+}
+
+/* Syntax colors from Peak's text tokens, so they keep contrast in both schemes */
+.tok-t,
+.tok-sel {
+  color: var(--peak-primary);
+}
+
+.tok-a,
+.tok-p {
+  color: var(--peak-accent);
+}
+
+.tok-s {
+  color: var(--peak-success);
+}
+
+.tok-c {
+  color: var(--peak-muted);
+  font-style: italic;
+}
+
+/* Reference tables */
+.docs-table {
+  margin-block-end: 1.5rem;
+}
+
+.docs-table table {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.docs-table td:first-child,
+.docs-table th:first-child {
+  white-space: nowrap;
+}
+
+.docs-table td:first-child code {
+  overflow-wrap: normal;
+}
+
+/* Color swatches */
+.docs-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.docs-swatches li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  list-style: none;
+  font-size: 0.75rem;
+}
+
+.docs-swatch {
+  display: block;
+  block-size: 3rem;
+  border: var(--pico-border-width) solid var(--peak-border);
+  border-radius: var(--pico-border-radius);
+}
+
+/* Little demo boxes for layout examples */
+.docs-box {
+  padding: 0.75rem 1rem;
+  border: var(--pico-border-width) dashed var(--peak-border-strong);
+  border-radius: var(--pico-border-radius);
+  background-color: var(--peak-primary-subtle);
+  font-size: 0.875rem;
+}
+
+.docs-dir {
+  margin-block-end: 1rem;
+}
+
+/* Previous / next */
+.docs-pager {
+  margin-block: 4rem 0;
+}
+
+.docs-pager article {
+  margin: 0;
+}
+
+.docs-pager small {
+  display: block;
+  color: var(--peak-muted);
+}
+
+.docs-pager-next {
+  grid-column: -2;
+  text-align: end;
+}
+
+.docs-footer {
+  margin-block-start: 3rem;
+  padding-block: 2rem;
+  border-block-start: var(--pico-border-width) solid var(--peak-border);
+  color: var(--peak-muted);
+  font-size: 0.875rem;
+}
+
+/* Customizer */
+.docs-customize {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (width >= 1024px) {
+  .docs-customize {
+    grid-template-columns: 22rem minmax(0, 1fr);
+  }
+
+  .docs-customize-controls {
+    position: sticky;
+    inset-block-start: calc(var(--docs-header-height) + 1rem);
+    max-block-size: calc(100dvh - var(--docs-header-height) - 2rem);
+    overflow-y: auto;
+    padding-inline-end: 0.5rem;
+    overscroll-behavior: contain;
+  }
+}
+
+.docs-customizer details {
+  margin-block-end: 0.5rem;
+  padding-block-end: 0.5rem;
+}
+
+.docs-field {
+  margin-block-end: 1rem;
+}
+
+.docs-field > label {
+  margin-block-end: 0.125rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.docs-field > label.docs-toggle {
+  font-weight: var(--pico-font-weight);
+}
+
+.docs-field small {
+  display: block;
+  color: var(--peak-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.docs-field :is(select, input[type="color"]) {
+  margin-block-end: 0.25rem;
+}
+
+.docs-field input[type="color"] {
+  inline-size: 4rem;
+  block-size: 2.25rem;
+  padding: 0.125rem;
+}
+
+.docs-range {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.docs-range input {
+  flex: 1;
+  margin: 0;
+}
+
+.docs-range output {
+  min-inline-size: 4.5rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.docs-field.is-optional:not(:has(.docs-toggle input:checked)) > :is(label:not(.docs-toggle), .docs-range, select, input) {
+  opacity: 0.45;
+}
+
+.docs-customize-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: 1.5rem;
+}
+
+.docs-customize-actions > * {
+  margin: 0;
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peak scoped build fixture</title>
+    <link rel="stylesheet" href="../../dist/peak.scoped.css" />
+  </head>
+  <body>
+    <p id="outside-text">Outside the scope: a third-party stack.</p>
+    <button id="outside-button">Outside</button>
+
+    <div class="peak" id="scope">
+      <h1 id="h1">Inside the scope</h1>
+      <p id="inside-text">Peak styles apply here.</p>
+      <button id="inside-button">Inside</button>
+
+      <section data-theme="dark">
+        <p id="dark-text">Nested dark theme</p>
+      </section>
+
+      <div data-peak-scope style="--peak-hue: 30">
+        <button id="hue-button">Hue 30</button>
+      </div>
+
+      <div class="peak-ignore">
+        <button id="ignored-button">Ignored</button>
+        <p id="ignored-text">A third-party stack inside the scope</p>
+      </div>
+
+      <ul>
+        <li>
+          <button id="menu-trigger" popovertarget="menu">Menu</button>
+          <ul id="menu" popover>
+            <li><a href="#">Edit</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <dialog id="dialog" closedby="any">
+        <article><p>Scoped dialog</p></article>
+      </dialog>
+
+      <p style="--pico-tooltip-background-color: rgb(255 0 255); padding-top: 4rem">
+        <span id="tip" data-tooltip="Scoped tooltip" data-placement="bottom">Tooltip</span>
+      </p>
+    </div>
+  </body>
+</html>

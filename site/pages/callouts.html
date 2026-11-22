@@ -1,0 +1,74 @@
+---
+title: Callouts and toasts
+group: Components
+order: 3
+description: Tinted notes inside the content, and short messages in the corner of the screen.
+---
+
+<h2>Callouts</h2>
+<p>
+  <code>.peak-callout</code> is a tinted note with a colored edge. A first <code>&lt;strong&gt;</code>
+  or heading becomes its title. Colors as badges: default (primary), <code>.secondary</code>,
+  <code>.accent</code>, <code>.success</code>, <code>.warning</code>, <code>.danger</code>,
+  <code>.info</code>.
+</p>
+<peak-example>
+  <aside class="peak-callout">
+    <strong>Note</strong>
+    <p>The default callout uses the primary color.</p>
+  </aside>
+  <aside class="peak-callout info">
+    <strong>Info</strong>
+    <p>Peak needs no JavaScript for any component.</p>
+  </aside>
+  <aside class="peak-callout success">
+    <strong>Success</strong>
+    <p>Your theme was saved.</p>
+  </aside>
+  <aside class="peak-callout warning">
+    <strong>Heads up</strong>
+    <p>Exact colors are outside the contrast guarantee.</p>
+  </aside>
+  <aside class="peak-callout danger">
+    <strong>Danger</strong>
+    <p>Renaming an input is a breaking change.</p>
+  </aside>
+</peak-example>
+<peak-example>
+  <aside class="peak-callout secondary"><p>A callout without a title, in the secondary color.</p></aside>
+  <div class="peak-callout accent">
+    <h4>A heading as title</h4>
+    <p>Any heading works as the first child too.</p>
+  </div>
+</peak-example>
+<p>
+  Use <code>&lt;aside&gt;</code> for a note beside the main text, or a <code>&lt;div&gt;</code> with
+  <code>role="note"</code> or <code>role="alert"</code> when that describes it better.
+</p>
+
+<h2>Toasts</h2>
+<p>
+  <code>.peak-toast</code> is a popover in the bottom corner at the inline end. With
+  <code>popover="manual"</code> it stays until it's closed. A button with
+  <code>popovertarget</code> opens and closes it without script; it slides in and out.
+</p>
+<peak-example>
+  <button popovertarget="toast-saved" popovertargetaction="show">Show toast</button>
+  <div id="toast-saved" class="peak-toast success" popover="manual" role="status">
+    Theme saved.
+    <button class="secondary outline" popovertarget="toast-saved" popovertargetaction="hide">Close</button>
+  </div>
+</peak-example>
+<p>
+  Colors as callouts, shown as the start edge. Showing a toast after an action, or hiding it after a
+  delay, needs a line of script:
+</p>
+<peak-code lang="js">
+  const toast = document.getElementById("toast-saved");
+  toast.showPopover();
+  setTimeout(() => toast.hidePopover(), 4000);
+</peak-code>
+<p>
+  One toast at a time: a second one in the same corner covers the first. Keep
+  <code>role="status"</code> (or <code>role="alert"</code> for errors) so screen readers announce it.
+</p>

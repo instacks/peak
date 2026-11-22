@@ -1,0 +1,186 @@
+---
+title: Theming
+group: Foundations
+order: 1
+description: Peak's look comes from a small set of inputs. Set them for the page, for a section, or per color scheme; read the derived tokens in your own CSS.
+---
+
+<h2>Inputs and derived tokens</h2>
+<p>Peak has two kinds of custom properties:</p>
+<ul>
+  <li><strong>Inputs</strong> such as <code>--peak-hue</code>, <code>--peak-radius</code> or <code>--peak-type-ratio</code>. Single values you set. Each has a default and a tested range; see the <a href="tokens.html#inputs">input reference</a>.</li>
+  <li><strong>Derived tokens</strong> such as <code>--peak-primary</code>, <code>--peak-surface</code> or <code>--peak-h2</code>. Computed from the inputs, for both color schemes at once. Read them in your own CSS; don't set them. See <a href="tokens.html#derived-tokens">derived tokens</a>.</li>
+</ul>
+<p>
+  Peak also sets Blades' <code>--pico-*</code> variables from its tokens, so everything Blades draws
+  follows the inputs as well.
+</p>
+
+<h2>The whole page</h2>
+<peak-code lang="css">
+  :root {
+    --peak-hue: 160;
+    --peak-chroma: 0.12;
+    --peak-radius: 0.75rem;
+    --peak-font-family: Avenir, Montserrat, Corbel, sans-serif;
+  }
+</peak-code>
+<p>Put this in your own stylesheet after Peak's; unlayered CSS always wins over Peak's layers.</p>
+
+<h2>One section</h2>
+<p>
+  Inputs work on any element with <code>data-peak-scope</code> (or <code>data-theme</code>): Peak
+  recomputes its derived tokens there, so the section gets a palette of its own.
+</p>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
+    <article data-peak-scope style="--peak-hue: 250">
+      <h4>Hue 250</h4>
+      <p><a href="#one-section">A link</a> <span class="peak-badge">Badge</span></p>
+      <button>Button</button>
+    </article>
+    <article data-peak-scope style="--peak-hue: 30; --peak-radius: 1.25rem">
+      <h4>Hue 30</h4>
+      <p><a href="#one-section">A link</a> <span class="peak-badge">Badge</span></p>
+      <button>Button</button>
+    </article>
+    <article data-peak-scope style="--peak-hue: 150; --peak-chroma: 0.08; --peak-radius: 0">
+      <h4>Hue 150</h4>
+      <p><a href="#one-section">A link</a> <span class="peak-badge">Badge</span></p>
+      <button>Button</button>
+    </article>
+  </div>
+</peak-example>
+<p>
+  Without the attribute, a hue set on a plain element would only change tokens that read the
+  hue directly; the rest were already computed on <code>:root</code>.
+</p>
+
+<h2>Light and dark</h2>
+<p>
+  Every Peak color is a <code>light-dark()</code> pair, so the scheme decides which half is used.
+  By default the page follows the visitor's system setting (with
+  <code>&lt;meta name="color-scheme" content="light dark"&gt;</code>). Force a scheme with
+  <code>data-theme</code>, on <code>&lt;html&gt;</code> or on any section:
+</p>
+<peak-example preview-class="sunken">
+  <div class="peak-grid-auto" style="--peak-grid-min: 14rem">
+    <article data-theme="light">
+      <h4>data-theme="light"</h4>
+      <p>Always light. <a href="#light-and-dark">A link</a>.</p>
+      <button class="secondary">Button</button>
+    </article>
+    <article data-theme="dark">
+      <h4>data-theme="dark"</h4>
+      <p>Always dark. <a href="#light-and-dark">A link</a>.</p>
+      <button class="secondary">Button</button>
+    </article>
+  </div>
+</peak-example>
+
+<h3 id="scheme-switch">A light/dark switch</h3>
+<p>
+  A <code>&lt;select class="peak-scheme"&gt;</code> anywhere on the page switches it, with CSS only
+  (<code>:has()</code>). The header of these docs has one.
+</p>
+<peak-example>
+  <select class="peak-scheme" aria-label="Color scheme">
+    <option value="">Auto</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</peak-example>
+<p>
+  CSS can't remember the choice on the next page. That's the one job of Peak's only script,
+  <code>peak-scheme.js</code> (<code>@instacks/peak/scheme</code>): it saves the choice in
+  <code>localStorage</code>, sets <code>data-theme</code> on <code>&lt;html&gt;</code> before the
+  first paint, and keeps every switch on the page in sync. Load it in the <code>&lt;head&gt;</code>,
+  without <code>defer</code>:
+</p>
+<peak-code lang="html">
+  <script src="https://cdn.jsdelivr.net/npm/@instacks/peak/dist/peak-scheme.js"></script>
+</peak-code>
+
+<h3 id="dark-fills">Deep fills in dark mode</h3>
+<p>
+  In dark mode, primary and secondary buttons are light fills with dark text by default. Set
+  <code>--peak-dark-fills: 1</code> to keep the light scheme's deep fills with white text instead.
+</p>
+<peak-example preview-class="sunken">
+  <div class="peak-cluster">
+    <article data-theme="dark" class="peak-cluster">
+      <button>Default</button><button class="secondary">Default</button>
+    </article>
+    <article data-theme="dark" data-peak-scope style="--peak-dark-fills: 1" class="peak-cluster">
+      <button>Deep fills</button><button class="secondary">Deep fills</button>
+    </article>
+  </div>
+</peak-example>
+
+<h2>Exact colors</h2>
+<p>
+  The derived palette covers most designs. When a brand guide prescribes exact colors, set the
+  light and dark value of a surface or text color directly. Each pair replaces the derived color
+  in that scheme; unset ones stay derived.
+</p>
+<peak-code lang="css">
+  :root {
+    --peak-bg-light: #fafaf7;
+    --peak-bg-dark: #0e1113;
+    --peak-heading-light: #1b1f24;
+    --peak-heading-dark: #f4f1ea;
+  }
+</peak-code>
+<p>
+  Available for the page background, surfaces, text, headings, muted text, borders and the
+  secondary fill (see <a href="tokens.html#inputs-exact-colors">Exact colors</a>). These are outside
+  the contrast guarantee: check them yourself.
+</p>
+
+<h2>Reading tokens in your CSS</h2>
+<p>Use the derived tokens for your own components, and they follow every input and both schemes:</p>
+<peak-code lang="css">
+  .promo {
+    padding: var(--peak-space-l);
+    border-radius: var(--peak-radius);
+    background: var(--peak-accent-subtle);
+    color: var(--peak-text);
+    box-shadow: var(--peak-shadow);
+  }
+
+  .promo strong {
+    color: var(--peak-accent);
+  }
+
+  /* A lighter version of the brand color, still in both schemes */
+  .halo {
+    background: oklch(from var(--peak-primary) l c h / 0.15);
+  }
+</peak-code>
+
+<h2>Blades and Pico variables</h2>
+<p>
+  Peak writes Blades' <code>--pico-*</code> variables from its tokens on every theme root
+  (<code>:root</code>, <code>[data-theme]</code>, <code>[data-peak-scope]</code>). Setting a
+  <code>--pico-*</code> variable yourself still works and wins, but it won't follow the inputs or
+  the color scheme. Prefer the inputs, and use <code>--pico-*</code> only for what Peak has no input
+  for.
+</p>
+<peak-code lang="css">
+  /* Works, but fixed in both schemes */
+  :root {
+    --pico-form-element-spacing-vertical: 0.5rem;
+  }
+</peak-code>
+
+<h2>Compact mode</h2>
+<p>
+  Blades' <code>data-compact</code> attribute (on <code>&lt;html&gt;</code> or any element) gives denser
+  forms and a flatter card look. Peak leaves it as Blades draws it.
+</p>
+<peak-example>
+  <form data-compact>
+    <input type="text" placeholder="Compact input" aria-label="Compact input">
+    <button type="button">Compact button</button>
+  </form>
+</peak-example>

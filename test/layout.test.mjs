@@ -1,0 +1,225 @@
+// Layout patterns, cards and badges (src/layout.css, src/stacks.css, src/components/card.css,
+// src/components/badge.css), in both builds, in plain
+// HTML and in Stacks' wrapper markup with Stacks' own unlayered CSS.
+import { test, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { inflateSync } from "node:zlib";
+import { launch, fixtureUrl, colorHelpers, contrast } from "./helpers.mjs";
+
+let browser;
+before(async () => {
+  browser = await launch();
+});
+after(() => browser?.close());
+
+async function open(file, { width = 1280, colorScheme = "light", reducedMotion = "no-preference" } = {}) {
+  const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme, reducedMotion });
+  page.setDefaultTimeout(5000);
+  await page.goto(fixtureUrl("layout.html"));
+  await page.evaluate(async (file) => {
+    if (file.includes("scoped")) document.documentElement.classList.add("peak");
+    const link = document.querySelector("link[rel=stylesheet]");
+    if (link.getAttribute("href").endsWith(file)) return;
+    await new Promise((resolve) => {
+      link.onload = resolve;
+      link.href = `../../dist/${file}`;
+    });
+  }, file);
+  await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+  return page;
+}
+
+const rect = (page, id) =>
+  page.evaluate((id) => {
+    const r = document.getElementById(id).getBoundingClientRect();
+    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
+  }, id);
+const style = (page, id, prop) => page.evaluate(([id, prop]) => getComputedStyle(document.getElementById(id))[prop], [id, prop]);
+const columns = (page, id) => page.evaluate((id) => getComputedStyle(document.getElementById(id)).gridTemplateColumns.split(" ").length, id);
+const px = (v) => parseFloat(v);
+
+// One pixel of the rendered page, read from a PNG screenshot (8-bit RGB(A), one IDAT stream)
+async function pixel(page, x, y) {
+  const png = await page.screenshot({ clip: { x, y, width: 1, height: 1 } });
+  let i = 8;
+  let channels = 3;
+  const idat = [];
+  while (i < png.length) {
+    const len = png.readUInt32BE(i);
+    const type = png.toString("ascii", i + 4, i + 8);
+    if (type === "IHDR") channels = png[i + 8 + 9] === 6 ? 4 : 3;
+    if (type === "IDAT") idat.push(png.subarray(i + 8, i + 8 + len));
+    i += 12 + len;
+  }
+  const raw = inflateSync(Buffer.concat(idat));
+  return [...raw.subarray(1, 1 + channels)].slice(0, 3);
+}
+
+for (const file of ["peak.css", "peak.scoped.css"]) {
+  test(`${file}: auto grid fits columns to the room, per-grid minimum, one column on a phone`, async () => {
+    const wide = await open(file);
+    const main = await rect(wide, "main");
+    const rootSize = px(await wide.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    const gap = px(await style(wide, "grid", "columnGap"));
+    const expected = Math.floor((main.width + gap) / (15 * rootSize + gap));
+    assert.equal(await columns(wide, "grid"), Math.min(expected, 5), "15rem columns");
+    assert.equal(await columns(wide, "grid-wide"), Math.floor((main.width + gap) / (30 * rootSize + gap)), "--peak-gridmin: 30rem");
+    await wide.close();
+
+    const phone = await open(file, { width: 390 });
+    assert.equal(await columns(phone, "grid"), 1);
+    assert.equal(await columns(phone, "grid-wide"), 1, "a minimum wider than the container still fits");
+    assert.equal(await phone.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0, "no horizontal overflow");
+    await phone.close();
+  });
+
+  test(`${file}: cards in a grid share the row height, footers at the bottom, no margins`, async () => {
+    const page = await open(file);
+    const cards = await Promise.all([1, 2, 3].map((n) => rect(page, `card-${n}`)));
+    const footers = await Promise.all([1, 2, 3].map((n) => rect(page, `footer-${n}`)));
+    assert.ok(cards.every((c) => Math.abs(c.height - cards[1].height) < 0.5), `heights ${cards.map((c) => c.height)}`);
+    assert.ok(footers.every((f, i) => Math.abs(f.bottom - cards[i].bottom) < 0.5), "footers at the card bottom");
+    assert.equal(await style(page, "card-1", "marginBottom"), "0px");
+    assert.equal(await style(page, "card-3", "marginBottom"), "0px", ".peak-card too (its own margin is in a later layer)");
+    await page.close();
+  });
+
+  test(`${file}: cluster, hero and band`, async () => {
+    const page = await open(file);
+    const rootSize = px(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    assert.equal(await style(page, "cluster", "display"), "flex");
+    assert.equal(await style(page, "cluster", "alignItems"), "end");
+    assert.equal(px(await style(page, "cluster", "columnGap")), 2 * rootSize, "--peak-gap");
+    assert.equal(px(await style(page, "hero", "paddingTop")), 4 * rootSize);
+    assert.equal(px(await style(page, "hero", "paddingBottom")), 2.5 * rootSize);
+    assert.equal(px(await style(page, "hero", "maxWidth")), 46 * rootSize);
+    assert.equal(await style(page, "hero", "marginBottom"), "0px", "no section spacing on top of its padding");
+
+    // The band's background reaches both viewport edges; its content stays in the container
+    const band = await rect(page, "band");
+    await page.evaluate(() => document.getElementById("band").scrollIntoView({ block: "center" }));
+    const b = await rect(page, "band");
+    const y = Math.round(b.top + b.height / 2);
+    await page.evaluate(colorHelpers);
+    const sunken = await page.evaluate(() => {
+      const c = resolveColor("var(--peak-surface-sunken)", document.getElementById("band"));
+      return [c.r, c.g, c.b];
+    });
+    for (const x of [1, 1278]) {
+      const [r, g, bl] = await pixel(page, x, y);
+      assert.ok(Math.abs(r - sunken[0]) + Math.abs(g - sunken[1]) + Math.abs(bl - sunken[2]) <= 3, `band color at x=${x}: ${[r, g, bl]} vs ${sunken}`);
+    }
+    assert.ok(band.left > 1, "content in the container");
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0, "no horizontal overflow");
+    await page.close();
+  });
+
+  for (const colorScheme of ["light", "dark"]) {
+    test(`${file}: ${colorScheme}: every badge variant is a readable pill`, async () => {
+      const page = await open(file, { colorScheme });
+      await page.evaluate(colorHelpers);
+      const badges = await page.evaluate(() =>
+        [...document.querySelectorAll("#badges .peak-badge")].map((el) => {
+          const cs = getComputedStyle(el);
+          const bg = cs.backgroundColor === "rgba(0, 0, 0, 0)" ? getComputedStyle(document.documentElement).backgroundColor : cs.backgroundColor;
+          return {
+            id: el.id,
+            fg: resolveColor(cs.color, el),
+            bg: resolveColor(bg, el),
+            pill: parseFloat(cs.borderTopLeftRadius) >= el.getBoundingClientRect().height / 2 - 0.5,
+            size: parseFloat(cs.fontSize) / parseFloat(getComputedStyle(el.parentElement).fontSize),
+            weight: cs.fontWeight,
+          };
+        }),
+      );
+      for (const b of badges) {
+        assert.ok(contrast(b.fg, b.bg) >= 4.5, `${b.id}: ${contrast(b.fg, b.bg).toFixed(2)}:1`);
+        assert.ok(b.pill, `${b.id} is a pill`);
+        assert.ok(Math.abs(b.size - 0.75) < 0.01, `${b.id} 0.75em`);
+        assert.equal(b.weight, "600");
+      }
+      const accent = await page.evaluate(() => [getComputedStyle(document.getElementById("badge-accent")).backgroundColor, resolveColor("var(--peak-accent-fill)").css]);
+      assert.equal(accent[0], accent[1], "accent badge uses the accent fill");
+      await page.close();
+    });
+  }
+
+  test(`${file}: a linked card is one click target; other links stay on top; it lifts on hover`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => document.getElementById("linked").scrollIntoView({ block: "center" }));
+    const card = await rect(page, "linked");
+    const hit = (x, y) => page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [x, y]);
+    assert.equal(await hit(card.left + 5, card.top + card.height / 2), "card-link", "anywhere on the card is the link");
+    const other = await rect(page, "other-link");
+    assert.equal(await hit(other.left + other.width / 2, other.top + other.height / 2), "other-link");
+    await page.mouse.move(card.left + 10, card.top + card.height / 2);
+    await page.waitForTimeout(400);
+    assert.equal(await page.evaluate(() => new DOMMatrixReadOnly(getComputedStyle(document.getElementById("linked")).transform).m42), -2);
+    await page.close();
+
+    const still = await open(file, { reducedMotion: "reduce" });
+    await still.evaluate(() => document.getElementById("linked").scrollIntoView({ block: "center" }));
+    const c = await rect(still, "linked");
+    await still.mouse.move(c.left + 10, c.top + c.height / 2);
+    await still.waitForTimeout(100);
+    assert.equal(await style(still, "linked", "transform"), "none", "no lift with reduced motion");
+    await still.focus("#card-link");
+    await still.keyboard.press("Shift+Tab");
+    await still.keyboard.press("Tab");
+    assert.notEqual(await style(still, "linked", "outlineStyle"), "none", "focus ring on the card");
+    await still.close();
+  });
+
+  test(`${file}: an image first in a card runs to its edges; .peak-card on any element`, async () => {
+    const page = await open(file);
+    const card = await rect(page, "image-card");
+    const img = await rect(page, "card-image");
+    assert.ok(Math.abs(img.left - card.left) < 0.5 && Math.abs(img.right - card.right) < 0.5 && Math.abs(img.top - card.top) < 0.5, "image flush with the card");
+    // width/height attributes (against layout shift) must not fix the height once the width bleeds
+    assert.ok(Math.abs(img.height - img.width / 2) < 1, `keeps its aspect ratio: ${img.width}×${img.height}`);
+    assert.notEqual(await style(page, "div-card", "boxShadow"), "none");
+    assert.ok(px(await style(page, "div-card", "paddingTop")) > 0);
+    await page.close();
+  });
+
+  test(`${file}: table group rows and code in cells`, async () => {
+    const page = await open(file, { width: 390 });
+    await page.evaluate(colorHelpers);
+    const s = await page.evaluate(() => {
+      const cs = (id) => getComputedStyle(document.getElementById(id));
+      return {
+        group: [cs("group-row").textTransform, cs("group-row").fontWeight, cs("group-row").color, resolveColor("var(--peak-muted)").css],
+        groupSize: parseFloat(cs("group-row").fontSize) / parseFloat(getComputedStyle(document.getElementById("table")).fontSize),
+        rowHeader: cs("row-header").textTransform,
+        codeSize: parseFloat(cs("cell-code").fontSize) / parseFloat(cs("value-cell").fontSize),
+        wrap: cs("cell-code").overflowWrap,
+        overflow: document.getElementById("table").scrollWidth - document.getElementById("table").clientWidth,
+      };
+    });
+    assert.deepEqual(s.group.slice(0, 2), ["uppercase", "600"]);
+    assert.equal(s.group[2], s.group[3], "muted");
+    assert.ok(Math.abs(s.groupSize - 0.8) < 0.01);
+    assert.equal(s.rowHeader, "none", "a th with scope=row isn't a group label");
+    assert.ok(Math.abs(s.codeSize - 0.8) < 0.01);
+    assert.equal(s.wrap, "anywhere");
+    assert.ok(s.overflow <= 0, "long code wraps instead of widening the table");
+    await page.close();
+  });
+
+  test(`${file}: Peak classes on Stacks container stacks win over Stacks' wrapper CSS`, async () => {
+    const page = await open(file);
+    assert.equal(await style(page, "s-grid", "display"), "grid");
+    assert.ok((await columns(page, "s-grid")) >= 3);
+    assert.equal(await style(page, "s-grid", "overflow"), "visible");
+    assert.equal(await style(page, "s-item-1", "overflow"), "visible", "items don't clip shadows or the hover lift");
+    const cards = await Promise.all(["s-card-1", "s-card-2", "s-card-3"].map((id) => rect(page, id)));
+    assert.ok(cards.every((c) => Math.abs(c.height - cards[1].height) < 0.5), `card heights ${cards.map((c) => c.height)}`);
+    const footer = await rect(page, "s-footer-1");
+    assert.ok(Math.abs(footer.bottom - cards[0].bottom) < 0.5, "footer at the bottom inside the wrappers");
+    assert.ok(px(await style(page, "s-card-3", "paddingTop")) > 0, "a card stack keeps its padding");
+    assert.equal(await style(page, "s-card-3", "marginBottom"), "0px");
+    assert.equal(await style(page, "s-cluster", "display"), "flex");
+    assert.ok(px(await style(page, "s-hero", "paddingTop")) > 0, "a hero stack keeps its padding");
+    await page.close();
+  });
+}

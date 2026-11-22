@@ -1,0 +1,239 @@
+---
+title: Navigation
+group: Components
+order: 7
+description: The site header, a mobile menu without JavaScript, dropdowns, sidebar navigation, breadcrumbs, pagination, a skip link and the footer.
+---
+
+<h2>Navigation bar</h2>
+<p>
+  Blades lays out a <code>&lt;nav&gt;</code> with lists as a bar: the first list at the start, the
+  last at the end. Links take the primary color; <code>.secondary</code> and <code>.contrast</code>
+  change it.
+</p>
+<peak-example>
+  <nav>
+    <ul><li><a href="#navigation-bar" class="contrast"><strong>Brand</strong></a></li></ul>
+    <ul>
+      <li><a href="#navigation-bar" class="secondary">Products</a></li>
+      <li><a href="#navigation-bar" class="secondary" aria-current="page">Docs</a></li>
+      <li><a href="#navigation-bar" role="button">Buy</a></li>
+    </ul>
+  </nav>
+</peak-example>
+
+<h2>Site header</h2>
+<p>
+  The <code>site-*</code> classes style a site's chrome. They're optional: a page that doesn't use
+  them is unaffected.
+</p>
+<ul>
+  <li><code>.site-header</code> around the navigation; <code>.nav-sticky</code> keeps it at the top while scrolling.</li>
+  <li><code>.site-nav</code> on the <code>&lt;nav&gt;</code>: wrapping lists, the current page in bold.</li>
+  <li><code>.site-title</code> for the brand link, with an optional logo image or SVG (height <code>--peak-logo-size</code>) and <code>.site-subtitle</code> after it.</li>
+  <li><code>data-nav-style="surface"</code> or <code>"bordered"</code> on the header gives it a background (and a bottom rule) that runs to the viewport edges.</li>
+  <li><code>data-nav-align="start"</code> on the nav puts the links right after the title.</li>
+</ul>
+<peak-example>
+  <header class="site-header" data-nav-style="surface">
+    <nav class="site-nav" data-nav-align="start">
+      <ul>
+        <li>
+          <a href="#site-header" class="site-title contrast"><img src="assets/favicon.svg" alt=""> Peak</a>
+          <small class="site-subtitle">CSS framework</small>
+        </li>
+      </ul>
+      <ul>
+        <li><a href="#site-header" aria-current="page">Home</a></li>
+        <li><a href="#site-header"><i>📦</i> Products</a></li>
+        <li><a href="#site-header">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+</peak-example>
+<p>
+  The header of these docs uses <code>data-nav-style="bordered"</code>. An <code>&lt;i&gt;</code> before
+  a link's text holds an icon: an emoji, an image, an SVG or an icon-font glyph.
+</p>
+
+<h2>Mobile menu</h2>
+<p>
+  <code>data-peak-menu="576"</code>, <code>"768"</code> or <code>"1024"</code> on the nav folds the
+  links into a button below that viewport width. The button opens them in a native popover: Esc and a
+  click outside close it, no JavaScript. Above the width, the wrappers disappear from the layout
+  (<code>display: contents</code>) and the links are a normal row.
+</p>
+<peak-example preview-class="tall">
+  <nav class="site-nav" data-peak-menu="1024">
+    <ul><li><a href="#mobile-menu" class="site-title contrast">Brand</a></li></ul>
+    <div class="site-menu" data-peak-anchor>
+      <button type="button" class="site-menu-toggle outline secondary" popovertarget="demo-menu"><span aria-hidden="true">☰</span> Menu</button>
+      <div class="site-menu-popover" id="demo-menu" popover>
+        <ul>
+          <li><a href="#mobile-menu" aria-current="page">Home</a></li>
+          <li><a href="#mobile-menu">Products</a></li>
+          <li><a href="#mobile-menu">Support</a></li>
+          <li><a href="#mobile-menu">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</peak-example>
+<p>This example folds below 1024px: make the window narrower to see the button.</p>
+
+<h2>Dropdowns in the bar</h2>
+<p>Two ways to give a link sub-pages:</p>
+<ul>
+  <li>Pico's <code>&lt;details class="dropdown"&gt;</code>, drawn like a nav link.</li>
+  <li>A <code>.site-dropdown-toggle</code> button and a <code>ul[popover]</code> in the same <code>&lt;li&gt;</code>: drawn as a link with a chevron that turns while open, and anchored (see <a href="overlays.html#menus">Menus</a>). Its color follows <code>data-link-style</code> (<code>secondary</code> or <code>contrast</code>).</li>
+</ul>
+<peak-example preview-class="tall visible">
+  <nav class="site-nav">
+    <ul><li><strong>Brand</strong></li></ul>
+    <ul>
+      <li>
+        <details class="dropdown">
+          <summary class="secondary">Details</summary>
+          <ul>
+            <li><a href="#dropdowns-in-the-bar">Poster CMS</a></li>
+            <li><a href="#dropdowns-in-the-bar">Gallery</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <button type="button" class="site-dropdown-toggle" data-link-style="secondary" popovertarget="nav-sub">Popover</button>
+        <ul id="nav-sub" popover>
+          <li><a href="#dropdowns-in-the-bar">Poster CMS</a></li>
+          <li><a href="#dropdowns-in-the-bar">Gallery</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</peak-example>
+
+<h2>Sidebar navigation</h2>
+<p>
+  <code>.peak-sidebar-nav</code> is a vertical list of links, the current page marked by a colored
+  edge. Nested lists are open only on the branch that holds the current page (with
+  <code>aria-current="page"</code>), so a long site stays short. The page list of these docs is one.
+</p>
+<peak-example>
+  <aside style="max-inline-size: 16rem">
+    <nav class="peak-sidebar-nav" aria-label="Section">
+      <ul>
+        <li><a href="#sidebar-navigation">Overview</a></li>
+        <li><a href="#sidebar-navigation">Components</a>
+          <ul>
+            <li><a href="#sidebar-navigation">Cards</a></li>
+            <li><a href="#sidebar-navigation" aria-current="page">Badges</a></li>
+          </ul>
+        </li>
+        <li><a href="#sidebar-navigation">Layout</a>
+          <ul>
+            <li><a href="#sidebar-navigation">Hidden: not the current branch</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+</peak-example>
+<p>
+  Put it in a <a href="grids.html#sidebar-layout"><code>.peak-with-sidebar</code></a> layout.
+  <code>.site-sidebar</code> on the <code>&lt;aside&gt;</code> lines it up with <code>.site-main</code>,
+  which gives the main content its block padding.
+</p>
+<peak-code lang="html">
+  <div class="container peak-with-sidebar sticky">
+    <aside class="site-sidebar">
+      <nav class="peak-sidebar-nav" aria-label="Pages">…</nav>
+    </aside>
+    <main class="site-main">…</main>
+  </div>
+</peak-code>
+
+<h2>Breadcrumb</h2>
+<p>Pico styles <code>nav[aria-label="breadcrumb"]</code>; <code>.site-breadcrumb</code> makes it smaller and adds space below.</p>
+<peak-example>
+  <nav aria-label="breadcrumb" class="site-breadcrumb">
+    <ul>
+      <li><a href="#breadcrumb">Home</a></li>
+      <li><a href="#breadcrumb">Stacks</a></li>
+      <li><span aria-current="page">Poster CMS</span></li>
+    </ul>
+  </nav>
+</peak-example>
+
+<h2>Pagination</h2>
+<p>
+  <code>.peak-pagination</code>: page links in a row of equal boxes, at least 2.5rem each. Mark the
+  current page with <code>aria-current="page"</code> and gaps with <code>aria-disabled="true"</code>.
+</p>
+<peak-example>
+  <nav class="peak-pagination" aria-label="Pages">
+    <ul>
+      <li><a href="#pagination" rel="prev">Previous</a></li>
+      <li><a href="#pagination">1</a></li>
+      <li><a aria-current="page">2</a></li>
+      <li><a href="#pagination">3</a></li>
+      <li><span aria-disabled="true">…</span></li>
+      <li><a href="#pagination">9</a></li>
+      <li><a href="#pagination" rel="next">Next</a></li>
+    </ul>
+  </nav>
+</peak-example>
+
+<h2>Skip link</h2>
+<p>
+  <code>.peak-skip-link</code> is hidden until it gets keyboard focus, then appears as a button in the
+  top corner. Make it the first element of the body. Press <kbd>Tab</kbd> on this page to see it.
+</p>
+<peak-code lang="html">
+  <body>
+    <a class="peak-skip-link" href="#main">Skip to content</a>
+    …
+    <main id="main" tabindex="-1">…</main>
+  </body>
+</peak-code>
+
+<h2>Light/dark switch</h2>
+<p>
+  A <code>select.peak-scheme</code> in the nav (in an <code>li.site-scheme</code>) is drawn compact.
+  See <a href="theming.html#scheme-switch">A light/dark switch</a>.
+</p>
+<peak-example>
+  <nav class="site-nav">
+    <ul><li><strong>Brand</strong></li></ul>
+    <ul>
+      <li><a href="#light-dark-switch">Docs</a></li>
+      <li class="site-scheme">
+        <select class="peak-scheme" aria-label="Color scheme">
+          <option value="">Auto</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </li>
+    </ul>
+  </nav>
+</peak-example>
+
+<h2>Footer</h2>
+<p>
+  <code>.site-footer</code>: a rule above, muted and a little smaller. Inside it,
+  <code>.site-footer-nav</code> lays out a row of links, <code>.site-footer-text</code> holds the
+  copyright and <code>.site-back-to-top</code> a link back up.
+</p>
+<peak-example>
+  <footer class="site-footer">
+    <nav class="site-footer-nav" aria-label="Footer">
+      <ul>
+        <li><a href="#footer">Home</a></li>
+        <li><a href="#footer" aria-current="page">Products</a></li>
+        <li><a href="#footer">Imprint</a></li>
+        <li><a href="#footer">Privacy</a></li>
+      </ul>
+    </nav>
+    <p class="site-footer-text">© 2026 Example. All rights reserved.</p>
+    <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+  </footer>
+</peak-example>
+<p>When printing, the header, sidebar, breadcrumb, footer links, skip link and scheme switch are left out.</p>

@@ -1,0 +1,93 @@
+/*
+ * Badge (docs: site/pages/badges.html): a small pill label. Each variant sets a foreground and a
+ * background pair from the contrast-tested tokens (test/contrast.test.mjs); .solid swaps to the
+ * filled pair, .outline drops the background.
+ */
+.peak-badge {
+  --_peak-badge-fg: var(--peak-primary-hover);
+  --_peak-badge-bg: var(--peak-primary-tint);
+  --_peak-badge-solid-fg: var(--peak-on-primary);
+  --_peak-badge-solid-bg: var(--peak-primary-fill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375em;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--_peak-badge-bg);
+  color: var(--_peak-badge-fg);
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: 0.125em;
+}
+
+.peak-badge.secondary {
+  --_peak-badge-fg: var(--peak-secondary-hover);
+  --_peak-badge-bg: var(--peak-secondary-tint);
+  --_peak-badge-solid-fg: var(--peak-on-secondary);
+  --_peak-badge-solid-bg: var(--peak-secondary-fill);
+}
+
+.peak-badge.contrast {
+  --_peak-badge-fg: var(--peak-on-contrast);
+  --_peak-badge-bg: var(--peak-contrast);
+  --_peak-badge-solid-fg: var(--peak-on-contrast);
+  --_peak-badge-solid-bg: var(--peak-contrast);
+}
+
+/* The accent is a fill in either form: its text color is for words in running text */
+.peak-badge.accent {
+  --_peak-badge-fg: var(--peak-on-accent);
+  --_peak-badge-bg: var(--peak-accent-fill);
+  --_peak-badge-solid-fg: var(--peak-on-accent);
+  --_peak-badge-solid-bg: var(--peak-accent-fill);
+}
+
+.peak-badge.success {
+  --_peak-badge-fg: var(--peak-success);
+  --_peak-badge-bg: var(--peak-success-subtle);
+  --_peak-badge-solid-fg: var(--peak-on-success);
+  --_peak-badge-solid-bg: var(--peak-success);
+}
+
+/* Warning isn't a text color (tokens.css), so its light form uses the page text */
+.peak-badge.warning {
+  --_peak-badge-fg: var(--peak-text);
+  --_peak-badge-bg: var(--peak-warning-subtle);
+  --_peak-badge-solid-fg: var(--peak-on-warning);
+  --_peak-badge-solid-bg: var(--peak-warning);
+}
+
+.peak-badge.danger {
+  --_peak-badge-fg: var(--peak-danger);
+  --_peak-badge-bg: var(--peak-danger-subtle);
+  --_peak-badge-solid-fg: var(--peak-on-danger);
+  --_peak-badge-solid-bg: var(--peak-danger);
+}
+
+.peak-badge.info {
+  --_peak-badge-fg: var(--peak-info);
+  --_peak-badge-bg: var(--peak-info-subtle);
+  --_peak-badge-solid-fg: var(--peak-on-info);
+  --_peak-badge-solid-bg: var(--peak-info);
+}
+
+.peak-badge.solid {
+  background-color: var(--_peak-badge-solid-bg);
+  color: var(--_peak-badge-solid-fg);
+}
+
+.peak-badge.outline {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 var(--pico-border-width) currentcolor;
+}
+
+/* A status dot before the label */
+.peak-badge.dot::before {
+  content: "";
+  inline-size: 0.5em;
+  block-size: 0.5em;
+  border-radius: 50%;
+  background-color: currentcolor;
+}

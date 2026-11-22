@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peak layout, cards and badges</title>
+    <link rel="stylesheet" href="../../dist/peak.css" />
+    <!-- Stacks' site CSS for its wrappers, verbatim from an export (unlayered, as on a real page) -->
+    <style>
+      .stacks_in>p{margin-top:0}.stacks_in,.stacks_top{border:0;display:block;margin:0;overflow:hidden;padding:0;position:relative}
+    </style>
+  </head>
+  <body>
+    <main class="container" id="main">
+      <section class="peak-hero" id="hero"><hgroup><p>Kicker</p><h1>Hero</h1></hgroup><p class="peak-lead">Lead</p></section>
+
+      <div class="peak-grid-auto" id="grid">
+        <article id="card-1"><header>Short</header><h3>One</h3><p>Text.</p><footer id="footer-1">Footer</footer></article>
+        <article id="card-2"><header>Tall</header><h3>Two</h3><p>Much longer text that wraps onto several lines in a narrow column of the grid, so this card is the tallest one in the row and sets its height.</p><footer id="footer-2">Footer</footer></article>
+        <article id="card-3" class="peak-card"><header>Class</header><h3>Three</h3><p>Text.</p><footer id="footer-3">Footer</footer></article>
+        <article id="card-4"><h3>Four</h3><p>Text.</p></article>
+        <article id="card-5"><h3>Five</h3><p>Text.</p></article>
+      </div>
+      <div class="peak-grid-auto" id="grid-wide" style="--peak-grid-min: 30rem"><div>a</div><div>b</div><div>c</div></div>
+
+      <div class="peak-cluster align-end" id="cluster" style="--peak-gap: 2rem"><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" width="40" height="40" alt="" /></figure><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" width="20" height="20" alt="" /></figure></div>
+
+      <section class="peak-band" id="band"><p>Band</p></section>
+
+      <p id="badges">
+        <span class="peak-badge" id="badge-primary">Primary</span>
+        <span class="peak-badge secondary" id="badge-secondary">Secondary</span>
+        <span class="peak-badge contrast" id="badge-contrast">Contrast</span>
+        <span class="peak-badge accent" id="badge-accent">New</span>
+        <span class="peak-badge success" id="badge-success">Success</span>
+        <span class="peak-badge warning" id="badge-warning">Warning</span>
+        <span class="peak-badge danger" id="badge-danger">Danger</span>
+        <span class="peak-badge info" id="badge-info">Info</span>
+        <span class="peak-badge solid" id="badge-solid">Solid</span>
+        <span class="peak-badge solid danger" id="badge-solid-danger">Solid danger</span>
+        <span class="peak-badge outline" id="badge-outline">Outline</span>
+        <span class="peak-badge dot success" id="badge-dot">Online</span>
+      </p>
+
+      <div class="peak-grid-auto">
+        <article id="linked"><header>Category <a href="#other" id="other-link">Other</a></header><h3>Linked card</h3><p>Body</p><footer><a href="#target" class="peak-card-link" id="card-link">Learn more</a></footer></article>
+        <article id="image-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" alt="" id="card-image" width="400" height="200" /><h3>Image card</h3></article>
+        <div class="peak-card" id="div-card"><p>A div card</p></div>
+      </div>
+
+      <table id="table">
+        <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><th colspan="2" scope="rowgroup" id="group-row">Light mode</th></tr>
+          <tr><td>Primary</td><td id="value-cell"><code id="cell-code">var(--pico-font-family-sans-serif-with-a-very-long-name)</code></td></tr>
+          <tr><th scope="row" id="row-header">Row header</th><td>stays a normal header cell</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Stacks markup: a container stack with the class peak-grid-auto, card stacks inside -->
+      <div class="out" id="stacks_out_3"><div class="stacks_in stack_stack in peak-grid-auto" id="s-grid">
+        <div class="out" id="stacks_out_5"><div class="stacks_in html_stack" id="s-item-1"><article id="s-card-1"><h3>Short</h3><p>Text.</p><footer id="s-footer-1">Footer</footer></article></div></div>
+        <div class="out" id="stacks_out_7"><div class="stacks_in html_stack" id="s-item-2"><article id="s-card-2"><h3>Tall</h3><p>Much longer text that wraps onto several lines in a narrow column of the grid, so this card is the tallest in the row.</p><footer id="s-footer-2">Footer</footer></article></div></div>
+        <div class="out" id="stacks_out_9"><div class="stacks_in stack_stack in peak-card" id="s-card-3"><div class="out"><div class="stacks_in text_stack"><p style="text-align:left" class="stacks-align-left">A card stack</p></div></div></div></div>
+      </div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-cluster" id="s-cluster"><div class="out"><div class="stacks_in text_stack"><p>a</p></div></div><div class="out"><div class="stacks_in text_stack"><p>b</p></div></div></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-hero" id="s-hero"><div class="out"><div class="stacks_in html_stack"><h1>Stacks hero</h1></div></div></div></div>
+    </main>
+  </body>
+</html>

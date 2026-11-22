@@ -1,0 +1,48 @@
+# Publishes @instacks/peak to npm when a version tag (v1.2.3, v2.0.0-beta.1) is pushed.
+#
+# Authentication: npm trusted publishing (OpenID Connect, no token to store). Configure it once on
+# npmjs.com › @instacks/peak › Settings › Trusted publishing: GitHub Actions, this repository,
+# workflow file "release.yml". npm only offers that for a package that exists, so the very first
+# version is published by hand (`npm publish` from a clean checkout after `npm test`).
+# Trusted publishing also attaches a provenance statement to every version.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10
+      - run: npm install --global npm@11
+      - run: npm ci
+      - name: The tag matches package.json
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME, package.json $version"; exit 1; }
+      # prepublishOnly builds dist/. A prerelease (1.1.0-beta.1) goes to the "next" dist-tag, so a
+      # plain `npm install` keeps getting the latest stable version.
+      - name: Publish
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          case "$version" in
+            *-*) npm publish --tag next ;;
+            *) npm publish ;;
+          esac

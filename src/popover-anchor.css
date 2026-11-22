@@ -1,0 +1,238 @@
+/*
+ * Popovers and CSS anchor positioning (docs/PLAN.md §2).
+ *
+ * Gating: enhancements test the exact properties they use. Chrome 125–128 shipped `anchor-name`
+ * with the old `inset-area` / `position-try-options` names, so `anchor-name` alone isn't enough.
+ * Anything that reuses one anchor name also needs `anchor-scope`; without it every popover
+ * anchors to the last element in the document that carries the name.
+ *
+ * Legacy markup keeps working unchanged: `details.dropdown` is only re-anchored with the opt-in
+ * [data-peak-anchor], and [data-tooltip] is only touched where anchor-scope is supported.
+ */
+
+/* -------------------------------------------------------------------------------------------------
+ * Generic popovers (§2.5): `<div popover>` gets no Blades styling. Themed as a raised surface and
+ * left centered, as the UA places it; opt in to anchoring with [data-peak-anchor] (below).
+ * ---------------------------------------------------------------------------------------------- */
+
+[popover]:not(:is(ul, menu, [popover="hint"], [role="tooltip"])) {
+  max-inline-size: min(32rem, 100vw - 2 * var(--peak-spacing));
+  padding: var(--peak-space-s);
+  border: var(--pico-border-width) solid var(--peak-border);
+  border-radius: var(--peak-radius);
+  background-color: var(--peak-surface-raised);
+  box-shadow: var(--pico-box-shadow);
+  color: var(--peak-text);
+
+  > :last-child {
+    margin-block-end: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Hint popovers (§2.4 B), a native alternative to [data-tooltip]:
+ *   <button interestfor="tip">Save</button> <span id="tip" popover="hint" role="tooltip">…</span>
+ * Opening on hover with no JS needs `interestfor` (Chromium-only); elsewhere the popover opens on
+ * click via popovertarget. Browsers that don't know popover="hint" treat it as "manual".
+ * ---------------------------------------------------------------------------------------------- */
+
+:is([popover="hint"], [role="tooltip"][popover]) {
+  max-inline-size: min(20rem, 100vw - 2rem);
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: var(--pico-border-radius);
+  background-color: var(--pico-tooltip-background-color);
+  color: var(--pico-tooltip-color);
+  font-size: 0.875rem;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Anchored placement
+ * ---------------------------------------------------------------------------------------------- */
+
+@supports (anchor-name: --a) and (position-area: block-end) and (position-try-fallbacks: flip-block) {
+  /*
+   * Menus (§2.2). Blades anchors them with `bottom span-right` plus a :dir(rtl) override; logical
+   * keywords follow the direction by themselves. The third fallback covers the corner case where
+   * both axes overflow.
+   */
+  :is(ul, menu)[popover] {
+    min-inline-size: anchor-size(inline);
+    max-block-size: calc(100dvh - 2 * var(--peak-spacing));
+    overflow-y: auto;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+    position-visibility: anchors-visible;
+  }
+
+  /* Opt-in anchoring for generic popovers: on the popover, or on a wrapper around its trigger */
+  :is([popover][data-peak-anchor], [data-peak-anchor] > [popover]):not(
+      :is(ul, menu, [popover="hint"], [role="tooltip"])
+    ) {
+    inset: auto;
+    margin: 0;
+    margin-block-start: var(--pico-outline-width);
+    position-area: block-end span-inline-end;
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+    position-visibility: anchors-visible;
+  }
+
+  :is([popover="hint"], [role="tooltip"][popover]) {
+    inset: auto;
+    margin: 0.25rem;
+    position-area: block-start;
+    position-try-fallbacks: flip-block;
+  }
+}
+
+/*
+ * Explicit, scoped anchor next to the implicit one. Covers showPopover() without { source } and
+ * engines that don't create an implicit anchor from popovertarget. It takes precedence over the
+ * implicit anchor, so a popover opened from a button elsewhere still sits by its sibling trigger.
+ */
+@supports (anchor-scope: --a) and (position-area: block-end) {
+  :where(li, [data-peak-anchor]):has(> [popovertarget]) {
+    anchor-scope: --peak-trigger;
+  }
+
+  :where(li, [data-peak-anchor]) > [popovertarget] {
+    anchor-name: --peak-trigger;
+  }
+
+  :where(li, [data-peak-anchor]) > [popover] {
+    position-anchor: --peak-trigger;
+  }
+}
+
+/*
+ * Without anchor positioning Blades centers menus in the viewport. Keep that, but cap the width
+ * and dim the page lightly, so a centered menu reads as a small dialog rather than a lost list.
+ */
+@supports not ((anchor-name: --a) and (position-area: block-end)) {
+  :is(ul, menu)[popover] {
+    max-inline-size: min(24rem, 100vw - 2 * var(--peak-spacing));
+    max-block-size: calc(100dvh - 2 * var(--peak-spacing));
+    overflow-y: auto;
+  }
+
+  :is(ul, menu)[popover]::backdrop {
+    background-color: color-mix(in srgb, var(--pico-modal-overlay-background-color), transparent 50%);
+  }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Legacy `<details class="dropdown">` (§2.3), opt-in with [data-peak-anchor].
+ *
+ * position: fixed, because with Pico's `absolute` the containing block is the small <details> box,
+ * so position-area and the flip test would measure against it instead of the viewport.
+ * Known limit: an ancestor with transform, filter, backdrop-filter, contain or
+ * `will-change: transform` becomes the containing block for `fixed` (common in animated Stacks).
+ * That's why this is opt-in; the lasting fix is moving the markup to `popover`.
+ * ---------------------------------------------------------------------------------------------- */
+
+@supports (anchor-scope: --a) and (position-area: block-end) {
+  details.dropdown[data-peak-anchor] {
+    anchor-scope: --peak-dd;
+  }
+
+  details.dropdown[data-peak-anchor] > summary {
+    anchor-name: --peak-dd;
+  }
+
+  details.dropdown[data-peak-anchor] > summary + ul {
+    position: fixed;
+    position-anchor: --peak-dd;
+    inset: auto;
+    inline-size: auto;
+    min-inline-size: anchor-size(inline);
+    margin: 0;
+    margin-block-start: var(--pico-outline-width);
+    position-area: block-end span-inline-end;
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+  }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * [data-tooltip] (§2.4 A). The text is a ::before generated from attr(data-tooltip); CSS can't
+ * give a pseudo-element the popover attribute, so it can't enter the top layer. Instead it is
+ * anchored to its own element with `position: fixed`, which flips against the viewport and
+ * escapes overflow clipping (not transformed ancestors).
+ *
+ * Pico's hover animation moves `transform` with translate(-50%, …), which fights position-area;
+ * it's replaced by a keyframe on `opacity` and `translate`. The caret (::after) is a second box
+ * that would flip on its own and could point the wrong way, so it's dropped here.
+ * Without anchor-scope, Blades' tooltips are left as they are.
+ * ---------------------------------------------------------------------------------------------- */
+
+@supports (anchor-scope: --a) and (position-area: block-start) {
+  [data-tooltip] {
+    anchor-name: --peak-tip;
+    anchor-scope: --peak-tip;
+  }
+
+  [data-tooltip]::before {
+    position: fixed;
+    position-anchor: --peak-tip;
+    inset: auto;
+    max-inline-size: min(20rem, 100vw - 2rem);
+    margin: 0.25rem;
+    transform: none;
+    white-space: normal;
+    position-area: top;
+    position-try-fallbacks: flip-block;
+  }
+
+  [data-tooltip][data-placement="bottom"]::before {
+    position-area: bottom;
+  }
+
+  [data-tooltip][data-placement="left"]::before {
+    position-area: left;
+    position-try-fallbacks: flip-inline;
+  }
+
+  [data-tooltip][data-placement="right"]::before {
+    position-area: right;
+    position-try-fallbacks: flip-inline;
+  }
+
+  /*
+   * Only render the bubble while it's shown. Anchor positioning remembers the last fallback that
+   * fit, so a hidden bubble below the fold at load would flip and then stay flipped after scrolling.
+   */
+  [data-tooltip]:not(:hover, :focus)::before {
+    display: none;
+  }
+
+  [data-tooltip]::after {
+    content: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-tooltip]:is(:hover, :focus)::before {
+      animation-name: peak-tooltip-in;
+    }
+  }
+}
+
+/* Top level, not inside @supports: the scoped build keeps @keyframes outside @scope */
+@keyframes peak-tooltip-in {
+  from {
+    translate: 0 0.25rem;
+    opacity: 0;
+  }
+
+  to {
+    translate: none;
+    opacity: 1;
+  }
+}

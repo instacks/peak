@@ -1,0 +1,173 @@
+---
+title: Getting started
+group: Getting started
+order: 2
+description: Add one stylesheet, write semantic HTML, and set a few inputs. Peak needs no build step and no JavaScript.
+---
+
+<h2>From a CDN</h2>
+<p>Link the minified stylesheet in the <code>&lt;head&gt;</code>:</p>
+<peak-code lang="html">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@instacks/peak/dist/peak.min.css">
+</peak-code>
+<p>Pin a version in production, e.g. <code>@instacks/peak@0.1/dist/peak.min.css</code>.</p>
+
+<h2>With npm</h2>
+<peak-code lang="bash">
+  npm install @instacks/peak
+</peak-code>
+<p>Then import it from your CSS (with a bundler that resolves package exports) or link the file from <code>node_modules</code>:</p>
+<peak-code lang="css">
+  @import "@instacks/peak";            /* dist/peak.min.css */
+  @import "@instacks/peak/unminified"; /* dist/peak.css */
+  @import "@instacks/peak/scoped";     /* dist/peak.scoped.min.css */
+</peak-code>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Export</th><th scope="col">File</th><th scope="col">Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>@instacks/peak</code></td><td><code>dist/peak.min.css</code></td><td>The whole page is Peak</td></tr>
+      <tr><td><code>@instacks/peak/unminified</code></td><td><code>dist/peak.css</code></td><td>The same, readable</td></tr>
+      <tr><td><code>@instacks/peak/scoped</code></td><td><code>dist/peak.scoped.min.css</code></td><td>Only inside <code>.peak</code> (<a href="scoped.html">Scoped build</a>)</td></tr>
+      <tr><td><code>@instacks/peak/scoped/unminified</code></td><td><code>dist/peak.scoped.css</code></td><td>The same, readable</td></tr>
+      <tr><td><code>@instacks/peak/scheme</code></td><td><code>dist/peak-scheme.js</code></td><td>Optional: remembers the light/dark switch (<a href="theming.html#light-and-dark">Light and dark</a>)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Starter page</h2>
+<p>
+  A page with a header, a centered container and a footer. Everything inside is plain HTML; the
+  only classes are layout helpers.
+</p>
+<peak-code lang="html">
+  <!doctype html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>My site</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@instacks/peak/dist/peak.min.css">
+    <style>
+      :root {
+        --peak-hue: 160;
+        --peak-radius: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul><li><a href="/" class="contrast"><strong>My site</strong></a></li></ul>
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/" role="button">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="container">
+      <section class="peak-hero">
+        <h1>Hello</h1>
+        <p class="peak-lead">A short introduction.</p>
+      </section>
+      <div class="peak-grid-auto">
+        <article><h3>One</h3><p>…</p></article>
+        <article><h3>Two</h3><p>…</p></article>
+        <article><h3>Three</h3><p>…</p></article>
+      </div>
+    </main>
+    <footer class="container site-footer">
+      <p>© 2026 My site</p>
+    </footer>
+  </body>
+  </html>
+</peak-code>
+<p>
+  <code>&lt;meta name="color-scheme" content="light dark"&gt;</code> lets the page follow the
+  visitor's system setting from the first paint. Leave it out, or set <code>data-theme="light"</code>
+  on <code>&lt;html&gt;</code>, for a light-only page.
+</p>
+
+<h2>Setting inputs</h2>
+<p>
+  Every color, size and space comes from the <code>--peak-*</code> inputs. Set them on
+  <code>:root</code> for the whole page, or on an element with <code>data-peak-scope</code> or
+  <code>data-theme</code> for one part of it:
+</p>
+<peak-code lang="css">
+  :root {
+    --peak-hue: 30;           /* brand hue, 0–360 */
+    --peak-chroma: 0.14;      /* brand saturation */
+    --peak-font-family: Charter, "Bitstream Charter", Cambria, serif;
+    --peak-type-ratio: 1.25;  /* a more dramatic heading scale */
+    --peak-spacing: 1.25rem;  /* more room everywhere */
+  }
+</peak-code>
+<p>
+  Try them in the <a href="customize.html">customizer</a>, which writes this CSS for you, and see
+  every input in the <a href="tokens.html">token reference</a>.
+</p>
+
+<h2>Cascade layers</h2>
+<p>Peak declares its layer order before any of its rules:</p>
+<peak-code lang="css">
+  @layer blades, peak.tokens, peak.base, peak.layout, peak.components, peak.utilities;
+</peak-code>
+<ul>
+  <li><code>blades</code>: Blades and Pico, unmodified.</li>
+  <li><code>peak.tokens</code>: the inputs, the derived tokens and the <code>--pico-*</code> bridge.</li>
+  <li><code>peak.base</code>: element defaults (headings, sections, code blocks).</li>
+  <li><code>peak.layout</code>: page structure and layout patterns.</li>
+  <li><code>peak.components</code>: cards, badges, menus, dialogs…</li>
+  <li><code>peak.utilities</code>: text colors, heading sizes, forced colors, print. Wins over components regardless of specificity.</li>
+</ul>
+<p>
+  CSS outside any layer beats all of them, so your own stylesheet overrides Peak with any
+  selector. To put a rule between Peak's layers instead, write it into one:
+</p>
+<peak-code lang="css">
+  /* Unlayered: wins over every Peak rule, even .peak-badge.solid */
+  .badge-big {
+    font-size: 1rem;
+  }
+
+  /* In Peak's components layer: a utility class still beats it */
+  @layer peak.components {
+    .my-card {
+      border: 1px solid var(--peak-border);
+    }
+  }
+</peak-code>
+
+<h2>Classes and variants</h2>
+<p>
+  Peak's classes start with <code>peak-</code>. Variants reuse Pico's short names
+  (<code>.secondary</code>, <code>.contrast</code>, <code>.outline</code>) and Peak's own
+  (<code>.accent</code>, <code>.success</code>, <code>.warning</code>, <code>.danger</code>,
+  <code>.info</code>, <code>.solid</code>…). They only mean something next to a Peak class:
+</p>
+<peak-example>
+  <span class="peak-badge">Default</span>
+  <span class="peak-badge secondary">Secondary</span>
+  <span class="peak-badge success solid">Success, solid</span>
+</peak-example>
+<p>
+  The <code>site-*</code> classes (<code>.site-nav</code>, <code>.site-footer</code>…) are page
+  chrome; see <a href="navigation.html">Navigation</a>.
+</p>
+
+<h2>Building from source</h2>
+<peak-code lang="bash">
+  git clone https://github.com/instacks/peak.git
+  cd peak
+  npm ci
+  npm run build   # dist/peak(.min).css and dist/peak.scoped(.min).css
+  npm run watch   # rebuild dist/peak.css on change
+  npm run docs    # this site, in _site/
+</peak-code>
+<p>
+  Peak is bundled with Lightning CSS for modern targets only (the <code>browserslist</code> field in
+  <code>package.json</code>). Broad targets would make it polyfill <code>light-dark()</code>, which
+  breaks nested color schemes.
+</p>

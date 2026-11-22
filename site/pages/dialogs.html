@@ -1,0 +1,116 @@
+---
+title: Dialogs and drawers
+group: Components
+order: 6
+description: A dialog element with an article inside. It fades and zooms in, fades out, and opens and closes with attributes only.
+---
+
+<h2>Modal dialog</h2>
+<p>
+  A <code>&lt;dialog&gt;</code> with an <code>&lt;article&gt;</code> is Blades' modal. Buttons open and
+  close it with <code>command</code> and <code>commandfor</code> (the Invoker Commands API), so no
+  script is needed. <code>closedby="any"</code> also closes it on Esc and a click outside.
+</p>
+<peak-example>
+  <button command="show-modal" commandfor="dialog-basic">Open dialog</button>
+  <dialog id="dialog-basic" closedby="any">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" command="close" commandfor="dialog-basic"></button>
+        <h3>Confirm your purchase</h3>
+      </header>
+      <p>You're buying Poster CMS for €49. Updates are free within the major version.</p>
+      <footer>
+        <button class="secondary" command="close" commandfor="dialog-basic">Cancel</button>
+        <button command="close" commandfor="dialog-basic">Buy now</button>
+      </footer>
+    </article>
+  </dialog>
+</peak-example>
+<p>
+  The dialog fades in while its card zooms in slightly (from <code>--peak-dialog-scale</code>, 0.96),
+  and fades out when it closes (Chromium
+  keeps it in the top layer while it does; other browsers fade it out underneath). With reduced
+  motion it opens and closes at once; with reduced transparency the backdrop isn't blurred.
+</p>
+<aside class="peak-callout info">
+  <strong>Older browsers</strong>
+  <p>
+    <code>command</code>/<code>commandfor</code> and <code>closedby</code> reached the major browsers
+    during 2025, after Peak's baseline. For older browsers, call <code>dialog.showModal()</code> and
+    <code>dialog.close()</code> from a click handler, or load a small shim like the one these docs
+    use. Esc closes a modal dialog everywhere.
+  </p>
+</aside>
+
+<h2>Sizes</h2>
+<p><code>.peak-wide</code> allows up to 64rem; <code>.peak-full</code> fills the viewport.</p>
+<peak-example>
+  <div class="peak-cluster">
+    <button class="secondary" command="show-modal" commandfor="dialog-wide">Wide dialog</button>
+    <button class="secondary" command="show-modal" commandfor="dialog-full">Full-screen dialog</button>
+  </div>
+  <dialog id="dialog-wide" class="peak-wide" closedby="any">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" command="close" commandfor="dialog-wide"></button>
+        <h3>Compare plans</h3>
+      </header>
+      <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
+        <div class="peak-card outline"><h4>Free</h4><p>One site.</p></div>
+        <div class="peak-card outline"><h4>Pro</h4><p>Unlimited sites.</p></div>
+        <div class="peak-card outline"><h4>Team</h4><p>Five seats.</p></div>
+      </div>
+    </article>
+  </dialog>
+  <dialog id="dialog-full" class="peak-full" closedby="any">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" command="close" commandfor="dialog-full"></button>
+        <h3>Full screen</h3>
+      </header>
+      <p>For editors, galleries and long forms.</p>
+    </article>
+  </dialog>
+</peak-example>
+
+<h2>Drawer</h2>
+<p>
+  <code>.peak-drawer</code> is a full-height panel that slides in from the inline end (the right in
+  left-to-right pages); <code>.start</code> uses the other side. Right-to-left pages flip both.
+  <code>--peak-drawer-width</code> sets the width (24rem). The page list of these docs is a drawer on
+  small screens.
+</p>
+<peak-example>
+  <div class="peak-cluster">
+    <button command="show-modal" commandfor="drawer-cart">Open cart</button>
+    <button class="secondary" command="show-modal" commandfor="drawer-filters">Filters (start)</button>
+  </div>
+  <dialog id="drawer-cart" class="peak-drawer" closedby="any">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" command="close" commandfor="drawer-cart"></button>
+        <h3>Cart</h3>
+      </header>
+      <div class="peak-media center">
+        <span class="peak-avatar" role="img" aria-label="Poster CMS">P</span>
+        <div><strong>Poster CMS</strong><br><small class="peak-tabular">€ 49,00</small></div>
+      </div>
+      <footer>
+        <button command="close" commandfor="drawer-cart">Checkout</button>
+      </footer>
+    </article>
+  </dialog>
+  <dialog id="drawer-filters" class="peak-drawer start" closedby="any" style="--peak-drawer-width: 20rem">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" command="close" commandfor="drawer-filters"></button>
+        <h3>Filters</h3>
+      </header>
+      <fieldset>
+        <label><input type="checkbox" checked> Content</label>
+        <label><input type="checkbox"> Layout</label>
+      </fieldset>
+    </article>
+  </dialog>
+</peak-example>

@@ -1,0 +1,84 @@
+---
+title: Accordions and tabs
+group: Components
+order: 4
+description: Both from the details element, with no JavaScript. Accordions animate where the browser supports it; tabs fall back to an accordion.
+---
+
+<h2>Accordion</h2>
+<p>
+  Every <code>&lt;details&gt;</code> is an accordion item. Give several the same <code>name</code> and
+  only one is open at a time (the browser does this, no script). Where the browser supports
+  <code>::details-content</code> and <code>interpolate-size</code>, opening and closing are animated,
+  except with reduced motion.
+</p>
+<peak-example>
+  <details name="faq" open>
+    <summary>What is Peak?</summary>
+    <p>A CSS layer on top of Blades CSS.</p>
+  </details>
+  <details name="faq">
+    <summary>Does it need JavaScript?</summary>
+    <p>No. One optional script remembers the light/dark choice.</p>
+  </details>
+  <details name="faq">
+    <summary>Which browsers?</summary>
+    <p>Chrome and Edge 123+, Firefox 128+, Safari 18+.</p>
+  </details>
+</peak-example>
+
+<h3>Grouped</h3>
+<p><code>.peak-accordion</code> groups the items in one box, separated by rules. <code>.flush</code> drops the box.</p>
+<peak-example>
+  <div class="peak-accordion">
+    <details name="grouped" open>
+      <summary>Shipping</summary>
+      <p>Instant download after purchase.</p>
+    </details>
+    <details name="grouped">
+      <summary>Updates</summary>
+      <p>Free updates within the major version.</p>
+    </details>
+    <details name="grouped">
+      <summary>Refunds</summary>
+      <p>Within 30 days, no questions asked.</p>
+    </details>
+  </div>
+</peak-example>
+<peak-example>
+  <div class="peak-accordion flush">
+    <details><summary>Flush item</summary><p>No box, rules between the items.</p></details>
+    <details><summary>Another one</summary><p>Not exclusive: no name.</p></details>
+  </div>
+</peak-example>
+
+<h2>Tabs</h2>
+<p>
+  <code>.peak-tabs</code> turns a group of exclusive <code>&lt;details&gt;</code> into tabs: the
+  summaries form the tab row and the open one's content is the panel. Up to eight tabs. Where
+  <code>::details-content</code> isn't supported, the same markup is an exclusive accordion.
+</p>
+<peak-example>
+  <div class="peak-tabs">
+    <details name="product" open>
+      <summary>Overview</summary>
+      <p>Poster CMS turns any page into a blog.</p>
+    </details>
+    <details name="product">
+      <summary>Specs</summary>
+      <ul>
+        <li>Stacks 5 and 6</li>
+        <li>Markdown or rich text</li>
+      </ul>
+    </details>
+    <details name="product">
+      <summary>Reviews</summary>
+      <p>★★★★★ “Just works.”</p>
+    </details>
+  </div>
+</peak-example>
+<p>
+  Tabs are keyboard accessible as summaries: <kbd>Tab</kbd> moves between them and
+  <kbd>Enter</kbd> or <kbd>Space</kbd> opens one. They are announced as disclosure buttons, not as
+  ARIA tabs; for a strict tablist pattern, use a script.
+</p>

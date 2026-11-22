@@ -1,0 +1,163 @@
+/*
+ * Card (docs: site/pages/cards.html). Blades styles <article> as a card; .peak-card gives any
+ * element (a Stacks container) the same look, with the same header and footer bands.
+ */
+.peak-card {
+  margin-block-end: var(--pico-block-spacing-vertical);
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-card-background-color);
+  box-shadow: var(--pico-card-box-shadow);
+}
+
+.peak-card > :is(header, footer) {
+  margin-inline: calc(var(--pico-block-spacing-horizontal) * -1);
+  padding: calc(var(--pico-block-spacing-vertical) * 0.66) var(--pico-block-spacing-horizontal);
+  background-color: var(--pico-card-sectioning-background-color);
+}
+
+.peak-card > header {
+  margin-block: calc(var(--pico-block-spacing-vertical) * -1) var(--pico-block-spacing-vertical);
+  border-block-end: var(--pico-border-width) solid var(--pico-card-border-color);
+  border-start-start-radius: var(--pico-border-radius);
+  border-start-end-radius: var(--pico-border-radius);
+}
+
+.peak-card > footer {
+  margin-block: var(--pico-block-spacing-vertical) calc(var(--pico-block-spacing-vertical) * -1);
+  border-block-start: var(--pico-border-width) solid var(--pico-card-border-color);
+  border-end-start-radius: var(--pico-border-radius);
+  border-end-end-radius: var(--pico-border-radius);
+}
+
+/*
+ * Cards in a grid line up: every card fills its row's height and its footer sits at the bottom.
+ * The content above the footer keeps its own bottom margin, so the gap never disappears. Here, not
+ * in layout.css, because the card's own margins (this layer) would win over a layout rule.
+ * In Stacks, a card is inside the item's wrappers (src/stacks.css stretches those).
+ */
+:is(.peak-grid-auto, .grid) > :is(article, .peak-card),
+.peak-grid-auto > .out > .stacks_in > :is(article, .peak-card):only-child,
+.peak-grid-auto > .out > .stacks_in.peak-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-block: 0;
+}
+
+:is(.peak-grid-auto, .grid) > :is(article, .peak-card) > footer,
+.peak-grid-auto > .out > .stacks_in > :is(article, .peak-card):only-child > footer,
+.peak-grid-auto > .out > .stacks_in.peak-card > footer {
+  margin-block-start: auto;
+}
+
+/* A card's heading sits close to its text, like a title rather than a section heading */
+:is(article, .peak-card) > :is(h2, h3, h4, h5, h6) {
+  margin-block-end: calc(var(--pico-typography-spacing-vertical) * 0.5);
+}
+
+/* An image (or figure) first in a card runs to its edges, under the rounded corners */
+:is(article, .peak-card) > :is(img, picture, figure):first-child {
+  display: block;
+  inline-size: calc(100% + var(--pico-block-spacing-horizontal) * 2);
+  max-inline-size: none;
+  /* Pico keeps an img's height attribute; with the width changed, that would letterbox it */
+  block-size: auto;
+  margin-block: calc(var(--pico-block-spacing-vertical) * -1) var(--pico-block-spacing-vertical);
+  margin-inline: calc(var(--pico-block-spacing-horizontal) * -1);
+  border-start-start-radius: var(--pico-border-radius);
+  border-start-end-radius: var(--pico-border-radius);
+  overflow: hidden;
+}
+
+.peak-card.outline {
+  box-shadow: 0 0 0 var(--pico-border-width) var(--pico-card-border-color);
+}
+
+.peak-card.flat {
+  background: var(--peak-surface-sunken);
+  box-shadow: none;
+}
+
+/*
+ * Linked card: .peak-card-link on one link in the card stretches it over the whole card, so the
+ * card is a single click target. Other links and controls in the card stay on top and clickable.
+ * The card lifts on hover and shows the link's focus ring around itself.
+ */
+:is(article, .peak-card):has(.peak-card-link) {
+  position: relative;
+  transition:
+    transform var(--pico-transition),
+    box-shadow var(--pico-transition);
+}
+
+.peak-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+:is(article, .peak-card):has(.peak-card-link)
+  :is(a, button, input, select, textarea, summary, label):not(.peak-card-link) {
+  position: relative;
+  z-index: 1;
+}
+
+:is(article, .peak-card):has(.peak-card-link):hover {
+  transform: translateY(-2px);
+}
+
+:is(article, .peak-card):has(.peak-card-link:focus-visible) {
+  outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+  outline-offset: 2px;
+}
+
+.peak-card-link:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Blades' reduced-motion rule makes the lift instant; without motion it shouldn't move at all */
+@media (prefers-reduced-motion: reduce) {
+  :is(article, .peak-card):has(.peak-card-link):hover {
+    transform: none;
+  }
+}
+
+/*
+ * Horizontal card: the leading image beside the content when the card is at least 32rem wide,
+ * above it when narrower. The card is a size container for its own children (a container query
+ * can't restyle the container itself, so the card is a two-column grid throughout and the
+ * children choose their columns). Only on this variant: size containment means a card can't take
+ * its width from its content, which would collapse ordinary cards in rows and clusters.
+ */
+.peak-card.horizontal {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  column-gap: var(--pico-block-spacing-horizontal);
+  container: peak-card / inline-size;
+}
+
+.peak-card.horizontal > * {
+  grid-column: 1 / -1;
+}
+
+@container peak-card (width >= 32rem) {
+  .peak-card.horizontal > :first-child:is(img, picture, figure) {
+    grid-column: 1;
+    grid-row: 1 / span 20;
+    inline-size: calc(100% + var(--pico-block-spacing-horizontal));
+    block-size: calc(100% + var(--pico-block-spacing-vertical) * 2);
+    margin-block: calc(var(--pico-block-spacing-vertical) * -1);
+    margin-inline: calc(var(--pico-block-spacing-horizontal) * -1) 0;
+    object-fit: cover;
+    border-radius: 0;
+    border-start-start-radius: var(--pico-border-radius);
+    border-end-start-radius: var(--pico-border-radius);
+  }
+
+  .peak-card.horizontal > :first-child:is(img, picture, figure) ~ * {
+    grid-column: 2;
+  }
+}

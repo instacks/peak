@@ -1,0 +1,61 @@
+/*
+ * Accordion (docs: site/pages/accordion.html). Blades styles every <details> as an accordion item;
+ * `name="…"` on several makes them exclusive (one open at a time), no CSS needed.
+ *
+ * Animated open and close where ::details-content and interpolate-size exist: the content's
+ * block size moves between 0 and auto. Dropdowns (their menu is positioned outside the details,
+ * and the clip would cut it off) and tabs are left out.
+ */
+@supports selector(::details-content) and (interpolate-size: allow-keywords) {
+  details:not(.dropdown, .peak-tabs > details) {
+    interpolate-size: allow-keywords;
+  }
+
+  details:not(.dropdown, .peak-tabs > details)::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--pico-transition),
+      content-visibility var(--pico-transition) allow-discrete;
+  }
+
+  details:not(.dropdown, .peak-tabs > details)[open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* Blades' reduced-motion rule covers *, ::before and ::after, not ::details-content */
+@media (prefers-reduced-motion: reduce) {
+  details::details-content {
+    transition: none;
+  }
+}
+
+/* A group of details in one box, each separated by a rule; .flush drops the box */
+.peak-accordion {
+  margin-block-end: var(--pico-spacing);
+  border: var(--pico-border-width) solid var(--pico-accordion-border-color);
+  border-radius: var(--pico-border-radius);
+}
+
+.peak-accordion > details {
+  margin: 0;
+  padding: var(--pico-spacing);
+}
+
+.peak-accordion > details + details {
+  border-block-start: var(--pico-border-width) solid var(--pico-accordion-border-color);
+}
+
+.peak-accordion > details[open] > summary {
+  margin-block-end: calc(var(--pico-spacing) * 0.75);
+}
+
+.peak-accordion.flush {
+  border: 0;
+  border-radius: 0;
+}
+
+.peak-accordion.flush > details {
+  padding-inline: 0;
+}

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peak component fixture</title>
+    <link rel="stylesheet" href="../../dist/peak.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h2>Dialogs</h2>
+      <button id="open-classic" onclick="classic.showModal()">Classic dialog</button>
+      <button id="open-closedby" command="show-modal" commandfor="closedby">closedby dialog</button>
+
+      <dialog id="classic">
+        <article>
+          <header><h3>Classic dialog</h3></header>
+          <p>Pico layout: the overlay is painted on the dialog itself.</p>
+          <footer><button onclick="classic.close()">Close</button></footer>
+        </article>
+      </dialog>
+
+      <dialog id="closedby" closedby="any">
+        <article>
+          <header>
+            <button aria-label="Close" rel="prev" command="close" commandfor="closedby"></button>
+            <h3>closedby dialog</h3>
+          </header>
+          <p>Blades layout: transparent box, overlay on ::backdrop.</p>
+        </article>
+      </dialog>
+
+      <dialog id="markup-open" open>
+        <article><p>Open in the markup: must not fade in on load.</p></article>
+      </dialog>
+
+      <h2>Popovers</h2>
+      <button id="generic-trigger" popovertarget="generic">Generic popover</button>
+      <div id="generic" popover><p>A generic popover.</p></div>
+
+      <nav>
+        <ul>
+          <li>
+            <button id="menu-trigger" popovertarget="menu">Menu</button>
+            <ul id="menu" popover>
+              <li><a href="#">Edit</a></li>
+              <li><a href="#">Duplicate</a></li>
+            </ul>
+          </li>
+          <li>
+            <button id="menu2-trigger" popovertarget="menu2">Second menu</button>
+            <ul id="menu2" popover>
+              <li><a href="#">Archive</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <h2>Menus in containers</h2>
+      <ul>
+        <li>
+          <div style="overflow: hidden; height: 3rem">
+            <ul>
+              <li>
+                <button id="clip-trigger" popovertarget="clip-menu">In overflow: hidden</button>
+                <ul id="clip-menu" popover>
+                  <li><a href="#">One</a></li><li><a href="#">Two</a></li><li><a href="#">Three</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <div style="transform: translateX(0)">
+        <ul>
+          <li>
+            <button id="transform-trigger" popovertarget="transform-menu">In a transformed parent</button>
+            <ul id="transform-menu" popover><li><a href="#">One</a></li></ul>
+          </li>
+        </ul>
+      </div>
+      <div dir="rtl">
+        <ul>
+          <li>
+            <button id="rtl-trigger" popovertarget="rtl-menu">RTL</button>
+            <ul id="rtl-menu" popover><li><a href="#">A rather long first item</a></li></ul>
+          </li>
+        </ul>
+      </div>
+
+      <h2>Menus at the edges</h2>
+      <div data-peak-anchor class="edge" style="position: absolute; top: 20rem; right: 0.5rem">
+        <button id="right-trigger" popovertarget="right-menu">Right</button>
+        <ul id="right-menu" popover><li><a href="#">A long item that would overflow</a></li></ul>
+      </div>
+      <div data-peak-anchor class="edge" style="position: fixed; bottom: 0.5rem; left: 10rem">
+        <button id="bottom-trigger" popovertarget="bottom-menu">Bottom</button>
+        <ul id="bottom-menu" popover>
+          <li><a href="#">One</a></li><li><a href="#">Two</a></li><li><a href="#">Three</a></li>
+        </ul>
+      </div>
+      <div data-peak-anchor class="edge" style="position: fixed; bottom: 0.5rem; right: 0.5rem">
+        <button id="corner-trigger" popovertarget="corner-menu">Corner</button>
+        <ul id="corner-menu" popover>
+          <li><a href="#">A long item that would overflow</a></li><li><a href="#">Two</a></li>
+        </ul>
+      </div>
+
+      <h2>Anchored generic popover</h2>
+      <div data-peak-anchor>
+        <button id="anchored-trigger" popovertarget="anchored">Anchored</button>
+        <div id="anchored" popover><p>Anchored with a wrapper.</p></div>
+      </div>
+
+      <h2>Hint popover</h2>
+      <button id="hint-trigger" interestfor="hint" popovertarget="hint">Save</button>
+      <span id="hint" popover="hint" role="tooltip">Saves the draft</span>
+
+      <h2>Legacy dropdowns</h2>
+      <details id="dd-legacy" class="dropdown">
+        <summary>Legacy dropdown</summary>
+        <ul><li><a href="#">One</a></li><li><a href="#">Two</a></li></ul>
+      </details>
+      <details id="dd-anchored" class="dropdown" data-peak-anchor>
+        <summary>Anchored dropdown</summary>
+        <ul><li><a href="#">One</a></li><li><a href="#">Two</a></li></ul>
+      </details>
+
+      <h2>Tooltips</h2>
+      <!-- A unique background lets the tests find the ::before bubble in a screenshot -->
+      <div id="tips" style="--pico-tooltip-background-color: rgb(255 0 255)">
+      <p style="text-align: center">
+        <span id="tip-top" data-tooltip="Top tooltip">Top</span> ·
+        <span id="tip-bottom" data-tooltip="Bottom tooltip" data-placement="bottom">Bottom</span> ·
+        <span id="tip-left" data-tooltip="Left tooltip" data-placement="left">Left</span> ·
+        <span id="tip-right" data-tooltip="Right tooltip" data-placement="right">Right</span>
+      </p>
+      <p>
+        <span
+          id="tip-long"
+          data-tooltip="A long tooltip that wraps onto several lines instead of running off the edge of the viewport"
+          >Long tooltip</span
+        >
+      </p>
+      <span id="tip-edge" data-tooltip="Flips below at the top edge" style="position: fixed; top: 0; left: 50%"
+        >Edge</span
+      >
+      </div>
+      <div style="height: 60vh"></div>
+    </main>
+  </body>
+</html>

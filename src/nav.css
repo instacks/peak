@@ -1,0 +1,176 @@
+/*
+ * Mobile menu (docs: site/pages/navigation.html): <nav data-peak-menu="576|768|1024"> with
+ *   <div class="site-menu" data-peak-anchor>
+ *     <button class="site-menu-toggle" popovertarget="site-menu">Menu</button>
+ *     <div class="site-menu-popover" id="site-menu" popover><ul>…links…</ul></div>
+ *   </div>
+ * No JavaScript: the button opens a native popover (light dismiss, Esc, top layer), anchored
+ * under it by popover-anchor.css ([data-peak-anchor]).
+ *
+ * The popover is a div, not the <ul>: Blades styles ul[popover] as a dropdown and replaces Pico's
+ * nav item rules, which the desktop row needs. At and above the breakpoint, both wrappers are
+ * display: contents, so the <ul> is a nav list like any other and the popover's own hidden
+ * state, opacity and position have no box to apply to. Media queries can't read custom
+ * properties, hence one block per breakpoint.
+ */
+.site-nav .site-menu,
+.site-nav .site-menu-popover[popover] {
+  display: contents;
+}
+
+.site-nav .site-menu-toggle {
+  display: none;
+}
+
+/* The list is the only <ul> in its wrapper, so Pico's first-of-type margin would hit it too */
+.site-nav .site-menu-popover > ul {
+  margin-inline-start: 0;
+}
+
+@media (width < 576px) {
+  .site-nav[data-peak-menu="576"] .site-menu {
+    display: block;
+  }
+
+  .site-nav[data-peak-menu="576"] .site-menu-toggle {
+    display: inline-flex;
+  }
+
+  .site-nav[data-peak-menu="576"] .site-menu-popover[popover]:not(:popover-open) {
+    display: none;
+  }
+
+  .site-nav[data-peak-menu="576"] .site-menu-popover[popover]:popover-open {
+    display: block;
+  }
+}
+
+@media (width < 768px) {
+  .site-nav[data-peak-menu="768"] .site-menu {
+    display: block;
+  }
+
+  .site-nav[data-peak-menu="768"] .site-menu-toggle {
+    display: inline-flex;
+  }
+
+  .site-nav[data-peak-menu="768"] .site-menu-popover[popover]:not(:popover-open) {
+    display: none;
+  }
+
+  .site-nav[data-peak-menu="768"] .site-menu-popover[popover]:popover-open {
+    display: block;
+  }
+}
+
+@media (width < 1024px) {
+  .site-nav[data-peak-menu="1024"] .site-menu {
+    display: block;
+  }
+
+  .site-nav[data-peak-menu="1024"] .site-menu-toggle {
+    display: inline-flex;
+  }
+
+  .site-nav[data-peak-menu="1024"] .site-menu-popover[popover]:not(:popover-open) {
+    display: none;
+  }
+
+  .site-nav[data-peak-menu="1024"] .site-menu-popover[popover]:popover-open {
+    display: block;
+  }
+}
+
+.site-menu-toggle {
+  align-items: center;
+  gap: 0.5ch;
+  margin: 0;
+}
+
+/* In the open menu the links stack, and sub-page dropdowns open in place instead of floating */
+.site-nav .site-menu-popover:popover-open > ul {
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
+}
+
+/*
+ * Pico pulls nav links out by their padding (negative margin), which the item padding offsets.
+ * Item padding equal to the link padding makes the links' click areas meet in the column.
+ */
+.site-nav .site-menu-popover:popover-open li {
+  display: block;
+  padding-block: var(--pico-nav-link-spacing-vertical);
+}
+
+/* An open dropdown label is drawn like a select field; in a vertical menu it is a label in line with the links */
+.site-nav .site-menu-popover:popover-open details.dropdown > summary {
+  margin-inline: calc(var(--pico-nav-link-spacing-horizontal) * -1);
+}
+
+.site-nav .site-menu-popover:popover-open details.dropdown > summary:not(:focus-visible) {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.site-nav .site-menu-popover:popover-open details.dropdown > summary + ul {
+  position: static;
+  margin-inline-start: var(--pico-nav-element-spacing-horizontal);
+  border: 0;
+  box-shadow: none;
+}
+
+/*
+ * Sidebar navigation: a vertical list of links, the current page marked by a colored start edge.
+ * Nested lists are open only on the branch that holds the current page (:has()), so a long site
+ * stays short. Blades' `aside nav` is already vertical; this undoes Pico's nav item spacing.
+ */
+/* Blades lays out nav as a row; a sidebar nav outside an aside (a drawer, a card) stays a column */
+.peak-sidebar-nav {
+  display: block;
+}
+
+.peak-sidebar-nav ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.peak-sidebar-nav li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.peak-sidebar-nav a {
+  display: block;
+  margin: 0;
+  padding: calc(var(--pico-nav-link-spacing-vertical) * 0.75) var(--pico-nav-link-spacing-horizontal);
+  border-inline-start: calc(var(--pico-border-width) * 2) solid var(--pico-muted-border-color);
+  border-radius: 0;
+  color: var(--pico-muted-color);
+  text-decoration: none;
+}
+
+.peak-sidebar-nav a:hover {
+  color: var(--pico-color);
+}
+
+.peak-sidebar-nav a[aria-current="page"] {
+  border-inline-start-color: var(--pico-primary);
+  color: var(--pico-primary);
+  font-weight: 600;
+}
+
+.peak-sidebar-nav ul ul a {
+  padding-inline-start: calc(var(--pico-nav-link-spacing-horizontal) * 2.5);
+}
+
+.peak-sidebar-nav ul ul ul a {
+  padding-inline-start: calc(var(--pico-nav-link-spacing-horizontal) * 4.5);
+}
+
+.peak-sidebar-nav li:not(:has([aria-current="page"])) > ul {
+  display: none;
+}

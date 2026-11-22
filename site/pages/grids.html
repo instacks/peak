@@ -1,0 +1,162 @@
+---
+title: Grids and patterns
+group: Layout
+order: 2
+description: Layouts that adapt to the space they get, not to the viewport. None of them needs a breakpoint.
+---
+
+<h2>Per-element knobs</h2>
+<p>
+  The layouts read a few custom properties you can set per element, with a <code>style</code>
+  attribute or a class of your own. They inherit like any custom property.
+</p>
+<ul>
+  <li><code>--peak-gap</code>: the gap of grids, clusters, switchers, media objects and sidebar layouts.</li>
+  <li><code>--peak-grid-min</code>: the narrowest column of a grid (an input, 15rem by default).</li>
+  <li><code>--peak-cols</code>: the most columns of <code>.peak-grid</code> (3).</li>
+  <li><code>--peak-sidebar-width</code>: the sidebar's width in <code>.peak-with-sidebar</code> (an input, 16rem).</li>
+  <li><code>--peak-switch-at</code>: where <code>.peak-switcher</code> stacks (40rem).</li>
+</ul>
+
+<h2>Auto grid</h2>
+<p>
+  <code>.peak-grid-auto</code> fits as many columns of at least <code>--peak-grid-min</code> as there is
+  room for, and a single column never overflows a narrow container. Cards in it line up: each fills
+  its row's height and its footer sits at the bottom.
+</p>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
+    <article><h4>One</h4><p>Short.</p><footer>Footer</footer></article>
+    <article><h4>Two</h4><p>A longer text that makes this card taller than the others.</p><footer>Footer</footer></article>
+    <article><h4>Three</h4><p>Short.</p><footer>Footer</footer></article>
+  </div>
+</peak-example>
+<p>
+  With fewer items than columns, the items stretch to fill the row. <code>.fill</code> keeps the empty
+  columns instead, so a short last row keeps the same item width:
+</p>
+<peak-example>
+  <div class="peak-grid-auto fill" style="--peak-grid-min: 10rem">
+    <div class="docs-box">One</div>
+    <div class="docs-box">Two</div>
+  </div>
+</peak-example>
+
+<h2>Column grid</h2>
+<p>
+  <code>.peak-grid</code> has at most <code>--peak-cols</code> equal columns (3 by default), none
+  narrower than <code>--peak-grid-min</code>. With less room it drops to fewer columns by itself.
+  Items can span: <code>.peak-span-2</code>, <code>.peak-span-3</code> (when the grid has that many
+  columns) and <code>.peak-span-full</code>.
+</p>
+<peak-example>
+  <div class="peak-grid" style="--peak-cols: 4; --peak-grid-min: 8rem">
+    <div class="docs-box peak-span-2">span 2</div>
+    <div class="docs-box">1</div>
+    <div class="docs-box">1</div>
+    <div class="docs-box">1</div>
+    <div class="docs-box peak-span-3">span 3</div>
+    <div class="docs-box peak-span-full">full</div>
+  </div>
+</peak-example>
+<p>
+  Spans switch on with a container query at the width where the grid has that many columns with the
+  default 15rem minimum; with a much larger minimum a span can add a column.
+  <code>.peak-span-full</code> is always safe.
+</p>
+
+<h3>Blades' grid</h3>
+<p><code>.grid</code> from Blades: equal columns from 768px, stacked below.</p>
+<peak-example>
+  <div class="grid">
+    <div class="docs-box">One</div>
+    <div class="docs-box">Two</div>
+    <div class="docs-box">Three</div>
+  </div>
+</peak-example>
+
+<h2>Cluster</h2>
+<p>
+  <code>.peak-cluster</code> is a wrapping row with even gaps: buttons, badges, chips, logos.
+  Children lose their block margins so they line up. Modifiers: <code>.justify-center</code>,
+  <code>.justify-end</code>, <code>.justify-between</code>, <code>.align-start</code>,
+  <code>.align-end</code>, <code>.align-baseline</code>.
+</p>
+<peak-example>
+  <div class="peak-cluster">
+    <button>Save</button>
+    <button class="secondary outline">Cancel</button>
+    <span class="peak-badge success dot">Saved 2 min ago</span>
+  </div>
+</peak-example>
+<peak-example>
+  <div class="peak-cluster justify-between" style="--peak-gap: 0.5rem">
+    <strong>Left</strong>
+    <span class="peak-cluster" style="--peak-gap: 0.5rem"><span class="peak-badge">One</span><span class="peak-badge">Two</span></span>
+  </div>
+</peak-example>
+
+<h2>Sidebar layout</h2>
+<p>
+  <code>.peak-with-sidebar</code> puts an <code>&lt;aside&gt;</code> (or <code>.peak-sidebar</code>) next
+  to the content, in either order. When the content would get narrower than 60%, the aside wraps
+  above or below it: no breakpoint. <code>.sticky</code> keeps the aside in view while the content
+  scrolls (offset by <code>--peak-sticky-offset</code>).
+</p>
+<peak-example>
+  <div class="peak-with-sidebar" style="--peak-sidebar-width: 12rem">
+    <aside class="docs-box">Aside, 12rem</aside>
+    <div class="docs-box">The content takes the rest, and wraps below the aside when it would be narrower than 60%.</div>
+  </div>
+</peak-example>
+<peak-example>
+  <div class="peak-with-sidebar sticky">
+    <div class="docs-box" style="min-block-size: 10rem">Content first</div>
+    <div class="peak-sidebar docs-box">.peak-sidebar at the end</div>
+  </div>
+</peak-example>
+
+<h2>Media object</h2>
+<p>
+  <code>.peak-media</code>: an image or icon beside text. The text wraps below the image when there
+  is no room for at least 16rem of it. <code>.center</code> centers them vertically.
+</p>
+<peak-example>
+  <div class="peak-media">
+    <span class="peak-avatar" style="--peak-avatar-size: 4rem" role="img" aria-label="Grace Hopper">GH</span>
+    <div>
+      <h4>Grace Hopper</h4>
+      <p>The first child keeps its size; the last takes the rest and wraps below when the row gets narrow.</p>
+    </div>
+  </div>
+</peak-example>
+
+<h2>Switcher</h2>
+<p>
+  <code>.peak-switcher</code> puts its items in one row while it is at least
+  <code>--peak-switch-at</code> wide (40rem), and stacks them all once it's narrower: never a
+  half-wrapped row. Five or more items always stack.
+</p>
+<peak-example>
+  <div class="peak-switcher" style="--peak-switch-at: 30rem">
+    <div class="docs-box">One</div>
+    <div class="docs-box">Two</div>
+    <div class="docs-box">Three</div>
+  </div>
+</peak-example>
+<p>Resize the window: the three boxes switch together.</p>
+
+<h2>Which one?</h2>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Pattern</th><th scope="col">Use for</th></tr></thead>
+    <tbody>
+      <tr><td><code>.peak-grid-auto</code></td><td>Cards and tiles of equal importance, any number</td></tr>
+      <tr><td><code>.peak-grid</code></td><td>A fixed maximum of columns, items that span</td></tr>
+      <tr><td><code>.peak-cluster</code></td><td>Inline things of different widths: buttons, tags, logos</td></tr>
+      <tr><td><code>.peak-switcher</code></td><td>A few equal blocks that should line up or stack, together</td></tr>
+      <tr><td><code>.peak-with-sidebar</code></td><td>Navigation, filters or a table of contents next to content</td></tr>
+      <tr><td><code>.peak-media</code></td><td>An avatar, icon or thumbnail beside text</td></tr>
+    </tbody>
+  </table>
+</div>

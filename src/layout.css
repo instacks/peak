@@ -1,0 +1,252 @@
+/*
+ * Layout patterns (docs: site/pages/grids.html), in peak.layout. Each is a class, so it also works
+ * on a Stacks container stack (class field); src/stacks.css adapts them to Stacks' wrappers.
+ *
+ * Per-element knobs, set with a style attribute (or by a Peak stack): --peak-gap on grids and
+ * clusters, --peak-grid-min on a grid. Both inherit, like any custom property.
+ */
+
+/* A section as a class, for elements that can't be a <section> (a Stacks container) */
+.peak-section {
+  margin-block-end: var(--peak-section-spacing, var(--pico-block-spacing-vertical));
+}
+
+/*
+ * Band: a section whose background runs to the viewport edges while its content stays in the
+ * container. The background is extended with a spread shadow clipped to the band's own height,
+ * which moves no layout: no 100vw margins, so no horizontal scrollbar, and nothing to flip in RTL.
+ */
+.peak-band {
+  --_peak-band-bg: var(--peak-surface-sunken);
+  padding-block: var(--peak-section-spacing, calc(var(--pico-block-spacing-vertical) * 2));
+  background-color: var(--_peak-band-bg);
+  box-shadow: 0 0 0 100vmax var(--_peak-band-bg);
+  clip-path: inset(0 -100vmax);
+}
+
+.peak-band.surface {
+  --_peak-band-bg: var(--peak-surface);
+}
+
+/* A band with data-theme takes that scheme's page background */
+.peak-band[data-theme] {
+  --_peak-band-bg: var(--peak-bg);
+}
+
+.peak-band.primary {
+  --_peak-band-bg: var(--peak-primary-fill);
+  --pico-color: var(--peak-on-primary);
+  color: var(--peak-on-primary);
+}
+
+.peak-band.contrast {
+  --_peak-band-bg: var(--peak-contrast);
+  --pico-color: var(--peak-on-contrast);
+  color: var(--peak-on-contrast);
+}
+
+/*
+ * Hero: generous space, at most about two lines of an h1 wide. Its padding is its spacing, so a
+ * <section class="peak-hero"> doesn't add the section spacing below it as well.
+ */
+.peak-hero {
+  max-inline-size: 46rem;
+  margin-block-end: 0;
+  padding-block: calc(var(--peak-spacing) * 4) calc(var(--peak-spacing) * 2.5);
+}
+
+.peak-hero.center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.peak-hero.center .peak-lead {
+  margin-inline: auto;
+}
+
+.peak-hero.center .peak-cluster {
+  justify-content: center;
+}
+
+/*
+ * Auto grid: as many columns of at least --peak-grid-min as fit, never wider than the container
+ * (min() keeps a single column from overflowing a narrow one). .fill keeps empty tracks, so a
+ * short row doesn't stretch.
+ */
+.peak-grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--peak-grid-min), 100%), 1fr));
+  gap: var(--peak-gap, var(--pico-grid-row-gap)) var(--peak-gap, var(--pico-grid-column-gap));
+}
+
+.peak-grid-auto.fill {
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--peak-grid-min), 100%), 1fr));
+}
+
+.peak-grid-auto > * {
+  min-inline-size: 0;
+  margin-block: 0;
+}
+
+/* Cluster: a wrapping row (buttons, badges, chips, icons, logos) */
+.peak-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--peak-gap, var(--pico-spacing));
+}
+
+.peak-cluster.justify-center {
+  justify-content: center;
+}
+
+.peak-cluster.justify-end {
+  justify-content: end;
+}
+
+.peak-cluster.justify-between {
+  justify-content: space-between;
+}
+
+.peak-cluster.align-start {
+  align-items: start;
+}
+
+.peak-cluster.align-end {
+  align-items: end;
+}
+
+.peak-cluster.align-baseline {
+  align-items: baseline;
+}
+
+/* Buttons and figures bring their own block margins; in a row they would only misalign it */
+.peak-cluster > * {
+  margin-block: 0;
+}
+
+/*
+ * Column grid: at most --peak-cols equal columns (default 3), none narrower than --peak-grid-min.
+ * With less room it drops to fewer columns by itself (auto-fill), so it needs no breakpoint.
+ */
+.peak-grid {
+  --_peak-gap: var(--peak-gap, var(--pico-grid-column-gap));
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(
+      min(
+        100%,
+        max(var(--peak-grid-min), (100% - (var(--peak-cols, 3) - 1) * var(--_peak-gap)) / var(--peak-cols, 3))
+      ),
+      1fr
+    )
+  );
+  gap: var(--peak-gap, var(--pico-grid-row-gap)) var(--_peak-gap);
+  container: peak-grid / inline-size;
+}
+
+.peak-grid > * {
+  min-inline-size: 0;
+  margin-block: 0;
+}
+
+.peak-span-full {
+  grid-column: 1 / -1;
+}
+
+/*
+ * A container query can't change the grid's own columns, only its items, so spans switch on at the
+ * width where the grid has that many columns with the default 15rem minimum (a larger minimum
+ * can make a span add a column). .peak-span-full is always safe.
+ */
+@container peak-grid (width >= 31rem) {
+  .peak-span-2 {
+    grid-column: span 2;
+  }
+}
+
+@container peak-grid (width >= 47rem) {
+  .peak-span-3 {
+    grid-column: span 3;
+  }
+}
+
+/*
+ * Sidebar layout: an aside (or .peak-sidebar) next to the content, in either order. It wraps the
+ * aside above or below once the content would get narrower than 60%, with no breakpoint.
+ * --peak-sidebar-width (an input, 16rem) sets the aside's width.
+ */
+.peak-with-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--peak-gap, calc(var(--pico-spacing) * 2));
+}
+
+.peak-with-sidebar > :is(aside, .peak-sidebar),
+.peak-with-sidebar > .out:has(> .peak-sidebar) {
+  flex: 1 1 var(--peak-sidebar-width);
+}
+
+.peak-with-sidebar > :not(aside, .peak-sidebar, .out:has(> .peak-sidebar)) {
+  flex: 999 1 0;
+  min-inline-size: 60%;
+}
+
+.peak-with-sidebar.sticky > :is(aside, .peak-sidebar),
+.peak-with-sidebar.sticky > .out:has(> .peak-sidebar) {
+  position: sticky;
+  inset-block-start: var(--peak-sticky-offset, var(--pico-spacing));
+  align-self: start;
+}
+
+/* Media object: an image or icon beside text; the text wraps below it when there's no room */
+.peak-media {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--peak-gap, var(--pico-spacing));
+  margin-block-end: var(--pico-typography-spacing-vertical);
+}
+
+.peak-media > :first-child {
+  flex: none;
+  max-inline-size: 100%;
+  margin-block: 0;
+}
+
+.peak-media > :last-child {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+
+.peak-media > :last-child > :first-child {
+  margin-block-start: 0;
+}
+
+.peak-media.center {
+  align-items: center;
+}
+
+/*
+ * Switcher: its items sit in one row while the switcher is at least --peak-switch-at wide (default
+ * 40rem), and all stack once it's narrower; never a half-wrapped row. Below the threshold the
+ * flex-basis is huge, so each item takes a whole line; above it the basis is negative, which
+ * counts as 0, so they share one. Every item flips at once. Five or more items always stack.
+ */
+.peak-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--peak-gap, var(--pico-spacing));
+}
+
+.peak-switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((var(--peak-switch-at, 40rem) - 100%) * 999);
+  margin-block: 0;
+}
+
+.peak-switcher > :nth-last-child(n + 5),
+.peak-switcher > :nth-last-child(n + 5) ~ * {
+  flex-basis: 100%;
+}

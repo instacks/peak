@@ -1,0 +1,58 @@
+/*
+ * Pagination (docs: site/pages/navigation.html): page links in a row of equal boxes.
+ *   <nav class="peak-pagination" aria-label="Pages">
+ *     <ul>
+ *       <li><a href="?page=1" rel="prev">Previous</a></li>
+ *       <li><a href="?page=1">1</a></li>
+ *       <li><a aria-current="page">2</a></li>
+ *       <li><span aria-disabled="true">…</span></li>
+ *     </ul>
+ *   </nav>
+ * Undoes Pico's nav item spacing; boxes are at least 2.5rem (WCAG 2.5.8 asks for 24px).
+ */
+.peak-pagination {
+  margin-block-end: var(--pico-typography-spacing-vertical);
+}
+
+.peak-pagination ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.peak-pagination li {
+  margin: 0;
+  padding: 0;
+}
+
+.peak-pagination li > :is(a, span) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.5rem;
+  min-block-size: 2.5rem;
+  margin: 0;
+  padding: 0 0.75rem;
+  border: var(--pico-border-width) solid var(--peak-border);
+  border-radius: var(--pico-border-radius);
+  color: var(--peak-text);
+  text-decoration: none;
+}
+
+.peak-pagination li > a:hover {
+  background-color: var(--peak-surface-sunken);
+}
+
+.peak-pagination li > [aria-current="page"] {
+  border-color: var(--peak-primary-fill);
+  background-color: var(--peak-primary-fill);
+  color: var(--peak-on-primary);
+}
+
+.peak-pagination li > [aria-disabled="true"] {
+  border-color: transparent;
+  color: var(--peak-muted);
+}

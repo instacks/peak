@@ -1,0 +1,108 @@
+---
+title: Cards
+group: Components
+order: 1
+description: An article is a card. Peak adds linked cards, full-bleed images, horizontal cards, outline and flat variants, and a class for elements that can't be an article.
+---
+
+<h2>Basic card</h2>
+<p>Blades draws every <code>&lt;article&gt;</code> as a card, with optional header and footer bands.</p>
+<peak-example>
+  <article>
+    <header><small>Content</small> <span class="peak-badge accent">New</span></header>
+    <h3>Poster CMS</h3>
+    <p>Blog and multi-purpose content for Stacks.</p>
+    <footer><small class="peak-text-muted">Updated today</small></footer>
+  </article>
+</peak-example>
+<p>
+  <code>.peak-card</code> gives the same look to any element, such as a <code>&lt;div&gt;</code> or a
+  <code>&lt;li&gt;</code>. A heading in a card sits close to its text, like a title.
+</p>
+<peak-example>
+  <div class="peak-card">
+    <h4>A div card</h4>
+    <p>Same look, any element.</p>
+  </div>
+</peak-example>
+
+<h2>Variants</h2>
+<p><code>.outline</code> draws a border instead of the shadow; <code>.flat</code> is a sunken surface without either.</p>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
+    <div class="peak-card"><h4>Default</h4><p>Surface and shadow.</p></div>
+    <div class="peak-card outline"><h4>Outline</h4><p>A border.</p></div>
+    <div class="peak-card flat"><h4>Flat</h4><p>Sunken, no shadow.</p></div>
+  </div>
+</peak-example>
+
+<h2>Linked card</h2>
+<p>
+  <code>.peak-card-link</code> on one link stretches it over the whole card: the card becomes a
+  single click target, lifts on hover and shows the focus ring around itself. Other links and
+  buttons in the card stay clickable on their own.
+</p>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 14rem">
+    <article>
+      <h4>Gallery</h4>
+      <p>Click anywhere on the card. <a href="#linked-card">This link</a> still works on its own.</p>
+      <footer><a class="peak-card-link" href="#linked-card">Learn more →</a></footer>
+    </article>
+    <article>
+      <h4>Columns</h4>
+      <p>Tab to the link to see the focus ring on the card.</p>
+      <footer><a class="peak-card-link" href="#linked-card">Learn more →</a></footer>
+    </article>
+  </div>
+</peak-example>
+<p>With reduced motion the card doesn't lift.</p>
+
+<h2>Image cards</h2>
+<p>
+  An image, picture or figure that is the card's first child runs to its edges under the rounded
+  corners. An inline SVG doesn't, so an icon at the top of a card stays an icon; wrap an SVG
+  illustration in a <code>&lt;figure&gt;</code> to make it bleed.
+</p>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 14rem">
+    <article>
+      <img src="assets/landscape.svg" alt="Mountains at sunset" width="640" height="400">
+      <h4>Mountains</h4>
+      <p>The image bleeds to the card's edges.</p>
+    </article>
+    <article>
+      <img src="assets/product.svg" alt="A laptop" width="640" height="400">
+      <h4>Product</h4>
+      <p>Use <code>&lt;img&gt;</code> or <code>&lt;picture&gt;</code> the same way.</p>
+    </article>
+  </div>
+</peak-example>
+
+<h2>Horizontal card</h2>
+<p>
+  <code>.peak-card.horizontal</code> puts its leading image beside the content once the card is at
+  least 32rem wide, and above it when narrower. It's a container query on the card itself, so it
+  works the same in a sidebar, a grid or full width.
+</p>
+<peak-example preview-class="flush">
+  <div class="peak-card horizontal">
+    <img src="assets/landscape.svg" alt="Mountains at sunset" width="640" height="400">
+    <h4>Horizontal</h4>
+    <p>Beside the image from a card width of 32rem. Make the window narrower and it stacks.</p>
+    <p><a href="#horizontal-card" role="button" class="secondary outline">Details</a></p>
+  </div>
+</peak-example>
+
+<h2>Cards in grids</h2>
+<p>
+  In <code>.peak-grid-auto</code> and Blades' <code>.grid</code>, cards fill their row's height and
+  push their footers to the bottom. See <a href="grids.html#auto-grid">Auto grid</a>.
+</p>
+
+<h2>Tokens</h2>
+<ul>
+  <li><code>--peak-card-bg</code>: the card background (the surface).</li>
+  <li><code>--peak-shadow</code>: the card shadow, shared with menus and dialogs.</li>
+  <li><code>--peak-radius</code> and <code>--peak-spacing</code> set the corners and padding.</li>
+</ul>

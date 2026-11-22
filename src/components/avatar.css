@@ -1,0 +1,41 @@
+/*
+ * Avatar (docs: site/pages/badges.html): a round picture or initials.
+ *   <span class="peak-avatar"><img src="…" alt="Ada Lovelace"></span>
+ *   <span class="peak-avatar" role="img" aria-label="Ada Lovelace">AL</span>
+ * --peak-avatar-size sets the size (2.5rem). .peak-avatar-group overlaps a row of them.
+ */
+.peak-avatar {
+  --_peak-avatar-size: var(--peak-avatar-size, 2.5rem);
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--_peak-avatar-size);
+  block-size: var(--_peak-avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--peak-secondary-tint);
+  color: var(--peak-secondary-hover);
+  font-size: calc(var(--_peak-avatar-size) * 0.4);
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.peak-avatar > img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.peak-avatar-group {
+  display: inline-flex;
+}
+
+/* Each one overlaps the previous; a ring in the page color keeps them apart */
+.peak-avatar-group > .peak-avatar {
+  box-shadow: 0 0 0 calc(var(--pico-border-width) * 2) var(--peak-bg);
+}
+
+.peak-avatar-group > .peak-avatar + .peak-avatar {
+  margin-inline-start: calc(var(--_peak-avatar-size) * -0.25);
+}

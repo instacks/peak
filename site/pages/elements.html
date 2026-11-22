@@ -1,0 +1,122 @@
+---
+title: Content elements
+group: Foundations
+order: 4
+description: Plain HTML, styled by Blades and themed by Peak's tokens. No classes needed.
+---
+
+<h2>Lists</h2>
+<peak-example>
+  <div class="grid">
+    <ul>
+      <li>Unordered</li>
+      <li>List item
+        <ul><li>Nested</li></ul>
+      </li>
+    </ul>
+    <ol>
+      <li>Ordered</li>
+      <li>List item</li>
+    </ol>
+    <dl>
+      <dt>Term</dt>
+      <dd>Description</dd>
+    </dl>
+  </div>
+</peak-example>
+<p>Blades' <code>.columns</code> flows a long list into as many columns of at least 25 characters as fit:</p>
+<peak-example>
+  <ul class="columns">
+    <li>Accordion</li><li>Avatar</li><li>Badge</li><li>Breadcrumb</li><li>Callout</li><li>Card</li>
+    <li>Chip</li><li>Dialog</li><li>Drawer</li><li>Pagination</li><li>Stats</li><li>Steps</li>
+  </ul>
+</peak-example>
+
+<h2>Timeline</h2>
+<p>Blades styles <code>dl.timeline</code> (or a <code>&lt;dl&gt;</code> inside <code>.has-timeline</code>) as a vertical timeline:</p>
+<peak-example>
+  <dl class="timeline">
+    <dt>May 2026</dt>
+    <dd>Blades CSS 3 released.</dd>
+    <dt>November 2026</dt>
+    <dd>Peak's documentation goes online.</dd>
+  </dl>
+</peak-example>
+
+<h2>Blockquote</h2>
+<peak-example>
+  <blockquote>
+    “Good defaults make well-structured content easier to read.”
+    <footer><cite>— A CSS principle</cite></footer>
+  </blockquote>
+</peak-example>
+
+<h2>Horizontal rule</h2>
+<peak-example>
+  <p>Above</p>
+  <hr>
+  <p>Below</p>
+</peak-example>
+
+<h2>Tables</h2>
+<p>
+  Wrap a wide table in <code>.overflow-auto</code> so it scrolls on small screens.
+  <code>.striped</code> adds stripes. Peak adds group labels
+  (<code>&lt;th scope="rowgroup"&gt;</code>) and smaller, wrapping code in cells.
+</p>
+<peak-example>
+  <div class="overflow-auto">
+    <table class="striped">
+      <thead>
+        <tr><th scope="col">Stack</th><th scope="col">Version</th><th scope="col">Setting</th></tr>
+      </thead>
+      <tbody>
+        <tr><th colspan="3" scope="rowgroup">Content</th></tr>
+        <tr><td>Poster CMS</td><td class="peak-tabular">3.2.1</td><td><code>poster_feed_limit</code></td></tr>
+        <tr><td>Gallery</td><td class="peak-tabular">2.0.4</td><td><code>gallery_columns</code></td></tr>
+        <tr><th colspan="3" scope="rowgroup">Layout</th></tr>
+        <tr><td>Columns</td><td class="peak-tabular">1.12.0</td><td><code>columns_gap</code></td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>3 stacks</td><td></td><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+</peak-example>
+
+<h2>Details</h2>
+<p>Every <code>&lt;details&gt;</code> is an accordion item; see <a href="accordion.html">Accordions and tabs</a>.</p>
+<peak-example>
+  <details>
+    <summary>What does Peak add to details?</summary>
+    <p>An open and close animation where the browser supports it.</p>
+  </details>
+</peak-example>
+
+<h2>Progress</h2>
+<peak-example>
+  <progress value="40" max="100"></progress>
+  <progress></progress>
+</peak-example>
+
+<h2>Loading</h2>
+<p><code>aria-busy="true"</code> shows a spinner on any element or button.</p>
+<peak-example>
+  <span aria-busy="true">Loading…</span>
+  <button aria-busy="true" aria-label="Please wait…"></button>
+</peak-example>
+
+<h2>Icons in links</h2>
+<p>
+  Blades lays out an <code>&lt;i&gt;</code> inside a link as an icon: an emoji, a favicon image or an
+  icon-font glyph, aligned and kept out of the underline.
+</p>
+<peak-example>
+  <p><a href="#icons-in-links"><i>📦</i> Download</a> · <a href="#icons-in-links"><i>⭐</i> Star on GitHub</a></p>
+</peak-example>
+
+<h2>Media</h2>
+<p>Images, videos and SVGs never grow wider than their container.</p>
+<peak-example>
+  <svg viewBox="0 0 600 160" role="img" aria-label="A placeholder image" style="inline-size: 100%; block-size: auto"><rect width="600" height="160" rx="12" fill="var(--peak-surface-sunken)"/><circle cx="80" cy="80" r="40" fill="var(--peak-accent-fill)"/><rect x="150" y="50" width="300" height="20" rx="10" fill="var(--peak-border-strong)"/><rect x="150" y="90" width="200" height="20" rx="10" fill="var(--peak-border)"/></svg>
+</peak-example>

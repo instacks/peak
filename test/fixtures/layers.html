@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" class="peak">
+  <head>
+    <meta charset="utf-8" />
+    <title>Peak layer order</title>
+    <link rel="stylesheet" href="../../dist/peak.css" />
+    <!--
+      Written after Peak, in the reverse of Peak's order: if the built file kept the declared
+      order, peak.utilities still beats the more specific peak.components rule, and the
+      unlayered rule beats both.
+    -->
+    <style>
+      @layer peak.utilities {
+        .probe {
+          color: rgb(0, 0, 1);
+          background-color: rgb(0, 0, 1);
+        }
+      }
+      @layer peak.components {
+        div#layered.probe,
+        div#unlayered.probe {
+          color: rgb(0, 0, 2);
+          background-color: rgb(0, 0, 2);
+        }
+      }
+      @layer blades {
+        div#layered.probe.probe {
+          outline-color: rgb(0, 0, 3);
+        }
+      }
+      @layer peak.tokens {
+        .probe {
+          outline-color: rgb(0, 0, 4);
+        }
+      }
+      .probe-unlayered {
+        background-color: rgb(0, 0, 5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="probe" id="layered">layered</div>
+    <div class="probe probe-unlayered" id="unlayered">unlayered</div>
+  </body>
+</html>

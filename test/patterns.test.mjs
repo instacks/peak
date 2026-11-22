@@ -1,0 +1,336 @@
+// Column grid, sidebar layout, media object (src/layout.css), tabs, accordion, chips and callouts
+// (src/components/*.css), in both builds and on Stacks'
+// wrapper markup with Stacks' own CSS.
+import { test, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { launch, fixtureUrl, colorHelpers, contrast } from "./helpers.mjs";
+
+let browser;
+before(async () => {
+  browser = await launch();
+});
+after(() => browser?.close());
+
+async function open(file, { width = 1280, reducedMotion = "no-preference", colorScheme = "light" } = {}) {
+  const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion, colorScheme });
+  page.setDefaultTimeout(5000);
+  await page.goto(fixtureUrl("patterns.html"));
+  await page.evaluate(async (file) => {
+    if (file.includes("scoped")) document.documentElement.classList.add("peak");
+    const link = document.querySelector("link[rel=stylesheet]");
+    if (link.getAttribute("href").endsWith(file)) return;
+    await new Promise((resolve) => {
+      link.onload = resolve;
+      link.href = `../../dist/${file}`;
+    });
+  }, file);
+  return page;
+}
+
+const rect = (page, id) => page.evaluate((id) => document.getElementById(id).getBoundingClientRect().toJSON(), id);
+const style = (page, id, prop) => page.evaluate(([id, prop]) => getComputedStyle(document.getElementById(id))[prop], [id, prop]);
+const columns = (page, id) => page.evaluate((id) => getComputedStyle(document.getElementById(id)).gridTemplateColumns.split(" ").length, id);
+const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+
+for (const file of ["peak.css", "peak.scoped.css"]) {
+  test(`${file}: column grid: --peak-cols columns at most, fewer when narrow, spans only where they fit`, async () => {
+    const wide = await open(file);
+    assert.equal(await columns(wide, "grid"), 3, "default 3");
+    assert.equal(await columns(wide, "grid-4"), 4, "--peak-cols: 4");
+    const grid = await rect(wide, "grid");
+    const span2 = await rect(wide, "span-2");
+    const full = await rect(wide, "span-full");
+    assert.ok(span2.width > grid.width * 0.6, "span-2 covers two of three columns");
+    assert.ok(Math.abs(full.width - grid.width) < 1, "span-full covers the row");
+    await wide.close();
+
+    const tablet = await open(file, { width: 700 });
+    assert.ok((await columns(tablet, "grid-4")) < 4, "fewer columns than asked when they would be narrower than the minimum");
+    await tablet.close();
+
+    const phone = await open(file, { width: 390 });
+    assert.equal(await columns(phone, "grid"), 1);
+    const g = await rect(phone, "grid");
+    const s = await rect(phone, "span-2");
+    assert.ok(s.width <= g.width + 0.5, "a span never adds a column");
+    assert.equal(await overflow(phone), 0);
+    await phone.close();
+  });
+
+  test(`${file}: sidebar layout side by side, wrapped when narrow, in either order; sticky`, async () => {
+    const wide = await open(file);
+    const rootSize = parseFloat(await wide.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    const [aside, content] = [await rect(wide, "aside"), await rect(wide, "content")];
+    assert.ok(Math.abs(aside.top - content.top) < 1 && aside.right <= content.left, "aside beside the content");
+    assert.ok(Math.abs(aside.width - 16 * rootSize) < 2, `aside 16rem (${aside.width})`);
+    const [c2, a2] = [await rect(wide, "content-2"), await rect(wide, "aside-2")];
+    assert.ok(Math.abs(a2.top - c2.top) < 1 && c2.right <= a2.left, "aside after the content");
+    assert.equal(await style(wide, "aside-2", "position"), "sticky");
+    await wide.close();
+
+    const phone = await open(file, { width: 390 });
+    const [a, c] = [await rect(phone, "aside"), await rect(phone, "content")];
+    assert.ok(c.top >= a.bottom, "stacked");
+    assert.equal(await overflow(phone), 0);
+    await phone.close();
+  });
+
+  test(`${file}: media object beside, then below its text`, async () => {
+    const wide = await open(file);
+    const [img, text] = [await rect(wide, "media-img"), await rect(wide, "media-text")];
+    assert.ok(text.left >= img.right && Math.abs(text.top - img.top) < 1);
+    assert.ok(parseFloat(await style(wide, "media", "marginBottom")) > 0, "spaced like a paragraph");
+    await wide.close();
+    const narrow = await open(file, { width: 300 });
+    const [i, t] = [await rect(narrow, "media-img"), await rect(narrow, "media-text")];
+    assert.ok(t.top >= i.bottom, "text wraps below");
+    await narrow.close();
+  });
+
+  test(`${file}: tabs: one row of tabs, one panel, switching, the open tab stays open`, async () => {
+    const page = await open(file);
+    const tops = await Promise.all(["sum-1", "sum-2", "sum-3"].map(async (id) => Math.round((await rect(page, id)).top)));
+    assert.equal(new Set(tops).size, 1, `tabs in one row: ${tops}`);
+    const visible = () => page.evaluate(() => ["panel-1", "panel-2", "panel-3"].map((id) => document.getElementById(id).getBoundingClientRect().height > 0));
+    assert.deepEqual(await visible(), [true, false, false]);
+    const [tabs, panel] = [await rect(page, "tabs"), await rect(page, "panel-1")];
+    assert.ok(panel.top > (await rect(page, "sum-1")).bottom && panel.left - tabs.left < 20, "panel below the tabs, from the start edge");
+    await page.click("#sum-2");
+    assert.deepEqual(await visible(), [false, true, false]);
+    // The open tab ignores pointer events, so click its spot directly (page.click would wait forever)
+    const s2 = await rect(page, "sum-2");
+    await page.mouse.click(s2.left + s2.width / 2, s2.top + s2.height / 2);
+    assert.deepEqual(await visible(), [false, true, false], "clicking the open tab doesn't close it");
+    assert.equal(await style(page, "sum-2", "borderBottomColor"), await page.evaluate(() => { const i = document.createElement("i"); i.style.color = "var(--pico-primary)"; document.getElementById("tabs").append(i); return getComputedStyle(i).color; }));
+    await page.close();
+  });
+
+  test(`${file}: accordions open with an animation, not with reduced motion; dropdowns untouched`, async () => {
+    const page = await open(file);
+    await page.click("#acc-1 > summary");
+    await page.waitForTimeout(60);
+    const mid = (await rect(page, "acc-1")).height;
+    await page.waitForTimeout(600);
+    const end = (await rect(page, "acc-1")).height;
+    assert.ok(mid < end - 5, `grows over time: ${mid} → ${end}`);
+    assert.ok((await rect(page, "acc-panel")).height > 0);
+    await page.click("#dropdown > summary");
+    await page.waitForTimeout(400);
+    assert.ok((await rect(page, "dropdown-link")).height > 0, "the dropdown's menu isn't clipped");
+    await page.close();
+
+    const still = await open(file, { reducedMotion: "reduce" });
+    const closed = (await rect(still, "acc-1")).height;
+    await still.click("#acc-1 > summary");
+    await still.waitForTimeout(30);
+    assert.ok((await rect(still, "acc-1")).height > closed + 20, "opens at once");
+    await still.close();
+  });
+
+  test(`${file}: chips: selectable through a hidden checkbox, a 24px remove target`, async () => {
+    const page = await open(file);
+    await page.evaluate(colorHelpers);
+    const tint = await page.evaluate(() => resolveColor("var(--peak-primary-tint)").css);
+    assert.notEqual(await style(page, "chip-check", "backgroundColor"), tint);
+    await page.click("#chip-check");
+    assert.equal(await page.evaluate(() => document.getElementById("chip-input").checked), true);
+    assert.equal(await style(page, "chip-check", "backgroundColor"), tint, "checked look");
+    assert.ok((await rect(page, "chip-input")).width <= 1, "checkbox not drawn");
+    const button = await rect(page, "chip-button");
+    assert.ok(button.width >= 24 && button.height >= 24, `remove target ${button.width}×${button.height}`);
+    assert.ok((await rect(page, "chip-link")).height >= 32 - 0.5, "chips at least 2rem tall");
+    await page.close();
+  });
+
+  for (const colorScheme of ["light", "dark"]) {
+    test(`${file}: ${colorScheme}: callouts: readable title and text on each tint, a colored edge`, async () => {
+      const page = await open(file, { colorScheme });
+      await page.evaluate(colorHelpers);
+      const callouts = await page.evaluate(() =>
+        [...document.querySelectorAll("main > .peak-callout")].map((el) => {
+          const cs = getComputedStyle(el);
+          return {
+            id: el.id,
+            bg: resolveColor(cs.backgroundColor, el),
+            text: resolveColor(getComputedStyle(el.querySelector("p")).color, el),
+            title: resolveColor(getComputedStyle(el.querySelector("strong")).color, el),
+            edge: parseFloat(cs.borderInlineStartWidth),
+          };
+        }),
+      );
+      assert.equal(callouts.length, 7);
+      for (const c of callouts) {
+        assert.ok(contrast(c.text, c.bg) >= 4.5, `${c.id} text ${contrast(c.text, c.bg).toFixed(2)}`);
+        assert.ok(contrast(c.title, c.bg) >= 4.5, `${c.id} title ${contrast(c.title, c.bg).toFixed(2)}`);
+        assert.ok(c.edge >= 3, `${c.id} edge`);
+      }
+      await page.close();
+    });
+  }
+
+  test(`${file}: switcher: one row when wide, all stacked when narrow, five items always stacked`, async () => {
+    const tops = (page, ids) => Promise.all(ids.map(async (id) => Math.round((await rect(page, id)).top)));
+    const wide = await open(file);
+    assert.equal(new Set(await tops(wide, ["sw-1", "sw-2", "sw-3"])).size, 1, "one row");
+    const five = await tops(wide, ["sw5-1", "sw5-2"]);
+    assert.ok(five[1] > five[0], "five items stack");
+    const s = await tops(wide, ["s-sw-1", "s-sw-2"]);
+    assert.equal(s[0], s[1], "on a Stacks container stack too");
+    await wide.close();
+    const narrow = await open(file, { width: 500 });
+    const t = await tops(narrow, ["sw-1", "sw-2", "sw-3"]);
+    assert.ok(t[0] < t[1] && t[1] < t[2], `stacked: ${t}`);
+    await narrow.close();
+  });
+
+  test(`${file}: horizontal card: image beside the content when wide, above it when narrow`, async () => {
+    const page = await open(file);
+    const [card, img, title] = [await rect(page, "h-card"), await rect(page, "h-img"), await rect(page, "h-title")];
+    assert.ok(title.left >= img.right && Math.abs(img.left - card.left) < 1 && Math.abs(img.top - card.top) < 1, "image at the start edge, beside the title");
+    assert.ok(Math.abs(img.bottom - card.bottom) < 1, "image fills the card's height");
+    const [nImg, nTitle] = [await rect(page, "h-img-narrow"), await rect(page, "h-title-narrow")];
+    assert.ok(nTitle.top >= nImg.bottom, "narrow card: image above");
+    await page.close();
+  });
+
+  test(`${file}: pagination: a row of boxes at least 2.5rem, the current page filled`, async () => {
+    const page = await open(file);
+    await page.evaluate(colorHelpers);
+    const boxes = await Promise.all(["page-prev", "page-1", "page-2", "page-gap", "page-9"].map((id) => rect(page, id)));
+    const rootSize = parseFloat(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    assert.equal(new Set(boxes.map((b) => Math.round(b.top))).size, 1, "one row");
+    assert.ok(boxes.every((b) => b.width >= 2.5 * rootSize - 0.5 && b.height >= 2.5 * rootSize - 0.5), "2.5rem boxes");
+    const current = await page.evaluate(() => {
+      const cs = getComputedStyle(document.getElementById("page-2"));
+      return [resolveColor(cs.color), resolveColor(cs.backgroundColor), resolveColor("var(--peak-primary-fill)").css];
+    });
+    assert.equal(current[1].css, current[2], "filled with the primary fill");
+    assert.ok(parseFloat(await style(page, "pagination", "marginBottom")) > 0, "spaced from what follows");
+    assert.ok(contrast(current[0], current[1]) >= 4.5);
+    await page.close();
+  });
+
+  test(`${file}: drawer slides in at the inline end (start, RTL), full height; wide and full dialogs`, async () => {
+    const page = await open(file);
+    const vw = 1280;
+    const vh = 900;
+    const show = (id) => page.evaluate((id) => document.getElementById(id).showModal(), id);
+    const hide = (id) => page.evaluate((id) => document.getElementById(id).close(), id);
+    await show("drawer");
+    await page.waitForTimeout(30);
+    const early = await rect(page, "drawer-panel");
+    await page.waitForTimeout(500);
+    const panel = await rect(page, "drawer-panel");
+    const rootSize = parseFloat(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    assert.ok(early.left > panel.left + 1, `slides in: ${early.left} → ${panel.left}`);
+    assert.ok(Math.abs(panel.right - vw) < 1 && Math.abs(panel.top) < 1 && Math.abs(panel.height - vh) < 1, "full height at the end edge");
+    assert.ok(Math.abs(panel.width - 24 * rootSize) < 1, "24rem");
+    await hide("drawer");
+    for (const id of ["drawer-start", "drawer-rtl"]) {
+      await show(id);
+      await page.waitForTimeout(500);
+      const r = await rect(page, `${id}-panel`);
+      assert.ok(Math.abs(r.left) < 1, `${id} at the left edge`);
+      await hide(id);
+    }
+    await show("wide");
+    await page.waitForTimeout(400);
+    const wide = await rect(page, "wide-panel");
+    assert.ok(wide.width > 700 && wide.width <= 64 * rootSize + 1, `wide ${wide.width}`);
+    await hide("wide");
+    await show("full");
+    await page.waitForTimeout(400);
+    const full = await rect(page, "full-panel");
+    assert.ok(Math.abs(full.width - vw) < 1 && Math.abs(full.height - vh) < 1, "full screen");
+    await hide("full");
+
+    // closedby switches Blades to its modern modal, where the dialog itself is a centered box
+    await show("drawer-cb");
+    await page.waitForTimeout(500);
+    const cb = await rect(page, "drawer-cb-panel");
+    assert.ok(Math.abs(cb.right - vw) < 1 && Math.abs(cb.top) < 1 && Math.abs(cb.height - vh) < 1, `closedby drawer: ${JSON.stringify(cb)}`);
+    assert.ok(Math.abs(cb.width - 24 * rootSize) < 1, "closedby drawer: 24rem");
+    await hide("drawer-cb");
+    await show("drawer-start-cb");
+    await page.waitForTimeout(500);
+    assert.ok(Math.abs((await rect(page, "drawer-start-cb-panel")).left) < 1, "closedby drawer at the start");
+    await hide("drawer-start-cb");
+    await show("wide-cb");
+    await page.waitForTimeout(400);
+    const wideCb = await rect(page, "wide-cb-panel");
+    assert.ok(wideCb.width > 700 && wideCb.width <= 64 * rootSize + 1, `closedby wide ${wideCb.width}`);
+    await hide("wide-cb");
+    await show("full-cb");
+    await page.waitForTimeout(400);
+    const fullCb = await rect(page, "full-cb-panel");
+    assert.ok(Math.abs(fullCb.width - vw) < 1 && Math.abs(fullCb.height - vh) < 1, `closedby full screen ${JSON.stringify(fullCb)}`);
+    await page.close();
+
+    const still = await open(file, { reducedMotion: "reduce" });
+    await still.evaluate(() => document.getElementById("drawer").showModal());
+    await still.waitForTimeout(30);
+    assert.ok(Math.abs((await rect(still, "drawer-panel")).right - 1280) < 1, "no slide with reduced motion");
+    await still.close();
+  });
+
+  test(`${file}: toast in the inline-end bottom corner, with its status edge`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => document.getElementById("toast").showPopover());
+    await page.waitForTimeout(400);
+    const t = await rect(page, "toast");
+    const rootSize = parseFloat(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    assert.ok(Math.abs(1280 - t.right - rootSize) < 1.5 && Math.abs(900 - t.bottom - rootSize) < 1.5, `corner ${t.right},${t.bottom}`);
+    await page.evaluate(colorHelpers);
+    const edge = await page.evaluate(() => [getComputedStyle(document.getElementById("toast")).borderInlineStartColor, resolveColor("var(--peak-success)").css]);
+    assert.equal(edge[0], edge[1]);
+    await page.click("#toast button");
+    assert.equal(await page.evaluate(() => document.getElementById("toast").matches(":popover-open")), false, "closes");
+    await page.close();
+  });
+
+  test(`${file}: stats, steps and avatars`, async () => {
+    const page = await open(file);
+    await page.evaluate(colorHelpers);
+    const [label, value, third] = [await rect(page, "stat-label"), await rect(page, "stat-value"), await rect(page, "stat-3")];
+    assert.ok(value.bottom <= label.top + 1, "number above its label");
+    assert.ok(Math.abs(third.top - value.top) < 1, "in columns");
+    const steps = await page.evaluate(() => ["step-1", "step-2", "step-3"].map((id) => {
+      const cs = getComputedStyle(document.getElementById(id), "::before");
+      return [cs.content, cs.backgroundColor];
+    }));
+    const fill = await page.evaluate(() => resolveColor("var(--peak-primary-fill)").css);
+    assert.equal(steps[0][0], '"✓"', "done");
+    assert.equal(steps[1][1], fill, "current filled");
+    assert.notEqual(steps[2][0], '"✓"', "upcoming numbered");
+    const avatars = await page.evaluate(() => {
+      const el = document.getElementById("avatar-1");
+      const cs = getComputedStyle(el);
+      return {
+        size: [el.getBoundingClientRect().width, el.getBoundingClientRect().height],
+        radius: cs.borderTopLeftRadius,
+        fg: resolveColor(cs.color, el),
+        bg: resolveColor(cs.backgroundColor, el),
+        overlap: document.getElementById("avatar-2").getBoundingClientRect().left < el.getBoundingClientRect().right,
+      };
+    });
+    const rootSize = parseFloat(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize));
+    assert.ok(Math.abs(avatars.size[0] - 2.5 * rootSize) < 0.5 && avatars.size[0] === avatars.size[1]);
+    assert.equal(avatars.radius, "50%");
+    assert.ok(contrast(avatars.fg, avatars.bg) >= 4.5, "initials readable");
+    assert.ok(avatars.overlap, "group overlaps");
+    await page.close();
+  });
+
+  test(`${file}: on Stacks container stacks: grid, sidebar (sticky works), media, callout`, async () => {
+    const page = await open(file);
+    assert.equal(await style(page, "s-grid", "display"), "grid");
+    assert.equal(await style(page, "s-sidebar", "display"), "flex");
+    assert.equal(await style(page, "s-sidebar", "overflow"), "visible", "an overflow: hidden ancestor would stop sticky");
+    const [a, c] = [await rect(page, "s-aside"), await rect(page, "s-content")];
+    assert.ok(Math.abs(a.top - c.top) < 1 && a.right <= c.left, "sidebar stack beside the content stack");
+    assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById("s-aside").parentElement).position), "sticky");
+    assert.equal(await style(page, "s-media", "display"), "flex");
+    assert.ok(parseFloat(await style(page, "s-callout", "paddingTop")) > 0);
+    await page.close();
+  });
+}

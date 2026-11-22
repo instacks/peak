@@ -1,0 +1,693 @@
+/*
+ * Peak tokens and the --pico-* bridge.
+ *
+ * Tiers (docs/PLAN.md §1):
+ *   1. Inputs     --peak-<name>          scalars for Stacks sliders and pickers (src/inputs.css).
+ *                                        Set them on :root, or on any [data-theme] /
+ *                                        [data-peak-scope] element.
+ *   2. Semantic   --peak-<group>-<name>  colors and sizes derived from the inputs. Read them; override
+ *                                        them only when an input can't express what you need.
+ *   3. Bridge     --pico-*               private. Feeds Peak's tokens into Blades' components.
+ * Private helpers use --_peak-*.
+ *
+ * Theme roots are written as :scope, which is :root at the top level and the scope root (.peak)
+ * in the scoped build.
+ */
+
+/* -------------------------------------------------------------------------------------------------
+ * 2. Semantic tokens
+ *
+ * Redeclared on every theme root, not just the root. A custom property that uses var() is resolved on
+ * the element that declares it, so derived tokens only follow a section's own inputs where they are
+ * redeclared. Blades also redeclares every --pico-* on [data-theme], so the bridge must be there too
+ * or nested themes fall back to Pico blue (PLAN B3).
+ *
+ * light-dark() is always the outermost function: each scheme is derived from a non-light-dark()
+ * origin, so no engine has to support relative color or color-mix() over a light-dark() value.
+ * ---------------------------------------------------------------------------------------------- */
+
+:where(:scope, :host, [data-theme], [data-peak-scope]) {
+  --_peak-brand: var(--peak-brand, oklch(0.6 var(--peak-chroma) var(--peak-hue)));
+
+  /*
+   * Origins of the neutral and secondary ramps. Each *-origin is invalid while its hue input is
+   * unset (the hues have no default and aren't registered), so the var() fallback applies:
+   * neutrals follow the brand hue, and secondary is the neutral ramp tinted four times as strongly.
+   */
+  --_peak-neutral-origin: oklch(0.6 0.1 var(--peak-neutral-hue));
+  --_peak-neutral: var(--_peak-neutral-origin, var(--_peak-brand));
+  /* Dark scheme surfaces and borders: their own hue, or the neutral one */
+  --_peak-neutral-dark-origin: oklch(0.6 0.1 var(--peak-neutral-hue-dark));
+  --_peak-neutral-dark: var(--_peak-neutral-dark-origin, var(--_peak-neutral));
+  /*
+   * Ink: text, headings, muted text and the contrast color. Unlike the neutral origins, these
+   * carry their chroma, so the tokens read it with `c`: the ink hue and tint when set, otherwise
+   * each scheme's neutral at the neutral tint (exactly the neutral ramp, as before).
+   */
+  --_peak-ink-origin: oklch(0.6 var(--peak-ink-chroma) var(--peak-ink-hue));
+  --_peak-ink: var(--_peak-ink-origin, oklch(from var(--_peak-neutral) 0.6 var(--peak-neutral-chroma) h));
+  --_peak-ink-dark: var(
+    --_peak-ink-origin,
+    oklch(from var(--_peak-neutral-dark) 0.6 var(--peak-neutral-chroma) h)
+  );
+  /* Secondary defaults to the ink ramp tinted four times as strongly (the neutral one while unset) */
+  --_peak-secondary-origin: oklch(0.6 var(--peak-secondary-chroma) var(--peak-secondary-hue));
+  --_peak-secondary: var(--_peak-secondary-origin, oklch(from var(--_peak-ink) 0.6 calc(c * 4) h));
+
+  /*
+   * Neutrals: tinted toward the neutral hue, which is the brand hue unless set. A few tokens read an
+   * exact color first (--peak-bg-light/-dark etc., "exact colors"): unset, the
+   * derived value applies; set, it is used as given, outside the contrast guarantee.
+   */
+  --peak-bg: light-dark(
+    var(--peak-bg-light, oklch(from var(--_peak-neutral) 0.99 var(--peak-neutral-chroma) h)),
+    var(--peak-bg-dark, oklch(from var(--_peak-neutral-dark) 0.17 var(--peak-neutral-chroma) h))
+  );
+  --peak-surface: light-dark(
+    var(--peak-surface-light, oklch(1 0 0)),
+    var(--peak-surface-dark, oklch(from var(--_peak-neutral-dark) 0.21 var(--peak-neutral-chroma) h))
+  );
+  --peak-surface-raised: light-dark(
+    oklch(1 0 0),
+    oklch(from var(--_peak-neutral-dark) 0.23 var(--peak-neutral-chroma) h)
+  );
+  --peak-surface-sunken: light-dark(
+    oklch(from var(--_peak-neutral) 0.975 var(--peak-neutral-chroma) h),
+    oklch(from var(--_peak-neutral-dark) 0.19 var(--peak-neutral-chroma) h)
+  );
+  --peak-text: light-dark(
+    var(--peak-text-light, oklch(from var(--_peak-ink) 0.24 c h)),
+    var(--peak-text-dark, oklch(from var(--_peak-ink-dark) 0.91 c h))
+  );
+  --peak-heading: light-dark(
+    var(--peak-heading-light, oklch(from var(--_peak-ink) 0.2 c h)),
+    var(--peak-heading-dark, oklch(from var(--_peak-ink-dark) 0.95 c h))
+  );
+  --peak-muted: light-dark(
+    var(--peak-muted-light, oklch(from var(--_peak-ink) 0.48 c h)),
+    var(--peak-muted-dark, oklch(from var(--_peak-ink-dark) 0.68 c h))
+  );
+  --peak-border: light-dark(
+    var(--peak-border-light, oklch(from var(--_peak-neutral) 0.88 var(--peak-neutral-chroma) h)),
+    var(--peak-border-dark, oklch(from var(--_peak-neutral-dark) 0.3 var(--peak-neutral-chroma) h))
+  );
+  --peak-border-strong: light-dark(
+    oklch(from var(--_peak-neutral) 0.82 var(--peak-neutral-chroma) h),
+    oklch(from var(--_peak-neutral-dark) 0.36 var(--peak-neutral-chroma) h)
+  );
+  --peak-shadow: 0 0.5rem 2.5rem
+    light-dark(
+      oklch(from var(--_peak-neutral) 0.6 calc(var(--peak-neutral-chroma) * 4) h / 0.2),
+      oklch(from var(--_peak-neutral-dark) 0.08 var(--peak-neutral-chroma) h / 0.2)
+    );
+
+  /*
+   * Gamut shift, for the light scheme. Saturated greens and cyans are outside sRGB at L 0.54 and
+   * clipping makes them lighter, so they fail 4.5:1 against white (test/contrast.test.mjs). This
+   * lowers lightness by chroma, most around hue 180. It is a token stream that uses the `c` and `h`
+   * channel keywords, so it is only valid inside a relative color: oklch(from X calc(L - var(…)) c h).
+   * The dark scheme caps chroma instead: a clipped red at chroma 0.3 can't get lighter, so raising L
+   * doesn't help there.
+   * Written as calc(), not a bare parenthesis: minified, `name:(` would be read as a template
+   * token when a Stacks template embeds Peak.
+   */
+  --_peak-gamut-shift: calc(c * (0.08 + 0.3 * max(0, cos((h - 180) * 1deg))));
+
+  /*
+   * Brand. Lightness is pinned per scheme for predictable contrast; hue and chroma come from the
+   * inputs or the picker. Text hover moves away from the background (darker in light, lighter in
+   * dark), and so does button hover, which keeps the on-primary text readable. Focus stays opaque
+   * (WCAG 1.4.11, as in Blades). Every pair passes WCAG 2 for hue 0–360 and chroma 0–0.3.
+   */
+  --peak-primary: light-dark(
+    oklch(from var(--_peak-brand) calc(0.54 - var(--_peak-gamut-shift)) c h),
+    oklch(from var(--_peak-brand) 0.72 min(c, 0.26) h)
+  );
+  --peak-primary-hover: light-dark(
+    oklch(from var(--_peak-brand) calc(0.47 - var(--_peak-gamut-shift)) c h),
+    oklch(from var(--_peak-brand) 0.79 min(c, 0.26) h)
+  );
+  /*
+   * Fills (buttons). Dark mode uses a light fill with dark text, or, with --peak-dark-fills: 1, the
+   * light scheme's deep fill with white text. --peak-dark-fills is a registered 0/1 number, so the
+   * mix below is all one or all the other.
+   */
+  --peak-primary-fill: light-dark(
+    oklch(from var(--_peak-brand) calc(0.54 - var(--_peak-gamut-shift)) c h),
+    color-mix(
+      in oklch,
+      oklch(from var(--_peak-brand) 0.72 min(c, 0.26) h),
+      oklch(from var(--_peak-brand) calc(0.54 - var(--_peak-gamut-shift)) c h)
+        calc(var(--peak-dark-fills) * 100%)
+    )
+  );
+  --peak-primary-hover-bg: light-dark(
+    oklch(from var(--_peak-brand) calc(0.48 - var(--_peak-gamut-shift)) c h),
+    color-mix(
+      in oklch,
+      oklch(from var(--_peak-brand) 0.8 min(c, 0.26) h),
+      oklch(from var(--_peak-brand) calc(0.48 - var(--_peak-gamut-shift)) c h)
+        calc(var(--peak-dark-fills) * 100%)
+    )
+  );
+  --peak-primary-focus: var(--peak-primary);
+  --peak-primary-subtle: light-dark(
+    oklch(from var(--_peak-brand) calc(0.54 - var(--_peak-gamut-shift)) c h / 0.2),
+    oklch(from var(--_peak-brand) 0.72 min(c, 0.26) h / 0.2)
+  );
+  --peak-primary-underline: light-dark(
+    oklch(from var(--_peak-brand) calc(0.54 - var(--_peak-gamut-shift)) c h / 0.5),
+    oklch(from var(--_peak-brand) 0.72 min(c, 0.26) h / 0.5)
+  );
+  /* Opaque tint for badges and other small fills: a translucent -subtle would depend on what's behind it */
+  --peak-primary-tint: light-dark(
+    oklch(from var(--_peak-brand) 0.94 calc(min(c, 0.26) * 0.3) h),
+    oklch(from var(--_peak-brand) 0.3 calc(min(c, 0.26) * 0.4) h)
+  );
+  --peak-on-primary: light-dark(
+    oklch(0.99 0 0),
+    color-mix(in oklch, oklch(0.15 0 0), oklch(0.99 0 0) calc(var(--peak-dark-fills) * 100%))
+  );
+
+  /*
+   * Secondary: its own hue and chroma, or a stronger tint of the neutral ramp. Lightness is pinned
+   * per scheme like the brand's, with the same gamut shift, so any hue and chroma 0–0.3 passes.
+   */
+  --peak-secondary: light-dark(
+    oklch(from var(--_peak-secondary) calc(0.5 - var(--_peak-gamut-shift)) c h),
+    oklch(from var(--_peak-secondary) 0.72 min(c, 0.26) h)
+  );
+  --peak-secondary-hover: light-dark(
+    oklch(from var(--_peak-secondary) calc(0.43 - var(--_peak-gamut-shift)) c h),
+    oklch(from var(--_peak-secondary) 0.79 min(c, 0.26) h)
+  );
+  --peak-secondary-fill: light-dark(
+    var(--peak-secondary-fill-light, oklch(from var(--_peak-secondary) calc(0.5 - var(--_peak-gamut-shift)) c h)),
+    var(--peak-secondary-fill-dark, color-mix(
+      in oklch,
+      oklch(from var(--_peak-secondary) 0.72 min(c, 0.26) h),
+      oklch(from var(--_peak-secondary) calc(0.5 - var(--_peak-gamut-shift)) c h)
+        calc(var(--peak-dark-fills) * 100%)
+    ))
+  );
+  --peak-secondary-hover-bg: light-dark(
+    oklch(from var(--_peak-secondary) calc(0.44 - var(--_peak-gamut-shift)) c h),
+    color-mix(
+      in oklch,
+      oklch(from var(--_peak-secondary) 0.66 min(c, 0.26) h),
+      oklch(from var(--_peak-secondary) calc(0.44 - var(--_peak-gamut-shift)) c h)
+        calc(var(--peak-dark-fills) * 100%)
+    )
+  );
+  --peak-secondary-focus: var(--peak-secondary);
+  --peak-secondary-subtle: light-dark(
+    oklch(from var(--_peak-secondary) calc(0.5 - var(--_peak-gamut-shift)) c h / 0.2),
+    oklch(from var(--_peak-secondary) 0.72 min(c, 0.26) h / 0.2)
+  );
+  --peak-secondary-underline: light-dark(
+    oklch(from var(--_peak-secondary) calc(0.5 - var(--_peak-gamut-shift)) c h / 0.5),
+    oklch(from var(--_peak-secondary) 0.72 min(c, 0.26) h / 0.5)
+  );
+  --peak-secondary-tint: light-dark(
+    oklch(from var(--_peak-secondary) 0.94 calc(min(c, 0.26) * 0.3) h),
+    oklch(from var(--_peak-secondary) 0.3 calc(min(c, 0.26) * 0.4) h)
+  );
+  --peak-on-secondary: light-dark(
+    oklch(0.99 0 0),
+    color-mix(in oklch, oklch(0.15 0 0), oklch(0.99 0 0) calc(var(--peak-dark-fills) * 100%))
+  );
+
+  /*
+   * Accent, for highlights used sparingly (badges, icons). --peak-accent is the text color, pinned
+   * like the brand's. The fill is vivid and light in both schemes, so it takes dark ink text, as
+   * the warning fill does.
+   */
+  /*
+   * The picker input is --peak-accent-color (--peak-accent is the derived color, so reading it here
+   * would be a cycle). A picked color's chroma is capped at the slider's 0.25: above that, clipping
+   * into sRGB lightens the light scheme's accent text below 4.5:1 on its subtle tint.
+   */
+  --_peak-accent: oklch(
+    from var(--peak-accent-color, oklch(0.6 var(--peak-accent-chroma) var(--peak-accent-hue)))
+    l min(c, 0.25) h
+  );
+  --peak-accent: light-dark(
+    oklch(from var(--_peak-accent) calc(0.54 - var(--_peak-gamut-shift)) c h),
+    oklch(from var(--_peak-accent) 0.72 min(c, 0.26) h)
+  );
+  --peak-accent-hover: light-dark(
+    oklch(from var(--_peak-accent) calc(0.47 - var(--_peak-gamut-shift)) c h),
+    oklch(from var(--_peak-accent) 0.79 min(c, 0.26) h)
+  );
+  --peak-accent-fill: oklch(from var(--_peak-accent) 0.68 c h);
+  --peak-accent-hover-bg: oklch(from var(--_peak-accent) 0.75 c h);
+  --peak-accent-subtle: light-dark(
+    oklch(from var(--_peak-accent) 0.96 calc(c * 0.25) h),
+    oklch(from var(--_peak-accent) 0.26 calc(c * 0.35) h)
+  );
+  --peak-on-accent: oklch(from var(--_peak-ink) 0.18 c h);
+
+  /* Contrast: the near-black / near-white end of the ink ramp */
+  --peak-contrast: light-dark(
+    oklch(from var(--_peak-ink) 0.18 c h),
+    oklch(from var(--_peak-ink-dark) 0.94 c h)
+  );
+  --peak-contrast-hover: light-dark(oklch(from var(--_peak-ink) 0.1 c h), oklch(1 0 0));
+  --peak-contrast-hover-bg: var(--peak-contrast-hover);
+  /* Same as Pico: a ring in the button's own color would read as a bigger button */
+  --peak-contrast-focus: var(--peak-secondary);
+  --peak-contrast-underline: light-dark(
+    oklch(from var(--_peak-ink) 0.18 c h / 0.5),
+    oklch(from var(--_peak-ink-dark) 0.94 c h / 0.5)
+  );
+  --peak-on-contrast: light-dark(oklch(0.99 0 0), oklch(0.15 0 0));
+
+  /*
+   * Status colors. The light scheme applies the same gamut shift as the brand. Warning is lighter
+   * (amber reads as brown at L 0.52), takes dark text, and isn't meant as a text color.
+   */
+  --peak-success: light-dark(
+    oklch(
+      from oklch(0.52 var(--peak-status-chroma) var(--peak-success-hue))
+      calc(l - var(--_peak-gamut-shift)) c h
+    ),
+    oklch(0.72 var(--peak-status-chroma) var(--peak-success-hue))
+  );
+  --peak-success-hover: light-dark(
+    oklch(
+      from oklch(0.46 var(--peak-status-chroma) var(--peak-success-hue))
+      calc(l - var(--_peak-gamut-shift)) c h
+    ),
+    oklch(0.78 var(--peak-status-chroma) var(--peak-success-hue))
+  );
+  --peak-success-subtle: light-dark(
+    oklch(0.96 calc(var(--peak-status-chroma) * 0.25) var(--peak-success-hue)),
+    oklch(0.26 calc(var(--peak-status-chroma) * 0.35) var(--peak-success-hue))
+  );
+  --peak-success-border: light-dark(
+    oklch(
+      from oklch(0.52 var(--peak-status-chroma) var(--peak-success-hue))
+      calc(l - var(--_peak-gamut-shift)) c h / 0.55
+    ),
+    oklch(0.72 var(--peak-status-chroma) var(--peak-success-hue) / 0.55)
+  );
+  --peak-on-success: light-dark(oklch(0.99 0 0), oklch(0.15 0 0));
+
+  --peak-warning: light-dark(
+    oklch(0.75 var(--peak-status-chroma) var(--peak-warning-hue)),
+    oklch(0.8 var(--peak-status-chroma) var(--peak-warning-hue))
+  );
+  --peak-warning-hover: light-dark(
+    oklch(0.69 var(--peak-status-chroma) var(--peak-warning-hue)),
+    oklch(0.86 var(--peak-status-chroma) var(--peak-warning-hue))
+  );
+  --peak-warning-subtle: light-dark(
+    oklch(0.96 calc(var(--peak-status-chroma) * 0.25) var(--peak-warning-hue)),
+    oklch(0.26 calc(var(--peak-status-chroma) * 0.35) var(--peak-warning-hue))
+  );
+  --peak-warning-border: light-dark(
+    oklch(0.75 var(--peak-status-chroma) var(--peak-warning-hue) / 0.55),
+    oklch(0.8 var(--peak-status-chroma) var(--peak-warning-hue) / 0.55)
+  );
+  --peak-on-warning: oklch(0.2 0 0);
+
+  --peak-danger: light-dark(
+    oklch(
+      from oklch(0.52 var(--peak-status-chroma) var(--peak-danger-hue))
+      calc(l - var(--_peak-gamut-shift)) c h
+    ),
+    oklch(0.72 var(--peak-status-chroma) var(--peak-danger-hue))
+  );
+  --peak-danger-hover: light-dark(
+    oklch(
+      from oklch(0.46 var(--peak-status-chroma) var(--peak-danger-hue))
+      calc(l - var(--_peak-gamut-shift)) c h
+    ),
+    oklch(0.78 var(--peak-status-chroma) var(--peak-danger-hue))
+  );
+  --peak-danger-subtle: light-dark(
+    oklch(0.96 calc(var(--peak-status-chroma) * 0.25) var(--peak-danger-hue)),
+    oklch(0.26 calc(var(--peak-status-chroma) * 0.35) var(--peak-danger-hue))
+  );
+  --peak-danger-border: light-dark(
+    oklch(
+      from oklch(0.52 var(--peak-status-chroma) var(--peak-danger-hue))
+      calc(l - var(--_peak-gamut-shift)) c h / 0.55
+    ),
+    oklch(0.72 var(--peak-status-chroma) var(--peak-danger-hue) / 0.55)
+  );
+  --peak-on-danger: light-dark(oklch(0.99 0 0), oklch(0.15 0 0));
+
+  --peak-info: light-dark(
+    oklch(
+      from oklch(0.52 var(--peak-status-chroma) var(--peak-info-hue))
+      calc(l - var(--_peak-gamut-shift)) c h
+    ),
+    oklch(0.72 var(--peak-status-chroma) var(--peak-info-hue))
+  );
+  --peak-info-hover: light-dark(
+    oklch(
+      from oklch(0.46 var(--peak-status-chroma) var(--peak-info-hue))
+      calc(l - var(--_peak-gamut-shift)) c h
+    ),
+    oklch(0.78 var(--peak-status-chroma) var(--peak-info-hue))
+  );
+  --peak-info-subtle: light-dark(
+    oklch(0.96 calc(var(--peak-status-chroma) * 0.25) var(--peak-info-hue)),
+    oklch(0.26 calc(var(--peak-status-chroma) * 0.35) var(--peak-info-hue))
+  );
+  --peak-info-border: light-dark(
+    oklch(
+      from oklch(0.52 var(--peak-status-chroma) var(--peak-info-hue))
+      calc(l - var(--_peak-gamut-shift)) c h / 0.55
+    ),
+    oklch(0.72 var(--peak-status-chroma) var(--peak-info-hue) / 0.55)
+  );
+  --peak-on-info: light-dark(oklch(0.99 0 0), oklch(0.15 0 0));
+
+  /*
+ * Modular type scale (h6 = 1rem). Ratio 1.15 gives h1–h3 within 0.02rem of Pico's fixed sizes;
+ * h4 and h5 come out larger (1.32rem and 1.15rem against 1.25rem and 1.125rem).
+ */
+  --peak-h6: 1rem;
+  --peak-h5: calc(1rem * var(--peak-type-ratio));
+  --peak-h4: calc(1rem * pow(var(--peak-type-ratio), 2));
+  --peak-h3: calc(1rem * pow(var(--peak-type-ratio), 3));
+  --peak-h2: calc(1rem * pow(var(--peak-type-ratio), 4));
+  --peak-h1: calc(1rem * pow(var(--peak-type-ratio), 5));
+
+  /* Spacing scale */
+  --peak-space-3xs: calc(var(--peak-spacing) * 0.25);
+  --peak-space-2xs: calc(var(--peak-spacing) * 0.5);
+  --peak-space-xs: calc(var(--peak-spacing) * 0.75);
+  --peak-space-s: var(--peak-spacing);
+  --peak-space-m: calc(var(--peak-spacing) * 1.5);
+  --peak-space-l: calc(var(--peak-spacing) * 2);
+  --peak-space-xl: calc(var(--peak-spacing) * 3);
+  --peak-space-2xl: calc(var(--peak-spacing) * 4);
+  --peak-space-3xl: calc(var(--peak-spacing) * 6);
+
+  /* The shade at an edge of a scrolled box (code blocks) */
+  --_peak-scroll-shadow: light-dark(oklch(0 0 0 / 0.14), oklch(0 0 0 / 0.55));
+
+  /* Deprecated aliases, kept through 0.x */
+  --peak-card-bg: var(--peak-surface);
+  --peak-primary-inverse: var(--peak-on-primary);
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * 3. Bridge: --pico-* ← --peak-*
+ *
+ * Variables Blades derives from other variables (e.g. --pico-card-box-shadow: var(--pico-box-shadow))
+ * are redeclared too: Blades only declares them on :root and [data-theme], so a [data-peak-scope]
+ * would otherwise inherit values resolved at the root.
+ * ---------------------------------------------------------------------------------------------- */
+
+/* Colors */
+:where(:scope, :host, [data-theme], [data-peak-scope]) {
+  --pico-background-color: var(--peak-bg);
+  --pico-color: var(--peak-text);
+  --pico-text-selection-color: var(--peak-primary-subtle);
+  --pico-muted-color: var(--peak-muted);
+  --pico-muted-border-color: var(--peak-border);
+  --pico-box-shadow: var(--peak-shadow);
+
+  --pico-primary: var(--peak-primary);
+  --pico-primary-background: var(--peak-primary-fill);
+  --pico-primary-border: var(--peak-primary-fill);
+  --pico-primary-underline: var(--peak-primary-underline);
+  --pico-primary-hover: var(--peak-primary-hover);
+  --pico-primary-hover-background: var(--peak-primary-hover-bg);
+  --pico-primary-hover-border: var(--peak-primary-hover-bg);
+  --pico-primary-hover-underline: var(--peak-primary-hover);
+  --pico-primary-focus: var(--peak-primary-focus);
+  --pico-primary-inverse: var(--peak-on-primary);
+
+  --pico-secondary: var(--peak-secondary);
+  --pico-secondary-background: var(--peak-secondary-fill);
+  --pico-secondary-border: var(--peak-secondary-fill);
+  --pico-secondary-underline: var(--peak-secondary-underline);
+  --pico-secondary-hover: var(--peak-secondary-hover);
+  --pico-secondary-hover-background: var(--peak-secondary-hover-bg);
+  --pico-secondary-hover-border: var(--peak-secondary-hover-bg);
+  --pico-secondary-hover-underline: var(--peak-secondary-hover);
+  --pico-secondary-focus: var(--peak-secondary-focus);
+  --pico-secondary-inverse: var(--peak-on-secondary);
+
+  --pico-contrast: var(--peak-contrast);
+  --pico-contrast-background: var(--peak-contrast);
+  --pico-contrast-border: var(--peak-contrast);
+  --pico-contrast-underline: var(--peak-contrast-underline);
+  --pico-contrast-hover: var(--peak-contrast-hover);
+  --pico-contrast-hover-background: var(--peak-contrast-hover-bg);
+  --pico-contrast-hover-border: var(--peak-contrast-hover-bg);
+  --pico-contrast-hover-underline: var(--peak-contrast-hover);
+  --pico-contrast-focus: var(--peak-contrast-focus);
+  --pico-contrast-inverse: var(--peak-on-contrast);
+
+  /* h3–h6 step from --peak-heading toward --peak-muted by 15/30/45/60% of the lightness gap */
+  --pico-h1-color: var(--peak-heading);
+  --pico-h2-color: var(--peak-heading);
+  --pico-h3-color: light-dark(
+    var(--peak-heading-light, oklch(from var(--_peak-ink) 0.242 c h)),
+    var(--peak-heading-dark, oklch(from var(--_peak-ink-dark) 0.9095 c h))
+  );
+  --pico-h4-color: light-dark(
+    var(--peak-heading-light, oklch(from var(--_peak-ink) 0.284 c h)),
+    var(--peak-heading-dark, oklch(from var(--_peak-ink-dark) 0.869 c h))
+  );
+  --pico-h5-color: light-dark(
+    var(--peak-heading-light, oklch(from var(--_peak-ink) 0.326 c h)),
+    var(--peak-heading-dark, oklch(from var(--_peak-ink-dark) 0.8285 c h))
+  );
+  --pico-h6-color: light-dark(
+    var(--peak-heading-light, oklch(from var(--_peak-ink) 0.368 c h)),
+    var(--peak-heading-dark, oklch(from var(--_peak-ink-dark) 0.788 c h))
+  );
+
+  --pico-mark-background-color: var(--peak-warning-subtle);
+  --pico-mark-color: var(--peak-text);
+  --pico-ins-color: var(--peak-success);
+  --pico-del-color: var(--peak-danger);
+  --pico-blockquote-border-color: var(--peak-border);
+  --pico-blockquote-footer-color: var(--peak-muted);
+  --pico-table-border-color: var(--peak-border);
+  --pico-table-row-stripped-background-color: oklch(from var(--_peak-secondary) 0.5 c h / 0.04);
+  --pico-code-background-color: var(--peak-surface-sunken);
+  --pico-code-color: var(--peak-muted);
+  --pico-code-kbd-background-color: var(--peak-text);
+  --pico-code-kbd-color: var(--peak-bg);
+
+  --pico-form-element-background-color: var(--peak-surface-sunken);
+  --pico-form-element-selected-background-color: var(--peak-primary-subtle);
+  --pico-form-element-border-color: var(--peak-border-strong);
+  --pico-form-element-color: var(--peak-text);
+  --pico-form-element-placeholder-color: var(--peak-muted);
+  --pico-form-element-active-background-color: var(--peak-surface);
+  --pico-form-element-active-border-color: var(--peak-primary);
+  --pico-form-element-focus-color: var(--peak-primary-focus);
+  --pico-form-element-invalid-border-color: var(--peak-danger);
+  --pico-form-element-invalid-active-border-color: var(--peak-danger-hover);
+  --pico-form-element-invalid-focus-color: var(--peak-danger);
+  --pico-form-element-valid-border-color: var(--peak-success);
+  --pico-form-element-valid-active-border-color: var(--peak-success-hover);
+  --pico-form-element-valid-focus-color: var(--peak-success);
+
+  --pico-switch-background-color: var(--peak-border-strong);
+  --pico-switch-checked-background-color: var(--peak-primary);
+  --pico-range-border-color: var(--peak-border);
+  --pico-range-active-border-color: var(--peak-border-strong);
+  --pico-range-thumb-border-color: var(--peak-bg);
+  --pico-range-thumb-color: var(--peak-secondary);
+  --pico-range-thumb-active-color: var(--peak-primary);
+  --pico-progress-background-color: var(--peak-border);
+  --pico-progress-color: var(--peak-primary);
+
+  --pico-accordion-border-color: var(--peak-border);
+  --pico-accordion-active-summary-color: var(--peak-primary-hover);
+  --pico-accordion-close-summary-color: var(--peak-text);
+  --pico-accordion-open-summary-color: var(--peak-muted);
+
+  --pico-card-background-color: var(--peak-surface);
+  --pico-card-border-color: var(--peak-border);
+  --pico-card-sectioning-background-color: var(--peak-surface-sunken);
+
+  --pico-dropdown-background-color: var(--peak-surface-raised);
+  --pico-dropdown-border-color: var(--peak-border);
+  --pico-dropdown-box-shadow: var(--peak-shadow);
+  --pico-dropdown-color: var(--peak-text);
+  --pico-dropdown-hover-background-color: var(--peak-primary-subtle);
+
+  --pico-tooltip-background-color: var(--peak-contrast);
+  --pico-tooltip-color: var(--peak-bg);
+
+  --pico-modal-overlay-background-color: light-dark(
+    oklch(from var(--_peak-neutral) 0.99 var(--peak-neutral-chroma) h / 0.75),
+    oklch(from var(--_peak-neutral-dark) 0.17 var(--peak-neutral-chroma) h / 0.75)
+  );
+
+  --pico-transition: var(--peak-duration) var(--peak-easing);
+}
+
+/*
+ * Sizes and spacing. Skipped inside Blades' [data-compact] areas, whose own sizes would otherwise
+ * lose to this later layer; compact keeps working there and Peak's size inputs don't apply.
+ */
+:where(:scope, :host, [data-theme], [data-peak-scope]):where(:not([data-compact], [data-compact] *)) {
+  --pico-border-radius: var(--peak-radius);
+  --pico-border-width: var(--peak-border-width);
+  --pico-outline-width: var(--peak-outline-width);
+  --pico-spacing: var(--peak-spacing);
+  --pico-block-spacing-vertical: var(--peak-spacing);
+  --pico-block-spacing-horizontal: var(--peak-spacing);
+  --pico-grid-column-gap: var(--peak-spacing);
+  --pico-grid-row-gap: var(--peak-spacing);
+  --pico-typography-spacing-vertical: calc(1rem * var(--peak-density));
+  --pico-form-element-spacing-vertical: calc(0.75rem * var(--peak-density));
+  --pico-form-element-spacing-horizontal: calc(1rem * var(--peak-density));
+  --pico-nav-element-spacing-vertical: calc(1rem * var(--peak-density));
+  --pico-nav-element-spacing-horizontal: calc(0.5rem * var(--peak-density));
+  --pico-nav-link-spacing-vertical: calc(0.5rem * var(--peak-density));
+  --pico-nav-link-spacing-horizontal: calc(0.5rem * var(--peak-density));
+  --pico-card-box-shadow: var(--peak-shadow);
+  /*
+   * Blades reads var(--pico-button-font-weight, var(--pico-font-weight)). While the input is unset
+   * this declaration is invalid at computed-value time, so Blades' fallback (the body weight)
+   * applies, as without Peak.
+   */
+  --pico-button-font-weight: var(--peak-button-font-weight);
+  --pico-group-box-shadow-focus-with-button: 0 0 0 var(--peak-outline-width)
+    var(--peak-primary-focus);
+  --pico-group-box-shadow-focus-with-input: 0 0 0 0.0625rem var(--peak-border-strong);
+}
+
+/*
+ * Root typography. Only on the document root: Blades sets these per element (code, kbd, small,
+ * thead th…), so a section-level value would leak into those elements.
+ */
+:where(:scope, :host) {
+  --pico-font-family: var(--peak-font-family, var(--pico-font-family-sans-serif));
+  --pico-line-height: var(--peak-line-height);
+  --pico-font-weight: var(--peak-font-weight);
+}
+
+/*
+ * Fluid root size: replaces Blades' stepped ramp (17/18/19/20/21px at 576…1536px) with the same
+ * curve. The rem term keeps it following the user's font-size preference (WCAG 1.4.4).
+ */
+:where(:scope, :host):where(:not([data-compact])) {
+  --pico-font-size: clamp(var(--peak-font-size-min), 0.875rem + 0.5vw, var(--peak-font-size-max));
+}
+
+/* Headings: Blades sets these on the elements themselves, so the bridge has to as well */
+:where(h1, h2, h3, h4, h5, h6) {
+  --pico-font-family: var(
+    --peak-font-family-heading,
+    var(--peak-font-family, var(--pico-font-family-sans-serif))
+  );
+}
+
+:where(h1, h2, h3, h4, h5, h6):where(:not([data-compact] *)) {
+  --pico-font-weight: var(--peak-heading-font-weight);
+}
+
+/* The optional per-level weights fall back to the heading weight while unset */
+:where(h1):where(:not([data-compact] *)) {
+  --pico-font-weight: var(--peak-display-weight, var(--peak-heading-font-weight));
+}
+
+:where(h4, h5, h6):where(:not([data-compact] *)) {
+  --pico-font-weight: var(--peak-subheading-font-weight, var(--peak-heading-font-weight));
+}
+
+/* Monospace: Blades also sets this on the elements, so the bridge has to as well */
+:where(pre, code, kbd, samp) {
+  --pico-font-family: var(--peak-font-family-mono, var(--pico-font-family-monospace));
+}
+
+/*
+ * Line height steps by 0.025 per level, as in Blades (h1 1.125 … h6 1.25): the input is h4's, so
+ * the default 1.2 reproduces Blades exactly and larger headings stay tighter.
+ */
+h1 {
+  --pico-font-size: var(--peak-h1);
+  --pico-line-height: calc(var(--peak-heading-line-height) - 0.075);
+}
+
+h2 {
+  --pico-font-size: var(--peak-h2);
+  --pico-line-height: calc(var(--peak-heading-line-height) - 0.05);
+}
+
+h3 {
+  --pico-font-size: var(--peak-h3);
+  --pico-line-height: calc(var(--peak-heading-line-height) - 0.025);
+}
+
+h4 {
+  --pico-font-size: var(--peak-h4);
+  --pico-line-height: var(--peak-heading-line-height);
+}
+
+h5 {
+  --pico-font-size: var(--peak-h5);
+  --pico-line-height: calc(var(--peak-heading-line-height) + 0.025);
+}
+
+h6 {
+  --pico-font-size: var(--peak-h6);
+  --pico-line-height: calc(var(--peak-heading-line-height) + 0.05);
+}
+
+/*
+ * Containers. Blades hard-codes the widths per breakpoint; there's no variable to bridge. The
+ * breakpoints themselves stay fixed because media queries can't read custom properties.
+ */
+@media (width >= 576px) {
+  .container {
+    max-width: min(var(--peak-container-sm), var(--peak-container-max));
+  }
+}
+
+@media (width >= 768px) {
+  .container {
+    max-width: min(var(--peak-container-md), var(--peak-container-max));
+  }
+}
+
+@media (width >= 1024px) {
+  .container {
+    max-width: min(var(--peak-container-lg), var(--peak-container-max));
+  }
+}
+
+@media (width >= 1280px) {
+  .container {
+    max-width: min(var(--peak-container-xl), var(--peak-container-max));
+  }
+}
+
+@media (width >= 1536px) {
+  .container {
+    max-width: min(var(--peak-container-2xl), var(--peak-container-max));
+  }
+}
+
+/*
+ * More contrast, when the visitor asks for it: muted text becomes regular text, and borders take
+ * the strong border color, which itself gets darker (lighter in the dark scheme).
+ */
+@media (prefers-contrast: more) {
+  :where(:scope, :host, [data-theme], [data-peak-scope]) {
+    --peak-muted: var(--peak-text);
+    --peak-border-strong: light-dark(oklch(from var(--_peak-ink) 0.55 c h), oklch(from var(--_peak-ink-dark) 0.62 c h));
+    --peak-border: var(--peak-border-strong);
+  }
+}
+
+/* Reduced transparency: no blur behind dialogs */
+@media (prefers-reduced-transparency: reduce) {
+  :where(:scope, :host, [data-theme], [data-peak-scope]) {
+    --pico-modal-overlay-backdrop-filter: none;
+  }
+}

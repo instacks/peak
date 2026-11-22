@@ -1,0 +1,80 @@
+---
+title: Accessibility
+group: Reference
+order: 3
+description: Peak follows the visitor's settings for motion, contrast, transparency and colors, and keeps its color pairs readable by construction.
+---
+
+<h2>Contrast by construction</h2>
+<p>
+  Every text color is tested against every background it's used on, for the whole range of every
+  color input, in both schemes: 4.5:1 for text (WCAG 2 AA), 3:1 for large text, controls and
+  focus rings. Exact colors (<code>--peak-*-light</code>, <code>--peak-*-dark</code>) are the only way
+  out of that guarantee.
+</p>
+<p>
+  Focus rings are opaque and <code>--peak-outline-width</code> wide (2px by default). Interactive
+  targets added by Peak (chip remove buttons, pagination links) are at least 24px (WCAG 2.5.8).
+</p>
+
+<h2>Reduced motion</h2>
+<p>
+  With <code>prefers-reduced-motion: reduce</code>, Blades turns off transitions and animations,
+  and Peak adds the cases that rule misses: accordions open at once, drawers don't slide, and linked
+  cards don't lift. <code>--peak-duration</code> is 0s.
+</p>
+
+<h2>More contrast</h2>
+<p>
+  With <code>prefers-contrast: more</code> (macOS "Increase contrast", Windows contrast themes),
+  muted text and borders become stronger.
+</p>
+
+<h2>Reduced transparency</h2>
+<p>With <code>prefers-reduced-transparency: reduce</code>, the backdrop behind dialogs isn't blurred.</p>
+
+<h2>Forced colors</h2>
+<p>
+  In forced-colors mode (Windows High Contrast), the system replaces every color and removes shadows.
+  Peak keeps shapes and states visible:
+</p>
+<ul>
+  <li>Cards, popovers, dialogs, badges and avatars get a border where a shadow drew their shape.</li>
+  <li>Focus rings become outlines in the <code>Highlight</code> color.</li>
+  <li>The current page, selected chips, solid badges and the current step use the system's highlight colors.</li>
+  <li>The open tab and the current sidebar link are marked with <code>Highlight</code>.</li>
+</ul>
+
+<h2>Print</h2>
+<ul>
+  <li>The light scheme, on white, also for a dark page.</li>
+  <li>No header, sidebar, skip link, menu button, scheme switch, footer links or breadcrumb.</li>
+  <li>No shadows or band backgrounds; cards and callouts get a thin border.</li>
+  <li>Cards, figures, code blocks, quotes and table rows aren't split across pages; headings stay with what follows them.</li>
+  <li>External links in <code>.peak-prose</code> print their address.</li>
+</ul>
+
+<h2>Right-to-left</h2>
+<p>
+  Peak uses logical properties (<code>margin-inline-start</code>, <code>inset-inline-end</code>,
+  <code>position-area: block-end span-inline-end</code>) throughout, so layouts, menus, toasts,
+  callout edges and the sidebar navigation mirror in <code>dir="rtl"</code>. Drawers slide in from
+  the correct side.
+</p>
+<peak-example>
+  <div dir="rtl" lang="ar">
+    <aside class="peak-callout info"><strong>ملاحظة</strong><p>الحافة الملونة على الجانب الأيمن.</p></aside>
+    <ol class="peak-steps">
+      <li>تنزيل</li>
+      <li aria-current="step">تثبيت</li>
+    </ol>
+  </div>
+</peak-example>
+
+<h2>What you still need to do</h2>
+<ul>
+  <li>Use the right elements: buttons for actions, links for navigation, headings in order, labels for every field.</li>
+  <li>Give icon-only buttons and initials avatars a text alternative (<code>aria-label</code> or <code>.peak-visually-hidden</code>).</li>
+  <li>Label each <code>&lt;nav&gt;</code> when there's more than one (<code>aria-label</code>).</li>
+  <li>Check exact colors and your own colors for contrast.</li>
+</ul>
