@@ -23,7 +23,9 @@ description: Layouts that adapt to the space they get, not to the viewport. None
 <p>
   <code>.peak-grid-auto</code> fits as many columns of at least <code>--peak-grid-min</code> as there is
   room for, and a single column never overflows a narrow container. Cards in it line up: each fills
-  its row's height and its footer sits at the bottom.
+  its row's height and its footer sits at the bottom. Like a card, a grid has space below it,
+  except as the last child of its section (this goes for <code>.peak-grid</code> and
+  <code>.peak-switcher</code> too).
 </p>
 <peak-example>
   <div class="peak-grid-auto" style="--peak-grid-min: 12rem">

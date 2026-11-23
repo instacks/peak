@@ -107,6 +107,12 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const gap = (await rect(page, "after-cluster")).top - (await rect(page, "div-cluster")).bottom;
     assert.ok(gap > 0 && Math.abs(gap - px(await style(page, "div-cluster", "marginBottom"))) < 0.5, `space below a div row: ${gap}`);
     assert.ok(px(await style(page, "div-cluster", "marginBottom")) > 0, "a div row has a margin below");
+    // A grid of cards is spaced like a card from what follows, except as the last child
+    const blockSpacing = px(await page.evaluate(() => getComputedStyle(document.body).getPropertyValue("--pico-block-spacing-vertical")));
+    const gridGap = (await rect(page, "after-grid")).top - (await rect(page, "spaced-grid")).bottom;
+    assert.ok(gridGap > 0 && Math.abs(gridGap - px(await style(page, "spaced-grid", "marginBottom"))) < 0.5, `space below a grid: ${gridGap}`);
+    assert.ok(px(await style(page, "spaced-grid", "marginBottom")) > 0, `grid margin (block spacing ${blockSpacing})`);
+    assert.equal(await style(page, "last-grid", "marginBottom"), "0px", "a last child adds nothing to its section's spacing");
 
     assert.equal(px(await style(page, "hero", "paddingTop")), 4 * rootSize);
     assert.equal(px(await style(page, "hero", "paddingBottom")), 2.5 * rootSize);

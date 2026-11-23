@@ -155,6 +155,15 @@
   margin-block-end: var(--pico-typography-spacing-vertical);
 }
 
+/*
+ * A grid of cards is spaced like a card: the cards drop their own margins inside it, so without
+ * this the next block (pagination, a heading) touched the last row. Not when it's the last child,
+ * where the section or card around it already spaces it. Zero specificity, like the cluster.
+ */
+:where(.peak-grid-auto, .peak-grid, .peak-switcher):where(:not(:last-child)) {
+  margin-block-end: var(--pico-block-spacing-vertical);
+}
+
 /* Buttons and figures bring their own block margins; in a row they would only misalign it */
 .peak-cluster > * {
   margin-block: 0;

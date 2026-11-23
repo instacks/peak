@@ -1,0 +1,257 @@
+---
+title: Product page
+description: A product from the same shop: images beside the details, a price with the old one struck through, variants as chips, size and quantity, "Add to cart" with a toast, a shipping note, tabs for description, specifications and reviews, related products and the cart drawer.
+order: 6
+uses: grids.html accordion.html badges.html forms.html callouts.html dialogs.html cards.html elements.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Arc table lamp · Hearth &amp; Grain shop example</title>
+<meta name="description" content="An example product page built with Peak.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/peak.min.css">
+<script src="../assets/peak-scheme.js"></script>
+<style data-peak-theme>
+  :root {
+    --peak-hue: 20;
+    --peak-chroma: 0.14;
+    --peak-accent-hue: 150;
+    --peak-neutral-hue: 50;
+    --peak-neutral-chroma: 0.01;
+    --peak-font-family: Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif;
+    --peak-radius: 0.875rem;
+    --peak-sidebar-width: 15rem;
+  }
+</style>
+</head>
+<body id="top">
+<a class="peak-skip-link" href="#content">Skip to content</a>
+
+<header class="site-header" data-nav-style="surface">
+  <nav class="site-nav container" data-peak-menu="768" aria-label="Site">
+    <ul>
+      <li><a class="site-title contrast" href="shop.html">Hearth &amp; Grain</a></li>
+    </ul>
+    <div class="site-menu" data-peak-anchor>
+      <button type="button" class="site-menu-toggle outline secondary" popovertarget="site-menu"><span aria-hidden="true">☰</span> Menu</button>
+      <div class="site-menu-popover" id="site-menu" popover>
+        <ul>
+          <li><a href="shop.html" class="secondary">Lamps</a></li>
+          <li><a href="#" class="secondary">Furniture</a></li>
+          <li><a href="#" class="secondary">Textiles</a></li>
+          <li><a href="../examples.html" class="secondary">All examples</a></li>
+          <li class="peak-hide-from-md"><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+        </ul>
+      </div>
+    </div>
+    <ul>
+      <li><button type="button" class="secondary outline" command="show-modal" commandfor="cart">Cart <span class="peak-badge solid" aria-label="2 items">2</span></button></li>
+      <li class="peak-hide-below-md"><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="content" class="container site-main" tabindex="-1">
+  <nav aria-label="breadcrumb" class="site-breadcrumb">
+    <ul>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="shop.html">Lamps</a></li>
+      <li><span aria-current="page">Arc table lamp</span></li>
+    </ul>
+  </nav>
+
+  <div class="peak-switcher" style="--peak-switch-at: 44rem">
+    <div>
+      <figure>
+        <img src="../assets/product.svg" alt="The Arc table lamp in brass, from the front" width="640" height="400">
+      </figure>
+      <div class="peak-grid-auto" style="--peak-grid-min: 5rem; --peak-gap: 0.5rem">
+        <img src="../assets/product.svg" alt="From the front" width="160" height="100">
+        <img src="../assets/shapes.svg" alt="The shade, close up" width="160" height="100">
+        <img src="../assets/landscape.svg" alt="In a living room" width="160" height="100">
+      </div>
+    </div>
+
+    <div>
+      <hgroup>
+        <p>Table lamps</p>
+        <h1>Arc table lamp</h1>
+      </hgroup>
+      <p class="peak-h3 peak-tabular"><strong>€ 89</strong> <s class="peak-text-muted">€ 119</s> <span class="peak-badge danger">−25%</span></p>
+      <p><small>Rated 4.7 out of 5 from <a href="#reviews">38 reviews</a></small></p>
+      <p>A brass arm that bends over a desk or a reading chair, with a linen shade that softens the light. Made to order in a small workshop.</p>
+
+      <form action="#" aria-label="Add to cart">
+        <fieldset class="peak-cluster" style="--peak-gap: 0.5rem">
+          <legend>Finish</legend>
+          <label class="peak-chip"><input type="radio" name="finish" value="brass" checked> Brass</label>
+          <label class="peak-chip"><input type="radio" name="finish" value="black"> Black</label>
+          <label class="peak-chip"><input type="radio" name="finish" value="white"> White</label>
+        </fieldset>
+        <label>Shade
+          <select name="shade">
+            <option>Linen, natural</option>
+            <option>Linen, charcoal</option>
+            <option>Paper, white</option>
+          </select>
+        </label>
+        <div role="group">
+          <input type="number" name="qty" value="1" min="1" max="9" aria-label="Quantity">
+          <button type="button" popovertarget="toast-added" popovertargetaction="show">Add to cart</button>
+        </div>
+      </form>
+
+      <aside class="peak-callout success">
+        <strong>Free shipping</strong>
+        <p>Ships in 5–7 working days. Returns are free for 30 days.</p>
+      </aside>
+    </div>
+  </div>
+
+  <div class="peak-tabs" id="reviews">
+    <details name="product" open>
+      <summary>Description</summary>
+      <div class="peak-prose">
+        <p>The Arc grew out of a lamp we made for our own workbench: we wanted light that reaches over the work without a clamp. The arm is a single brass tube, bent by hand and balanced by a solid base.</p>
+        <ul>
+          <li>Warm, dimmable light from a standard E27 bulb.</li>
+          <li>A fabric cord, 2 m, with a switch on the cord.</li>
+          <li>The brass darkens with use; a cloth brings the shine back.</li>
+        </ul>
+      </div>
+    </details>
+    <details name="product">
+      <summary>Specifications</summary>
+      <div class="overflow-auto">
+        <table class="striped">
+          <tbody>
+            <tr><th scope="row">Height</th><td class="peak-tabular">52 cm</td></tr>
+            <tr><th scope="row">Reach of the arm</th><td class="peak-tabular">38 cm</td></tr>
+            <tr><th scope="row">Shade diameter</th><td class="peak-tabular">24 cm</td></tr>
+            <tr><th scope="row">Weight</th><td class="peak-tabular">2.4 kg</td></tr>
+            <tr><th scope="row">Bulb</th><td>E27, up to 40 W (not included)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <details name="product">
+      <summary>Reviews (38)</summary>
+      <div class="peak-grid-auto">
+        <article>
+          <p><strong>Exactly the reading light I wanted</strong></p>
+          <p>Reaches over the armchair without being in the way. The shade gives a soft, warm light.</p>
+          <footer>
+            <div class="peak-media center" style="--peak-media-min: 8rem">
+              <span class="peak-avatar" role="img" aria-label="Hana Sato">HS</span>
+              <small><strong>Hana Sato</strong><br><span class="peak-text-muted">5 of 5 · <time datetime="2026-10-30">30 Oct 2026</time></span></small>
+            </div>
+          </footer>
+        </article>
+        <article>
+          <p><strong>Heavier than expected, in a good way</strong></p>
+          <p>The base keeps it steady. I'd have liked a longer cord for my desk.</p>
+          <footer>
+            <div class="peak-media center" style="--peak-media-min: 8rem">
+              <span class="peak-avatar" role="img" aria-label="Omar Farouk">OF</span>
+              <small><strong>Omar Farouk</strong><br><span class="peak-text-muted">4 of 5 · <time datetime="2026-10-12">12 Oct 2026</time></span></small>
+            </div>
+          </footer>
+        </article>
+      </div>
+    </details>
+  </div>
+
+  <section aria-labelledby="also-like">
+    <h2 id="also-like">You may also like</h2>
+    <div class="peak-grid-auto" style="--peak-grid-min: 10rem">
+      <article>
+        <img src="../assets/shapes.svg" alt="Globe pendant in white glass" width="640" height="400">
+        <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Globe pendant</a></h3>
+        <p class="peak-tabular"><strong>€ 145</strong></p>
+      </article>
+      <article>
+        <img src="../assets/landscape.svg" alt="Dune table lamp with a linen shade" width="640" height="400">
+        <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Dune table lamp</a></h3>
+        <p class="peak-tabular"><strong>€ 120</strong></p>
+      </article>
+      <article>
+        <img src="../assets/product.svg" alt="Cone pendant in black steel" width="640" height="400">
+        <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Cone pendant</a></h3>
+        <p class="peak-tabular"><strong>€ 98</strong></p>
+      </article>
+      <article>
+        <img src="../assets/shapes.svg" alt="Pebble table lamp in oak" width="640" height="400">
+        <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Pebble table lamp</a></h3>
+        <p class="peak-tabular"><strong>€ 64</strong> <s class="peak-text-muted">€ 79</s></p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<div id="toast-added" class="peak-toast success" popover="manual" role="status">
+  Added to your cart.
+  <div class="peak-cluster" style="--peak-gap: 0.5rem">
+    <button type="button" command="show-modal" commandfor="cart">View cart</button>
+    <button type="button" class="secondary outline" popovertarget="toast-added" popovertargetaction="hide">Close</button>
+  </div>
+</div>
+
+<dialog class="peak-drawer" id="cart" closedby="any" aria-labelledby="cart-title">
+  <article>
+    <header>
+      <button aria-label="Close" rel="prev" command="close" commandfor="cart"></button>
+      <h2 class="peak-h4 peak-mb-0" id="cart-title">Your cart</h2>
+    </header>
+    <ol class="peak-steps">
+      <li aria-current="step"><strong>Cart</strong></li>
+      <li><strong>Shipping</strong></li>
+      <li><strong>Payment</strong></li>
+    </ol>
+    <div class="peak-media center" style="--peak-media-min: 10rem">
+      <img src="../assets/product.svg" alt="" width="96" height="60">
+      <div>
+        <strong>Arc table lamp</strong><br><small class="peak-text-muted peak-tabular">Brass · € 89</small>
+        <label class="peak-mb-0"><small>Quantity</small> <input type="number" name="qty-arc" value="1" min="0" max="9"></label>
+      </div>
+    </div>
+    <div class="peak-media center" style="--peak-media-min: 10rem">
+      <img src="../assets/shapes.svg" alt="" width="96" height="60">
+      <div>
+        <strong>Globe pendant</strong><br><small class="peak-text-muted peak-tabular">White · € 145</small>
+        <label class="peak-mb-0"><small>Quantity</small> <input type="number" name="qty-globe" value="1" min="0" max="9"></label>
+      </div>
+    </div>
+    <table>
+      <tbody>
+        <tr><th scope="row">Subtotal</th><td class="peak-text-end peak-tabular">€ 234.00</td></tr>
+        <tr><th scope="row">Shipping</th><td class="peak-text-end peak-tabular">€ 0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><th scope="row">Total</th><td class="peak-text-end peak-tabular">€ 234.00</td></tr>
+      </tfoot>
+    </table>
+    <footer>
+      <button type="button" class="secondary" command="close" commandfor="cart">Keep shopping</button>
+      <button type="button" command="close" commandfor="cart">Checkout</button>
+    </footer>
+  </article>
+</dialog>
+
+<footer class="site-footer container">
+  <nav class="site-footer-nav" aria-label="Footer">
+    <ul>
+      <li><a href="#">Shipping</a></li>
+      <li><a href="#">Returns</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="../examples.html">More Peak examples</a></li>
+    </ul>
+  </nav>
+  <p class="site-footer-text">© 2026 Hearth &amp; Grain, an invented shop.</p>
+  <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+</footer>
+</body>
+</html>
