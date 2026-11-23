@@ -1,8 +1,8 @@
 ---
 title: Landing page
-description: A marketing page for an invented product: hero, features, pricing, testimonials, FAQ and a sign-up band.
+description: A marketing page for an invented note-taking product: a header with a dropdown and a mobile menu, a hero, features, numbers, steps, pricing, testimonials, FAQ and a sign-up band.
 order: 1
-uses: navigation.html layout.html
+uses: layout.html grids.html navigation.html typography.html cards.html badges.html data.html accordion.html forms.html overlays.html
 ---
 <!doctype html>
 <html lang="en">
@@ -11,27 +11,48 @@ uses: navigation.html layout.html
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>Notewell · Landing page example</title>
+<meta name="description" content="An example landing page built with Peak.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/peak.min.css">
 <script src="../assets/peak-scheme.js"></script>
 <style data-peak-theme>
   :root {
-    --peak-hue: 250;
+    --peak-hue: 255;
+    --peak-accent-hue: 25;
+    --peak-font-family-heading: Avenir, Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif;
+    --peak-display-weight: 800;
+    --peak-section-spacing: 5rem;
+    --peak-radius: 0.5rem;
   }
 </style>
 </head>
 <body id="top">
 <a class="peak-skip-link" href="#content">Skip to content</a>
-<header class="site-header" data-nav-style="bordered">
+
+<header class="site-header nav-sticky" data-nav-style="bordered">
   <nav class="site-nav container" data-peak-menu="768" aria-label="Site">
-    <ul><li><a class="site-title contrast" href="#top">Notewell</a></li></ul>
+    <ul>
+      <li><a class="site-title contrast" href="#top"><img src="../assets/favicon.svg" alt="" width="28" height="28"> Notewell</a></li>
+    </ul>
     <div class="site-menu" data-peak-anchor>
       <button type="button" class="site-menu-toggle outline secondary" popovertarget="site-menu"><span aria-hidden="true">☰</span> Menu</button>
       <div class="site-menu-popover" id="site-menu" popover>
         <ul>
-          <li><a href="#content">Features</a></li>
-          <li><a href="#content">Pricing</a></li>
-          <li><a href="../examples.html">All examples</a></li>
+          <li><a href="#features" class="secondary">Features</a></li>
+          <li>
+            <details class="dropdown">
+              <summary class="secondary">Solutions</summary>
+              <ul>
+                <li><a href="#">For startups</a></li>
+                <li><a href="#">For agencies</a></li>
+                <li><a href="#">For schools</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a href="#pricing" class="secondary">Pricing</a></li>
+          <li><a href="#faq" class="secondary">FAQ</a></li>
+          <li><a href="../examples.html" class="secondary">All examples</a></li>
+          <li><a href="#sign-up" role="button">Sign up</a></li>
         </ul>
       </div>
     </div>
@@ -40,23 +61,237 @@ uses: navigation.html layout.html
     </ul>
   </nav>
 </header>
-<main id="content" class="site-main" tabindex="-1">
+
+<main id="content" class="container" tabindex="-1">
   <section class="peak-band">
-    <div class="container peak-hero">
-      <hgroup>
-        <p>Notes for small teams</p>
-        <h1 class="peak-display">Write it down once</h1>
-      </hgroup>
-      <p class="peak-lead">A shared notebook that keeps decisions, how-tos and meeting notes where the whole team can find them.</p>
-      <div class="peak-cluster">
-        <a href="#content" role="button">Start free</a>
-        <a href="#content" role="button" class="secondary outline">See pricing</a>
+    <div class="peak-switcher">
+      <div class="peak-hero">
+        <hgroup>
+          <p>Notes for small teams</p>
+          <h1 class="peak-display">Write it down <span class="peak-text-primary">once</span></h1>
+        </hgroup>
+        <p class="peak-lead">A shared notebook that keeps decisions, how-tos and meeting notes where the whole team can find them, a year from now.</p>
+        <div class="peak-cluster">
+          <a href="#sign-up" role="button">Start free</a>
+          <a href="#pricing" role="button" class="secondary outline">See pricing</a>
+        </div>
+        <p><small class="peak-text-muted">Free for up to three people. No card needed.</small></p>
       </div>
+      <figure>
+        <img src="../assets/landscape.svg" alt="An illustration of mountains at sunset" width="640" height="400">
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="trusted">
+    <p id="trusted" class="peak-eyebrow secondary">Used by teams at</p>
+    <div class="peak-cluster peak-text-muted">
+      <strong>Harbor &amp; Pine</strong>
+      <strong>Lumen Works</strong>
+      <strong>Field Office</strong>
+      <strong>Copperline</strong>
+      <strong>Studio Nord</strong>
+    </div>
+  </section>
+
+  <section id="features">
+    <hgroup>
+      <p>Features</p>
+      <h2>Everything a team notebook needs</h2>
+    </hgroup>
+    <p class="peak-lead">And nothing that makes writing feel like filing a ticket.</p>
+    <div class="peak-grid-auto" style="--peak-grid-min: 13rem">
+      <article>
+        <svg class="peak-text-primary" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <h3>Search that finds it</h3>
+        <p>Every note, comment and attachment is searchable, typos included.</p>
+      </article>
+      <article>
+        <svg class="peak-text-primary" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+        <h3>Templates</h3>
+        <p>Meeting notes, decisions and how-tos start from a shape your team agreed on.</p>
+      </article>
+      <article>
+        <svg class="peak-text-primary" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>
+        <h3>Works offline</h3>
+        <p>Write on the train; your notes sync when you're back online.</p>
+      </article>
+      <article>
+        <svg class="peak-text-primary" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <h3>Private by default</h3>
+        <p>Share a note with a link, a group or nobody. You decide per page.</p>
+        <footer><a class="peak-card-link" href="#">Read about security →</a></footer>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="numbers">
+    <h2 id="numbers" class="peak-visually-hidden">In numbers</h2>
+    <dl class="peak-stats">
+      <div><dt>Teams writing</dt><dd>4,200</dd></div>
+      <div><dt>Notes a day</dt><dd>38k</dd></div>
+      <div><dt>Median search</dt><dd>80 ms</dd></div>
+      <div><dt>Uptime this year</dt><dd>99.98%</dd></div>
+    </dl>
+  </section>
+
+  <section class="peak-band surface">
+    <hgroup>
+      <p>How it works</p>
+      <h2>Up and running in an afternoon</h2>
+    </hgroup>
+    <ol class="peak-steps">
+      <li><strong>Create a space</strong><br><small class="peak-text-muted">One per team or project.</small></li>
+      <li><strong>Import your notes</strong><br><small class="peak-text-muted">From text files, a wiki export or another notes app.</small></li>
+      <li><strong>Invite the team</strong><br><small class="peak-text-muted">By link or by email; guests are free.</small></li>
+    </ol>
+  </section>
+
+  <section id="pricing">
+    <hgroup>
+      <p>Pricing</p>
+      <h2>Simple plans, billed monthly</h2>
+    </hgroup>
+    <div class="peak-grid-auto">
+      <article class="peak-card outline">
+        <header><strong>Starter</strong></header>
+        <p><span class="peak-h2 peak-tabular">€0</span> <span class="peak-text-muted">per month</span></p>
+        <ul>
+          <li>Up to 3 people</li>
+          <li>500 notes</li>
+          <li>Search and templates</li>
+        </ul>
+        <footer><a href="#sign-up" role="button" class="secondary outline">Start free</a></footer>
+      </article>
+      <article>
+        <header><strong>Team</strong> <span class="peak-badge accent">Popular</span></header>
+        <p><span class="peak-h2 peak-tabular">€6</span> <span class="peak-text-muted">per person and month</span></p>
+        <ul>
+          <li>Unlimited people and notes</li>
+          <li>Offline and version history</li>
+          <li>Guests for free</li>
+        </ul>
+        <footer><a href="#sign-up" role="button">Try it for 30 days</a></footer>
+      </article>
+      <article class="peak-card outline">
+        <header><strong>Organization</strong></header>
+        <p><span class="peak-h2 peak-tabular">€11</span> <span class="peak-text-muted">per person and month</span></p>
+        <ul>
+          <li>Everything in Team</li>
+          <li>Single sign-on and audit log</li>
+          <li>A named contact</li>
+        </ul>
+        <footer><a href="#" role="button" class="secondary outline">Talk to us</a></footer>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="testimonials">
+    <hgroup>
+      <p>What teams say</p>
+      <h2 id="testimonials">From people who write things down</h2>
+    </hgroup>
+    <div class="peak-grid-auto">
+      <article>
+        <blockquote>
+          <p>We stopped answering the same questions in chat. The answer is a link now.</p>
+        </blockquote>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 8rem">
+            <span class="peak-avatar" role="img" aria-label="Mira Okafor">MO</span>
+            <div><strong>Mira Okafor</strong><br><small class="peak-text-muted">Operations, a design studio</small></div>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <blockquote>
+          <p>Onboarding a new developer went from two weeks of shadowing to a reading list.</p>
+        </blockquote>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 8rem">
+            <span class="peak-avatar" role="img" aria-label="Jonas Berg">JB</span>
+            <div><strong>Jonas Berg</strong><br><small class="peak-text-muted">Engineering lead, a logistics company</small></div>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <blockquote>
+          <p>The templates alone made our meetings shorter. Everyone knows where the decisions go.</p>
+        </blockquote>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 8rem">
+            <span class="peak-avatar" role="img" aria-label="Lea Moreau">LM</span>
+            <div><strong>Lea Moreau</strong><br><small class="peak-text-muted">Head of programs, a school</small></div>
+          </div>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <div class="peak-accordion">
+      <details name="faq" open>
+        <summary>Can I try it without a card?</summary>
+        <p>Yes. The Starter plan is free for up to three people, for as long as you like.</p>
+      </details>
+      <details name="faq">
+        <summary>Where are my notes stored?</summary>
+        <p>In data centers in the EU, encrypted at rest. You can export everything as Markdown at any time.</p>
+      </details>
+      <details name="faq">
+        <summary>Can guests edit notes?</summary>
+        <p>Guests can read and comment. Give them a seat to let them edit.</p>
+      </details>
+      <details name="faq">
+        <summary>What happens when I cancel?</summary>
+        <p>Your space turns read-only for 90 days, so you can export it, and is then deleted.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="sign-up" class="peak-band primary">
+    <div class="peak-hero center">
+      <h2>Start your team's notebook today</h2>
+      <p class="peak-lead">Free for three people. Upgrade when the team grows.</p>
+      <form action="#" aria-label="Sign up">
+        <div role="group">
+          <input type="email" name="email" placeholder="you@example.com" aria-label="Email address" autocomplete="email" required>
+          <button type="submit" class="contrast">Sign up</button>
+        </div>
+      </form>
     </div>
   </section>
 </main>
+
 <footer class="site-footer container">
-  <p class="site-footer-text">© 2026 Notewell, an invented product.</p>
+  <div class="peak-grid-auto" style="--peak-grid-min: 9rem">
+    <nav class="site-footer-nav stacked" aria-labelledby="footer-product">
+      <p id="footer-product"><strong>Product</strong></p>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </nav>
+    <nav class="site-footer-nav stacked" aria-labelledby="footer-company">
+      <p id="footer-company"><strong>Company</strong></p>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <nav class="site-footer-nav stacked" aria-labelledby="footer-legal">
+      <p id="footer-legal"><strong>Legal</strong></p>
+      <ul>
+        <li><a href="#">Imprint</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="site-footer-text">© 2026 Notewell, an invented product. <a href="../examples.html">More Peak examples</a>.</p>
   <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
 </footer>
 </body>

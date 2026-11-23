@@ -100,6 +100,27 @@
           <ul><li><a href="#" id="logo-link">Home</a></li></ul>
         </nav>
       </header>
+      <form style="inline-size: 20rem"><div role="group" id="field-group"><input type="email" aria-label="Email" id="group-input" /><button type="submit" id="group-button">Sign up now</button></div></form>
+      <div role="group" id="button-group"><button>One label</button><button>Another label</button></div>
+      <header class="site-header" data-nav-style="bordered" id="bordered-header">
+        <nav class="site-nav" data-peak-menu="768" id="menu-nav">
+          <ul><li><a href="#" class="site-title contrast" id="menu-title"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'/%3E" alt="" width="28" height="28" /> Brand</a></li></ul>
+          <div class="site-menu" data-peak-anchor>
+            <button type="button" class="site-menu-toggle outline secondary" popovertarget="fixture-menu" id="menu-toggle">Menu</button>
+            <div class="site-menu-popover" id="fixture-menu" popover>
+              <ul><li><a href="#" id="menu-link-1">One</a></li><li><a href="#" id="menu-link-2">Two</a></li><li><details class="dropdown" id="header-dropdown"><summary>More</summary><ul><li><a href="#">One</a></li><li><a href="#">Two</a></li><li><a href="#" id="header-dropdown-last">Three</a></li></ul></details></li></ul>
+            </div>
+          </div>
+          <ul><li><select aria-label="Scheme" id="menu-select"><option>Auto</option></select></li></ul>
+        </nav>
+      </header>
+      <footer class="site-footer">
+        <div class="peak-grid-auto" style="--peak-grid-min: 10rem">
+          <nav class="site-footer-nav stacked" aria-label="Product"><p id="fcol-heading"><strong>Product</strong></p><ul><li><a href="#" id="fcol-1">One</a></li><li><a href="#" id="fcol-2">Two</a></li></ul></nav>
+          <nav class="site-footer-nav stacked" aria-label="Company"><p><strong>Company</strong></p><ul><li><a href="#">Three</a></li></ul></nav>
+        </div>
+        <nav class="site-footer-nav" aria-label="Footer"><ul><li><a href="#" id="frow-1">Imprint</a></li><li><a href="#" id="frow-2">Privacy</a></li></ul></nav>
+      </footer>
     </main>
   </body>
 </html>

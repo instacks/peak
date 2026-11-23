@@ -3,7 +3,7 @@
 // wrapper markup with Stacks' own CSS.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { launch, fixtureUrl, colorHelpers, contrast } from "./helpers.mjs";
+import { launch, fixtureUrl, colorHelpers, contrast, pixel } from "./helpers.mjs";
 
 let browser;
 before(async () => {
@@ -299,6 +299,103 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.ok(Math.abs(t.img - t.imgHeight) < 1, `the square logo stays square: ${t.img}×${t.imgHeight}`);
     assert.ok(t.subLeft >= t.textRight - 1, `subtitle after the title, not over it: ${JSON.stringify(t)}`);
     await phone.close();
+  });
+
+  test(`${file}: a field and a button in a group: the label stays on one line; buttons alone still share`, async () => {
+    const page = await open(file);
+    const r = await page.evaluate(() => {
+      const label = document.createRange();
+      label.selectNodeContents(document.getElementById("group-button"));
+      const lines = label.getClientRects().length;
+      const shrink = [...document.getElementById("button-group").children].map((b) => getComputedStyle(b).flexShrink);
+      return { lines, shrink, inputW: document.getElementById("group-input").getBoundingClientRect().width };
+    });
+    assert.equal(r.lines, 1, "button label on one line");
+    assert.ok(r.inputW > 0, "the field keeps some room");
+    assert.deepEqual(r.shrink, ["1", "1"], "a group of buttons alone is unchanged");
+    await page.close();
+  });
+
+  test(`${file}: mobile menu: a row when wide; a centered toggle and a stacked popover when narrow`, async () => {
+    const page = await open(file);
+    const wide = await page.evaluate(() => {
+      const r = (id) => document.getElementById(id).closest("li").getBoundingClientRect().toJSON();
+      return { toggle: getComputedStyle(document.getElementById("menu-toggle")).display, one: r("menu-link-1"), two: r("menu-link-2") };
+    });
+    assert.equal(wide.toggle, "none");
+    assert.ok(Math.abs(wide.one.top - wide.two.top) < 0.5 && wide.two.left >= wide.one.right - 0.5, "links in a row");
+    await page.close();
+
+    const phone = await open(file, { width: 390 });
+    const mid = async (id) => {
+      const r = await rect(phone, id);
+      return (r.top + r.bottom) / 2;
+    };
+    const title = await mid("menu-title");
+    for (const id of ["menu-toggle", "menu-select"]) {
+      const m = await mid(id);
+      assert.ok(Math.abs(m - title) < 2, `${id} centered on the title: ${m} vs ${title}`);
+    }
+    assert.equal(await phone.isVisible("#menu-link-1"), false);
+    await phone.click("#menu-toggle");
+    await phone.waitForTimeout(400);
+    const [toggle, one, two] = await phone.evaluate(() =>
+      ["menu-toggle", "menu-link-1", "menu-link-2"].map((id) => (document.getElementById(id).closest("li") ?? document.getElementById(id)).getBoundingClientRect().toJSON()),
+    );
+    assert.ok(one.top >= toggle.bottom - 1, "the menu opens below its toggle");
+    assert.ok(two.top >= one.bottom - 1, "links stacked");
+    await phone.close();
+  });
+
+  test(`${file}: header styles: background and rule to the viewport edges; a dropdown hangs out of the header`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => {
+      const h = document.getElementById("bordered-header");
+      h.dataset.navStyle = "surface";
+      h.scrollIntoView({ block: "center" });
+    });
+    await page.evaluate(colorHelpers);
+    const colors = await page.evaluate(() => {
+      const h = document.getElementById("bordered-header");
+      const rgb = (v) => {
+        const c = resolveColor(v, h);
+        return [c.r, c.g, c.b];
+      };
+      return { surface: rgb("var(--peak-surface)"), rule: rgb("var(--pico-muted-border-color)"), bg: rgb("var(--peak-bg)") };
+    });
+    const h = await rect(page, "bordered-header");
+    const near = (a, b) => a.every((v, i) => Math.abs(v - b[i]) <= 3);
+    for (const x of [1, 1278]) {
+      const inside = await pixel(page, x, Math.round(h.top + h.height / 2));
+      assert.ok(near(inside, colors.surface), `surface at x=${x}: ${inside} vs ${colors.surface}`);
+      const below = await pixel(page, x, Math.ceil(h.bottom));
+      assert.ok(near(below, colors.rule), `rule below at x=${x}: ${below} vs ${colors.rule}`);
+      const under = await pixel(page, x, Math.ceil(h.bottom) + 3);
+      assert.ok(near(under, colors.bg), `page below the rule at x=${x}: ${under} vs ${colors.bg}`);
+    }
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0, "no horizontal overflow");
+    await page.click("#header-dropdown > summary");
+    const last = await rect(page, "header-dropdown-last");
+    assert.ok(last.top > h.bottom, "the dropdown's last item is below the header");
+    const hit = await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [last.left + 5, (last.top + last.bottom) / 2]);
+    assert.equal(hit, "header-dropdown-last", "visible and clickable below the header");
+    await page.close();
+  });
+
+  test(`${file}: footer columns: a heading above stacked links; a plain footer nav is a row`, async () => {
+    const page = await open(file);
+    // The list items: Pico pads nav links and pulls them out by the same amount
+    const [heading, one, two, row1, row2] = await page.evaluate(() =>
+      ["fcol-heading", "fcol-1", "fcol-2", "frow-1", "frow-2"].map((id) => {
+        const el = document.getElementById(id);
+        return (el.closest("li") ?? el).getBoundingClientRect().toJSON();
+      }),
+    );
+    assert.ok(one.top >= heading.bottom, "the links below the heading");
+    assert.ok(two.top >= one.bottom && Math.abs(two.left - one.left) < 0.5, "one link per line");
+    assert.ok(Math.abs(one.left - heading.left) < 0.5, `links start under the heading: ${one.left} vs ${heading.left}`);
+    assert.ok(Math.abs(row1.top - row2.top) < 0.5 && row2.left > row1.right, "a row without .stacked");
+    await page.close();
   });
 
   test(`${file}: toast in the inline-end bottom corner, with its status edge`, async () => {

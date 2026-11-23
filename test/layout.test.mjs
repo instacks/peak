@@ -128,11 +128,70 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
       assert.ok(Math.abs(r - sunken[0]) + Math.abs(g - sunken[1]) + Math.abs(bl - sunken[2]) <= 3, `band color at x=${x}: ${[r, g, bl]} vs ${sunken}`);
     }
     assert.ok(band.left > 1, "content in the container");
+    // Nothing clips what hangs out of the band: a dropdown's last item below its bottom edge
+    await page.click("#band-dropdown > summary");
+    const last = await rect(page, "band-dropdown-last");
+    const after = await rect(page, "band");
+    assert.ok(last.bottom > after.bottom, "the dropdown reaches below the band");
+    const hit = await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [last.left + 5, (last.top + last.bottom) / 2]);
+    assert.equal(hit, "band-dropdown-last", "and is visible and clickable there");
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0, "no horizontal overflow");
     await page.close();
   });
 
+  test(`${file}: a switcher item with wide code or a wide image fits a phone`, async () => {
+    const page = await open(file, { width: 390 });
+    const sw = await rect(page, "switcher-image");
+    for (const id of ["switcher-code", "switcher-figure"]) {
+      const item = await rect(page, id);
+      assert.ok(item.right <= sw.right + 0.5, `${id} ${item.right} inside the switcher ${sw.right}`);
+    }
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0, "no horizontal overflow");
+    await page.close();
+  });
+
+  test(`${file}: --peak-media-min keeps a byline beside its avatar in a narrow card`, async () => {
+    const page = await open(file);
+    const [avatar, text] = [await rect(page, "media-avatar"), await rect(page, "media-text")];
+    assert.ok(text.left > avatar.right, "the name is beside the avatar");
+    // Without the knob, the 16rem minimum doesn't fit the card and the text wraps below
+    const [a2, t2] = [await rect(page, "media-default-avatar"), await rect(page, "media-default-text")];
+    assert.ok(t2.top >= a2.bottom, "the default minimum wraps");
+    await page.close();
+  });
+
   for (const colorScheme of ["light", "dark"]) {
+    test(`${file}: ${colorScheme}: text on a filled band takes the band's text color`, async () => {
+      const page = await open(file, { colorScheme });
+      await page.evaluate(colorHelpers);
+      const result = await page.evaluate(() => {
+        const color = (id) => {
+          const c = getComputedStyle(document.getElementById(id)).color;
+          return resolveColor(c);
+        };
+        const bg = (id, token) => resolveColor(`var(${token})`, document.getElementById(id));
+        return {
+          primary: {
+            bg: bg("band-primary", "--peak-primary-fill"),
+            fg: bg("band-primary", "--peak-on-primary"),
+            items: Object.fromEntries(["band-eyebrow", "band-h2", "band-h3", "band-lead", "band-link", "band-muted", "band-text-primary"].map((id) => [id, color(id)])),
+          },
+          contrast: {
+            bg: bg("band-contrast", "--peak-contrast"),
+            fg: bg("band-contrast", "--peak-on-contrast"),
+            items: Object.fromEntries(["band-contrast-h3", "band-contrast-lead"].map((id) => [id, color(id)])),
+          },
+        };
+      });
+      for (const band of Object.values(result)) {
+        for (const [id, c] of Object.entries(band.items)) {
+          assert.deepEqual([c.r, c.g, c.b], [band.fg.r, band.fg.g, band.fg.b], `${id}: ${c.css}`);
+          assert.ok(contrast(c, band.bg) >= 4.5, `${id}: contrast ${contrast(c, band.bg).toFixed(2)}`);
+        }
+      }
+      await page.close();
+    });
+
     test(`${file}: ${colorScheme}: every badge variant is a readable pill`, async () => {
       const page = await open(file, { colorScheme });
       await page.evaluate(colorHelpers);

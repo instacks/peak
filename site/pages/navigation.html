@@ -87,6 +87,11 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
   <li>Pico's <code>&lt;details class="dropdown"&gt;</code>, drawn like a nav link.</li>
   <li>A <code>.site-dropdown-toggle</code> button and a <code>ul[popover]</code> in the same <code>&lt;li&gt;</code>: drawn as a link with a chevron that turns while open, and anchored (see <a href="overlays.html#menus">Menus</a>). Its color follows <code>data-link-style</code> (<code>secondary</code> or <code>contrast</code>).</li>
 </ul>
+<p>
+  In an open <a href="#mobile-menu">mobile menu</a>, a <code>&lt;details&gt;</code> dropdown opens in
+  place and pushes the links below it down. A popover can't: it sits in the top layer and floats
+  over them. For a header that folds into a mobile menu, prefer <code>&lt;details&gt;</code>.
+</p>
 <peak-example preview-class="tall visible">
   <nav class="site-nav">
     <ul><li><strong>Brand</strong></li></ul>
@@ -234,6 +239,31 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
     </nav>
     <p class="site-footer-text">© 2026 Example. All rights reserved.</p>
     <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+  </footer>
+</peak-example>
+<p>
+  For columns of links, put several footer navs in a grid, each with a heading, and add
+  <code>.stacked</code> to put one link per line:
+</p>
+<peak-example>
+  <footer class="site-footer">
+    <div class="peak-grid-auto" style="--peak-grid-min: 9rem">
+      <nav class="site-footer-nav stacked" aria-labelledby="footer-col-product">
+        <p id="footer-col-product"><strong>Product</strong></p>
+        <ul>
+          <li><a href="#footer">Features</a></li>
+          <li><a href="#footer">Pricing</a></li>
+        </ul>
+      </nav>
+      <nav class="site-footer-nav stacked" aria-labelledby="footer-col-legal">
+        <p id="footer-col-legal"><strong>Legal</strong></p>
+        <ul>
+          <li><a href="#footer">Imprint</a></li>
+          <li><a href="#footer">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="site-footer-text">© 2026 Example.</p>
   </footer>
 </peak-example>
 <p>When printing, the header, sidebar, breadcrumb, footer links, skip link and scheme switch are left out.</p>

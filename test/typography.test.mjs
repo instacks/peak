@@ -143,6 +143,20 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
+  test(`${file}: an image with width and height fits its container and keeps its ratio`, async () => {
+    const page = await open(file);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const r = await page.evaluate(() => {
+      const box = (id) => document.getElementById(id).getBoundingClientRect();
+      return { fig: box("wide-figure"), img: box("wide-img"), icon: box("icon-img"), overflow: document.documentElement.scrollWidth - innerWidth };
+    });
+    assert.ok(Math.abs(r.img.width - r.fig.width) < 0.5, `img ${r.img.width} in figure ${r.fig.width}`);
+    assert.ok(Math.abs(r.img.width / r.img.height - 2) < 0.01, `ratio ${r.img.width / r.img.height}`);
+    assert.equal(r.icon.height, 20, "a height attribute alone stays fixed");
+    assert.equal(r.overflow, 0);
+    await page.close();
+  });
+
   test(`${file}: display, lead and utilities`, async () => {
     const page = await open(file);
     const s = await read(page);

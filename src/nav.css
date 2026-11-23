@@ -87,6 +87,11 @@
   margin: 0;
 }
 
+/* Blades' nav is a row that doesn't center its items: below the breakpoint the menu's box would sit at the top of the bar */
+.site-nav .site-menu {
+  align-self: center;
+}
+
 /* In the open menu the links stack, and sub-page dropdowns open in place instead of floating */
 .site-nav .site-menu-popover:popover-open > ul {
   flex-direction: column;

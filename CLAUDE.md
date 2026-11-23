@@ -16,7 +16,8 @@ src/peak.scoped.css     entry, scoped build (see below)
 tokens.json             single source for the --peak-* inputs (ranges, labels, editor hints); in the npm package
 src/inputs.css          GENERATED from tokens.json: @property + :root defaults (never scoped)
 src/tokens.css          semantic --peak-* tokens and the --pico-* bridge
-src/typography.css      peak.base: headings, eyebrow, .peak-display/-lead/-prose, .peak-anchor, section, pre
+src/typography.css      peak.base: headings, eyebrow, .peak-display/-lead/-prose, .peak-anchor, section, pre, img
+src/forms.css           peak.base: form element defaults (a field and a button in role="group")
 src/utilities.css       peak.utilities: .peak-text-*, .peak-h1…h6, .peak-tabular
 src/media.css           peak.utilities: forced colors and print
 src/layout.css          peak.layout: section/band/hero, .peak-grid-auto/.peak-grid, cluster, sidebar, media

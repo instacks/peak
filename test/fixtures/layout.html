@@ -37,7 +37,28 @@
 
       <div class="peak-cluster align-end" id="cluster" style="--peak-gap: 2rem"><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" width="40" height="40" alt="" /></figure><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" width="20" height="20" alt="" /></figure></div>
 
-      <section class="peak-band" id="band"><p>Band</p></section>
+      <section class="peak-band" id="band"><p>Band</p>
+        <details class="dropdown" id="band-dropdown"><summary>Menu</summary><ul><li><a href="#">One</a></li><li><a href="#">Two</a></li><li><a href="#">Three</a></li><li><a href="#" id="band-dropdown-last">Four</a></li></ul></details>
+      </section>
+      <!-- A filled band: every text color follows the fill (the docs needed an inline style before) -->
+      <section class="peak-band primary" id="band-primary">
+        <hgroup><p id="band-eyebrow">Eyebrow</p><h2 id="band-h2">Heading</h2></hgroup>
+        <h3 id="band-h3">Heading</h3>
+        <p class="peak-lead" id="band-lead">Lead with <a href="#band" id="band-link">a link</a>, <small class="peak-text-muted" id="band-muted">muted</small> and <span class="peak-text-primary" id="band-text-primary">primary</span> text.</p>
+      </section>
+      <section class="peak-band contrast" id="band-contrast"><h3 id="band-contrast-h3">Heading</h3><p class="peak-lead" id="band-contrast-lead">Lead</p></section>
+
+      <!-- A switcher whose code and image are wider than a phone: the stacked items shrink to the switcher -->
+      <div class="peak-switcher" id="switcher-image">
+        <div id="switcher-code"><pre><code>a_long_line_of_code_that_does_not_wrap_and_is_wider_than_any_phone_screen = 1</code></pre></div>
+        <figure id="switcher-figure"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Crect width='640' height='400' fill='%23888'/%3E%3C/svg%3E" width="640" height="400" alt="" /></figure>
+      </div>
+
+      <!-- A byline in a narrow card: --peak-media-min keeps the name beside the avatar -->
+      <article style="inline-size: 18rem">
+        <div class="peak-media center" id="media-byline" style="--peak-media-min: 8rem"><span class="peak-avatar" id="media-avatar">AB</span><div id="media-text"><strong>A name</strong><br /><small>A role</small></div></div>
+        <div class="peak-media" id="media-default"><span class="peak-avatar" id="media-default-avatar">AB</span><div id="media-default-text"><strong>A name</strong></div></div>
+      </article>
 
       <p id="badges">
         <span class="peak-badge" id="badge-primary">Primary</span>

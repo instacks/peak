@@ -16,6 +16,7 @@ description: Layouts that adapt to the space they get, not to the viewport. None
   <li><code>--peak-cols</code>: the most columns of <code>.peak-grid</code> (3).</li>
   <li><code>--peak-sidebar-width</code>: the sidebar's width in <code>.peak-with-sidebar</code> (an input, 16rem).</li>
   <li><code>--peak-switch-at</code>: where <code>.peak-switcher</code> stacks (40rem).</li>
+  <li><code>--peak-media-min</code>: the narrowest the text of <code>.peak-media</code> gets before it wraps below the image (16rem).</li>
 </ul>
 
 <h2>Auto grid</h2>
@@ -122,7 +123,8 @@ description: Layouts that adapt to the space they get, not to the viewport. None
 <h2>Media object</h2>
 <p>
   <code>.peak-media</code>: an image or icon beside text. The text wraps below the image when there
-  is no room for at least 16rem of it. <code>.center</code> centers them vertically.
+  is no room for at least 16rem of it (<code>--peak-media-min</code>). <code>.center</code> centers
+  them vertically.
 </p>
 <peak-example>
   <div class="peak-media">
@@ -132,6 +134,18 @@ description: Layouts that adapt to the space they get, not to the viewport. None
       <p>The first child keeps its size; the last takes the rest and wraps below when the row gets narrow.</p>
     </div>
   </div>
+</peak-example>
+<p>A byline in a narrow card keeps the name beside the avatar with a smaller minimum:</p>
+<peak-example>
+  <article style="max-inline-size: 18rem">
+    <p>A quote or a post excerpt.</p>
+    <footer>
+      <div class="peak-media center" style="--peak-media-min: 8rem">
+        <span class="peak-avatar" role="img" aria-label="Grace Hopper">GH</span>
+        <div><strong>Grace Hopper</strong><br><small class="peak-text-muted">Rear admiral</small></div>
+      </div>
+    </footer>
+  </article>
 </peak-example>
 
 <h2>Switcher</h2>

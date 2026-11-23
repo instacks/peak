@@ -51,6 +51,19 @@
   .peak-badge.dot::before {
     background-color: CanvasText;
   }
+
+  /*
+   * The full-width backgrounds of bands and headers are border images, which this mode keeps
+   * (unlike shadows): a fill behind the system's text colors. The header keeps a rule below.
+   */
+  .peak-band,
+  :is(.site-header, :scope.site-header):is([data-nav-style="surface"], [data-nav-style="bordered"]) {
+    border-image-source: none;
+  }
+
+  :is(.site-header, :scope.site-header):is([data-nav-style="surface"], [data-nav-style="bordered"]) {
+    border-block-end: 1px solid CanvasText;
+  }
 }
 
 /*
@@ -75,8 +88,7 @@
 
   .peak-band {
     background: none;
-    box-shadow: none;
-    clip-path: none;
+    border-image-source: none;
   }
 
   :is(article, .peak-card, .peak-callout, figure, pre, blockquote, tr, img) {

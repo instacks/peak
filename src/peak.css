@@ -4,6 +4,7 @@
 @import "./inputs.css" layer(peak.tokens);
 @import "./tokens.css" layer(peak.tokens);
 @import "./typography.css" layer(peak.base);
+@import "./forms.css" layer(peak.base);
 @import "./site.css" layer(peak.layout);
 @import "./layout.css" layer(peak.layout);
 @import "./stacks.css" layer(peak.layout);

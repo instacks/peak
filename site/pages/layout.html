@@ -60,12 +60,17 @@ description: Containers, sections, full-width bands and heroes. The building blo
   <li><code>.surface</code>: the surface color (white in light mode).</li>
   <li><code>.primary</code>: the primary fill, with light text.</li>
   <li><code>.contrast</code>: the contrast color, with inverted text.</li>
+  <li>On both, headings, lead text, eyebrows, links and focus rings take the band's text color. Buttons keep their fill: use <code>.contrast</code> or <code>.secondary</code> buttons on a primary band.</li>
   <li><code>[data-theme="dark"]</code> (or light): the page background of that scheme, with everything inside in that scheme.</li>
 </ul>
 <peak-example>
   <section class="peak-band primary">
-    <h3 style="color: inherit">Primary band</h3>
-    <p>Text on the primary fill.</p>
+    <hgroup>
+      <p>Eyebrow</p>
+      <h3>Primary band</h3>
+    </hgroup>
+    <p class="peak-lead">Text on the primary fill, <a href="#band">a link</a>.</p>
+    <button class="contrast">Button</button>
   </section>
   <section class="peak-band" data-theme="dark">
     <h3>A dark band</h3>

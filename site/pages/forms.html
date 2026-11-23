@@ -37,7 +37,14 @@ description: Form controls from Blades, themed by Peak's tokens. Spacing follows
     <input type="search" name="q" placeholder="Search" aria-label="Search">
     <input type="submit" value="Search">
   </form>
+  <form onsubmit="return false">
+    <div role="group">
+      <input type="email" name="email" placeholder="you@example.com" aria-label="Email address">
+      <button type="submit">Sign up</button>
+    </div>
+  </form>
 </peak-example>
+<p>With a field in the group, the field gives up the room and a <code>&lt;button&gt;</code> keeps its label on one line.</p>
 
 <h2>Inputs</h2>
 <peak-example>
