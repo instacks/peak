@@ -40,10 +40,17 @@ description: Small labels for status and counts, interactive chips for tags and 
 </peak-example>
 
 <h3>In text and headings</h3>
-<p>A badge sizes itself relative to the surrounding text.</p>
+<p>
+  A badge sizes itself relative to the surrounding text. A label too long for its container
+  wraps inside it, with rounded corners instead of the pill ends.
+</p>
 <peak-example>
   <h3>Poster CMS <span class="peak-badge accent">New</span></h3>
   <p>Inbox <span class="peak-badge solid">12</span></p>
+  <article style="max-inline-size: 16rem">
+    <header><small>Plugins</small> <span class="peak-badge secondary">Works with Stacks 5 and Stacks 6</span></header>
+    <p>A badge in a narrow card.</p>
+  </article>
 </peak-example>
 
 <h2>Chips</h2>

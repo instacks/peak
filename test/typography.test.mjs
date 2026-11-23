@@ -160,4 +160,43 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.ok(Math.abs(s.caption.size - 0.75 * s.text.size) < 0.05, "caption 0.75em");
     await page.close();
   });
+
+  test(`${file}: alignment utilities follow the writing direction; margin resets beat components`, async () => {
+    const page = await open(file);
+    const a = await page.evaluate(() => {
+      const cs = (id) => getComputedStyle(document.getElementById(id));
+      const left = (id) => {
+        const el = document.getElementById(id);
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        return { text: r.getBoundingClientRect().left - el.getBoundingClientRect().left, box: el.getBoundingClientRect().width - r.getBoundingClientRect().width };
+      };
+      return {
+        center: cs("text-center").textAlign,
+        end: cs("text-end").textAlign,
+        endRtl: left("text-end-rtl"),
+        endLtr: left("text-end"),
+        heading: cs("center-heading").textAlign,
+        eyebrow: cs("center-eyebrow").textAlign,
+        start: cs("text-start").textAlign,
+        mt0: parseFloat(cs("mt-0").marginBlockStart),
+        mtNormal: parseFloat(cs("mt-normal").marginBlockStart),
+        mb0: parseFloat(cs("mb-0").marginBlockEnd),
+        card: parseFloat(cs("card-mb-0").marginBlockEnd),
+      };
+    });
+    assert.equal(a.center, "center");
+    assert.equal(a.end, "end");
+    // "end" puts the text on the right in LTR and on the left in RTL
+    assert.ok(Math.abs(a.endLtr.text - a.endLtr.box) < 1, "LTR: text at the right edge");
+    assert.ok(a.endRtl.text < 1, "RTL: text at the left edge");
+    assert.equal(a.heading, "center", "an hgroup's heading inherits it");
+    assert.equal(a.eyebrow, "center", "and its eyebrow");
+    assert.equal(a.start, "start");
+    assert.ok(a.mtNormal > 0, "a heading after content has space above by default");
+    assert.equal(a.mt0, 0);
+    assert.equal(a.mb0, 0);
+    assert.equal(a.card, 0, "utilities win over the card's margin");
+    await page.close();
+  });
 }

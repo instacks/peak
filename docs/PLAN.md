@@ -592,6 +592,7 @@ that Lightning CSS itself compiled, so it never sees CSS written by Stacks or by
 | B18 | Medium | An `<img>` with `width`/`height` attributes at the top of a card kept the attribute's height while Peak widened it to the card edges: letterboxed, with empty bands. Pico only sets `height: auto` on images without the attribute. | Found while building the docs (22 Nov 2026) | **Fixed:** `block-size: auto` on the bleeding image; `test/layout.test.mjs` checks the aspect ratio |
 | B19 | Medium | The header's `surface` and `bordered` nav styles never drew their bottom rule: the background's spread shadow covered the rule's shadow on every side. The test only checked that a shadow was set. | Found while building the docs (22 Nov 2026) | **Fixed:** both shadows are shifted up by their spread, so the rule shows below the header; `test/stacks.test.mjs` samples the pixels |
 | B20 | Medium | A site title with a logo was out of line: the logo made the title an inline-flex box whose baseline is the image's bottom edge, so the subtitle and links sat low. On phones Pico's `img { max-width: 100% }` let the logo shrink to nothing in the flex row, and the title text slid under the subtitle (the Stacks theme writes the same markup). | Found on the published docs (22 Nov 2026) | **Fixed:** `src/site.css` centers the title's item and keeps the logo and title from shrinking; `test/patterns.test.mjs` checks alignment at 1280px and 360px |
+| B21 | Medium | A long badge label ran out of a narrow card: `.peak-badge` had `white-space: nowrap` and a 999px radius. | Found in a Stacks 6 preview by the theme's stack probe (23 Nov 2026) | **Fixed:** the label wraps inside its container (`max-inline-size: 100%`, `overflow-wrap: anywhere`), with a radius of half a line plus the padding: a pill on one line, round corners when wrapped. `test/layout.test.mjs` checks a badge in a 12rem card |
 
 ---
 
@@ -869,7 +870,7 @@ B1, B2, B3, B4, B5, B6, B7, B8, B9, B10 and B12 are fixed. B11 (`@layer` stateme
 the output) is unchanged; with sub-layers the order comes from first appearance, which
 `test/layers.test.mjs` checks in all four dist files; the scoped build restores the statement. B13: both files are implemented and the README documents
 the inputs and markup. B14, B15 and B16 concerned a theme built on Peak and are tracked there.
-B17, B18 and B19 (found while building the documentation site) and B20 (found on the published docs) are fixed.
+B17, B18 and B19 (found while building the documentation site), B20 (found on the published docs) and B21 (found by the Stacks theme's stack probe) are fixed.
 
 ---
 

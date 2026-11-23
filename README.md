@@ -205,7 +205,8 @@ variants.
 
 `.peak-card-link` on one link makes the whole card clickable (other links stay clickable) and
 lifts it on hover. Badges: `.peak-badge` with `.secondary`, `.contrast`, `.accent`, `.success`,
-`.warning`, `.danger`, `.info`, plus `.solid`, `.outline`, `.dot`. `.peak-card` gives any element
+`.warning`, `.danger`, `.info`, plus `.solid`, `.outline`, `.dot`; a long label wraps inside its
+container. `.peak-card` gives any element
 the card look. All of these classes also work on a Stacks container stack's class field.
 
 ## Typography
@@ -232,7 +233,8 @@ Code blocks that scroll get a shade along each edge with more code beyond it (CS
 `<a class="peak-anchor" href="#id">#</a>` in a heading is a link to it, shown on hover and focus.
 
 Text colors: `.peak-text-primary`, `-secondary`, `-contrast`, `-muted`, `-success`, `-danger`,
-`-info`. Headings get balanced line breaks, letter-spacing from `--peak-heading-tracking` (h1 4/3
+`-info`. Alignment by writing direction: `.peak-text-start`, `-center`, `-end`; margin resets
+`.peak-mt-0` and `.peak-mb-0`. Headings get balanced line breaks, letter-spacing from `--peak-heading-tracking` (h1 4/3
 of it, `.peak-display` 5/3) and Blades' per-level line heights around `--peak-heading-line-height`.
 Optional weights for h1 (`--peak-display-weight`), h4–h6 (`--peak-subheading-font-weight`) and
 buttons (`--peak-button-font-weight`) fall back to the heading or body weight while unset.
