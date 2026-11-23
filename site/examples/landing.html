@@ -1,0 +1,63 @@
+---
+title: Landing page
+description: A marketing page for an invented product: hero, features, pricing, testimonials, FAQ and a sign-up band.
+order: 1
+uses: navigation.html layout.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notewell · Landing page example</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/peak.min.css">
+<script src="../assets/peak-scheme.js"></script>
+<style data-peak-theme>
+  :root {
+    --peak-hue: 250;
+  }
+</style>
+</head>
+<body id="top">
+<a class="peak-skip-link" href="#content">Skip to content</a>
+<header class="site-header" data-nav-style="bordered">
+  <nav class="site-nav container" data-peak-menu="768" aria-label="Site">
+    <ul><li><a class="site-title contrast" href="#top">Notewell</a></li></ul>
+    <div class="site-menu" data-peak-anchor>
+      <button type="button" class="site-menu-toggle outline secondary" popovertarget="site-menu"><span aria-hidden="true">☰</span> Menu</button>
+      <div class="site-menu-popover" id="site-menu" popover>
+        <ul>
+          <li><a href="#content">Features</a></li>
+          <li><a href="#content">Pricing</a></li>
+          <li><a href="../examples.html">All examples</a></li>
+        </ul>
+      </div>
+    </div>
+    <ul>
+      <li><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    </ul>
+  </nav>
+</header>
+<main id="content" class="site-main" tabindex="-1">
+  <section class="peak-band">
+    <div class="container peak-hero">
+      <hgroup>
+        <p>Notes for small teams</p>
+        <h1 class="peak-display">Write it down once</h1>
+      </hgroup>
+      <p class="peak-lead">A shared notebook that keeps decisions, how-tos and meeting notes where the whole team can find them.</p>
+      <div class="peak-cluster">
+        <a href="#content" role="button">Start free</a>
+        <a href="#content" role="button" class="secondary outline">See pricing</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer container">
+  <p class="site-footer-text">© 2026 Notewell, an invented product.</p>
+  <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+</footer>
+</body>
+</html>

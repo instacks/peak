@@ -390,6 +390,30 @@ body.docs {
   margin-block-end: 1rem;
 }
 
+/* Example gallery: a whole page in an iframe, which is a viewport of its own */
+.docs-frame {
+  margin-block: 1.5rem 1rem;
+  overflow: hidden;
+  border: var(--pico-border-width) solid var(--peak-border);
+  border-radius: var(--pico-border-radius);
+  background-color: var(--peak-bg);
+}
+
+.docs-frame iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 32rem;
+  border: 0;
+}
+
+.docs-frame-actions {
+  margin-block-end: 1rem;
+}
+
+.docs-frame-actions [role="button"] {
+  margin: 0;
+}
+
 /* Previous / next */
 .docs-pager {
   margin-block: 4rem 0;

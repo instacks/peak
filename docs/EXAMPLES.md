@@ -1,6 +1,14 @@
 # Example page layouts: plan
 
-Status: **planned, not started** (23 Nov 2026). This file is the handoff for the session that
+Status: **step 1 done** (23 Nov 2026): the builder, the gallery page (`site/pages/examples.html`),
+the tests, and `site/examples/landing.html` as a minimal page that step 2 fills in. Open point
+for step 2: at 390px the mobile menu's toggle looks taller than the title and the scheme select
+in the header (check whether that is Peak or the example's markup).
+
+Decided in step 1: examples are not counted as documentation by the class/input coverage tests
+(`all` in `test/docs.test.mjs` holds the docs pages only). Besides `<style data-peak-theme>`, the
+builder allows inline `style` attributes that only set `--peak-*` knobs (e.g. `--peak-grid-min`),
+and fails on any other CSS, on `docs.css`/`docs.js`, and on a `uses` entry that is no docs page. This file is the handoff for the session that
 builds it. Read `CLAUDE.md` and the "Documentation site" part of it first; this plan follows its
 rules.
 
