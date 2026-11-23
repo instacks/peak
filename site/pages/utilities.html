@@ -34,6 +34,33 @@ description: A deliberately small set of single-purpose classes. They live in th
   <p class="peak-h4">Paragraph at h4 size</p>
 </peak-example>
 
+<h2>Text alignment</h2>
+<p>
+  <code>.peak-text-start</code>, <code>.peak-text-center</code> and <code>.peak-text-end</code>
+  align text by the writing direction, so <code>-end</code> is the right edge in English and the
+  left edge in Arabic. Children inherit it: on an <code>hgroup</code> it aligns the eyebrow, the
+  heading and the subtitle together.
+</p>
+<peak-example>
+  <hgroup class="peak-text-center">
+    <p>Eyebrow</p>
+    <h3>A centered heading</h3>
+    <p>And its subtitle</p>
+  </hgroup>
+  <p class="peak-text-end">At the end of the line</p>
+</peak-example>
+
+<h2>Margin resets</h2>
+<p>
+  <code>.peak-mt-0</code> removes the space before an element (a heading that follows other
+  content gets some), <code>.peak-mb-0</code> the space after it (paragraphs, cards). Use them
+  where a layout already spaces its items.
+</p>
+<peak-example>
+  <article class="peak-card peak-mb-0">A card without its bottom margin</article>
+  <p class="peak-mt-0">The paragraph sits right below it.</p>
+</peak-example>
+
 <h2>Tabular numbers</h2>
 <p><code>.peak-tabular</code>: digits of equal width, for columns of numbers and counters.</p>
 <peak-example>

@@ -138,6 +138,32 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
         assert.ok(Math.abs(b.size - 0.75) < 0.01, `${b.id} 0.75em`);
         assert.equal(b.weight, "600");
       }
+      const narrow = await page.evaluate(() => {
+        const r = (id) => document.getElementById(id).getBoundingClientRect();
+        const card = document.getElementById("narrow-card");
+        const cs = getComputedStyle(card);
+        const inner = card.getBoundingClientRect().right - parseFloat(cs.paddingRight) - parseFloat(cs.borderRightWidth);
+        const long = document.getElementById("badge-long");
+        const lh = parseFloat(getComputedStyle(long).lineHeight);
+        const dot = getComputedStyle(long, "::before");
+        return {
+          longRight: r("badge-long").right,
+          inner,
+          longLines: Math.round((r("badge-long").height - 2 * parseFloat(getComputedStyle(long).paddingTop)) / lh),
+          dot: [parseFloat(dot.width), parseFloat(dot.height)],
+          shortLines: ["badge-short", "badge-short-2"].map((id) => Math.round(r(id).height / lh)),
+          shortHeight: r("badge-short").height,
+          shortRadius: parseFloat(getComputedStyle(document.getElementById("badge-short")).borderTopLeftRadius),
+          scroll: document.documentElement.scrollWidth - innerWidth,
+        };
+      });
+      assert.ok(narrow.longRight <= narrow.inner + 0.5, `a long badge stays inside its card: ${narrow.longRight} > ${narrow.inner}`);
+      assert.ok(narrow.longLines >= 2, "it wraps");
+      assert.equal(narrow.dot[0], narrow.dot[1], "its dot stays round");
+      assert.ok(narrow.dot[0] > 0, "and keeps its size");
+      assert.deepEqual(narrow.shortLines, [1, 1], "short badges stay on one line");
+      assert.ok(Math.abs(narrow.shortRadius - narrow.shortHeight / 2) < 0.5, "a one-line badge is still a pill");
+      assert.equal(narrow.scroll, 0, "no horizontal overflow");
       const accent = await page.evaluate(() => [getComputedStyle(document.getElementById("badge-accent")).backgroundColor, resolveColor("var(--peak-accent-fill)").css]);
       assert.equal(accent[0], accent[1], "accent badge uses the accent fill");
       await page.close();
