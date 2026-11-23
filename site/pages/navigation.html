@@ -121,6 +121,7 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
   <code>.peak-sidebar-nav</code> is a vertical list of links, the current page marked by a colored
   edge. Nested lists are open only on the branch that holds the current page (with
   <code>aria-current="page"</code>), so a long site stays short. The page list of these docs is one.
+  A paragraph or heading between two lists labels the group below it.
 </p>
 <peak-example>
   <aside style="max-inline-size: 16rem">
@@ -138,6 +139,10 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
             <li><a href="#sidebar-navigation">Hidden: not the current branch</a></li>
           </ul>
         </li>
+      </ul>
+      <p>Account</p>
+      <ul>
+        <li><a href="#sidebar-navigation">Settings <span class="peak-badge">2</span></a></li>
       </ul>
     </nav>
   </aside>

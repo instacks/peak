@@ -10,6 +10,15 @@ dialog.peak-wide > article {
 }
 
 /*
+ * Blades sets out the footer's buttons in a row at the end, but Pico makes every
+ * button[type="submit"] full width: a form's submit button in the footer (form="…") took a line
+ * of its own below the others.
+ */
+dialog > article > footer button[type="submit"] {
+  inline-size: auto;
+}
+
+/*
  * With closedby, Blades' modern modal makes the dialog itself the box: fit-content height, centered
  * by margin: auto, at most 700px wide. The sizes and the drawer need the dialog's box back: the
  * viewport for full and drawer (the drawer's panel is placed inside it), 64rem for wide.

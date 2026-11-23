@@ -382,6 +382,46 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
+  test(`${file}: sidebar nav: current link marked, other branches closed, group labels spaced; a meter as wide as a progress bar`, async () => {
+    const page = await open(file);
+    const r = await page.evaluate(() => {
+      const cs = (id) => getComputedStyle(document.getElementById(id));
+      const box = (id) => document.getElementById(id).getBoundingClientRect();
+      return {
+        currentWeight: cs("sidenav-current").fontWeight,
+        currentEdge: cs("sidenav-current").borderInlineStartColor,
+        primary: getComputedStyle(document.body).getPropertyValue("--pico-primary"),
+        openChild: cs("sidenav-open-child").display,
+        hiddenChild: document.getElementById("sidenav-hidden-child").closest("ul").checkVisibility(),
+        labelGap: box("sidenav-label").top - box("sidenav-list-1").bottom,
+        firstLabelMargin: parseFloat(cs("sidenav-first-label").marginBlockStart),
+        labelSize: parseFloat(cs("sidenav-label").fontSize),
+        root: parseFloat(getComputedStyle(document.documentElement).fontSize),
+        transform: cs("sidenav-label").textTransform,
+        meter: box("meter").width,
+        progress: box("progress").width,
+      };
+    });
+    assert.equal(Number(r.currentWeight), 600);
+    assert.notEqual(r.openChild, "none", "the current branch is open");
+    assert.equal(r.hiddenChild, false, "other branches are closed");
+    assert.ok(r.labelGap > r.root, `space above a group label: ${r.labelGap}`);
+    assert.equal(r.firstLabelMargin, 0, "none above the first");
+    assert.ok(Math.abs(r.labelSize - 0.75 * r.root) < 0.01, `label size ${r.labelSize}`);
+    assert.equal(r.transform, "uppercase");
+    assert.ok(Math.abs(r.meter - r.progress) < 0.5, `meter ${r.meter} vs progress ${r.progress}`);
+    await page.close();
+  });
+
+  test(`${file}: a form's submit button in a dialog footer sits in the row with the others`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => document.getElementById("form-dialog").showModal());
+    await page.waitForTimeout(300);
+    const [cancel, submit] = await Promise.all([rect(page, "dialog-cancel"), rect(page, "dialog-submit")]);
+    assert.ok(Math.abs(cancel.top - submit.top) < 1 && submit.left > cancel.right, `one row: ${JSON.stringify({ cancel, submit })}`);
+    await page.close();
+  });
+
   test(`${file}: footer columns: a heading above stacked links; a plain footer nav is a row`, async () => {
     const page = await open(file);
     // The list items: Pico pads nav links and pulls them out by the same amount
@@ -456,6 +496,12 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById("s-aside").parentElement).position), "sticky");
     assert.equal(await style(page, "s-media", "display"), "flex");
     assert.ok(parseFloat(await style(page, "s-callout", "paddingTop")) > 0);
+    assert.equal(await style(page, "s-hide-below", "display"), "block");
+    assert.equal(await style(page, "s-hide-from", "display"), "none", "over Stacks' display: block");
+    assert.notEqual(await style(page, "s-band", "borderImageSource"), "none", "the band's full-width background survives Stacks' border: 0");
+    await page.setViewportSize({ width: 390, height: 800 });
+    assert.equal(await style(page, "s-hide-below", "display"), "none");
+    assert.equal(await style(page, "s-hide-from", "display"), "block");
     await page.close();
   });
 }

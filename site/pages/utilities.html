@@ -77,6 +77,42 @@ description: A deliberately small set of single-purpose classes. They live in th
   <button><span aria-hidden="true">🔍</span><span class="peak-visually-hidden">Search</span></button>
 </peak-example>
 
+<h2>Show and hide by width</h2>
+<p>
+  Hide an element below a viewport width, or from that width up. The usual pair: a sidebar on wide
+  screens, and on narrow ones a button that opens the same links in a
+  <a href="dialogs.html#drawer">drawer</a>.
+</p>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Width</th><th scope="col">Hidden below it</th><th scope="col">Hidden from it up</th></tr></thead>
+    <tbody>
+      <tr><td>576px</td><td><code>.peak-hide-below-sm</code></td><td><code>.peak-hide-from-sm</code></td></tr>
+      <tr><td>768px</td><td><code>.peak-hide-below-md</code></td><td><code>.peak-hide-from-md</code></td></tr>
+      <tr><td>1024px</td><td><code>.peak-hide-below-lg</code></td><td><code>.peak-hide-from-lg</code></td></tr>
+      <tr><td>1280px</td><td><code>.peak-hide-below-xl</code></td><td><code>.peak-hide-from-xl</code></td></tr>
+    </tbody>
+  </table>
+</div>
+<peak-example>
+  <p>
+    <span class="peak-badge peak-hide-below-lg">1024px or wider</span>
+    <span class="peak-badge secondary peak-hide-from-lg">Narrower than 1024px</span>
+  </p>
+</peak-example>
+<peak-code lang="html">
+  <button class="peak-hide-from-lg" command="show-modal" commandfor="nav-drawer">Menu</button>
+  <dialog class="peak-drawer start" id="nav-drawer" closedby="any">…</dialog>
+  <div class="peak-with-sidebar">
+    <aside class="peak-hide-below-lg">…</aside>
+    <main>…</main>
+  </div>
+</peak-code>
+<p>
+  Hidden is <code>display: none</code>, for everyone, screen readers included. On a Stacks container
+  stack they work through the class field too.
+</p>
+
 <h2>Scoping</h2>
 <ul>
   <li><code>.peak</code> and <code>.peak-ignore</code> choose where the <a href="scoped.html">scoped build</a> applies.</li>

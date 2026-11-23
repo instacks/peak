@@ -31,6 +31,17 @@
   padding-block: var(--peak-section-spacing, calc(var(--pico-block-spacing-vertical) * 2)) !important;
 }
 
+/*
+ * Stacks' border: 0 shorthand also resets the border image that extends the band to the viewport
+ * edges. Not in forced colors or print, where media.css drops it: an !important here would beat
+ * that later layer.
+ */
+@media screen and (forced-colors: none) {
+  .stacks_in.peak-band {
+    border-image: linear-gradient(var(--_peak-band-bg), var(--_peak-band-bg)) fill 0 / 0 / 0 100vmax !important;
+  }
+}
+
 .stacks_in.peak-hero {
   padding-block: calc(var(--peak-spacing) * 4) calc(var(--peak-spacing) * 2.5) !important;
 }
@@ -89,4 +100,53 @@
 .stacks_in.peak-switcher,
 .stacks_in.peak-switcher > .out > .stacks_in {
   overflow: visible !important;
+}
+
+/* Stacks' display: block would show a hidden stack */
+@media (width < 576px) {
+  .stacks_in.peak-hide-below-sm {
+    display: none !important;
+  }
+}
+
+@media (width >= 576px) {
+  .stacks_in.peak-hide-from-sm {
+    display: none !important;
+  }
+}
+
+@media (width < 768px) {
+  .stacks_in.peak-hide-below-md {
+    display: none !important;
+  }
+}
+
+@media (width >= 768px) {
+  .stacks_in.peak-hide-from-md {
+    display: none !important;
+  }
+}
+
+@media (width < 1024px) {
+  .stacks_in.peak-hide-below-lg {
+    display: none !important;
+  }
+}
+
+@media (width >= 1024px) {
+  .stacks_in.peak-hide-from-lg {
+    display: none !important;
+  }
+}
+
+@media (width < 1280px) {
+  .stacks_in.peak-hide-below-xl {
+    display: none !important;
+  }
+}
+
+@media (width >= 1280px) {
+  .stacks_in.peak-hide-from-xl {
+    display: none !important;
+  }
 }

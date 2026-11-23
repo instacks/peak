@@ -241,6 +241,13 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
       assert.deepEqual(narrow.shortLines, [1, 1], "short badges stay on one line");
       assert.ok(Math.abs(narrow.shortRadius - narrow.shortHeight / 2) < 0.5, "a one-line badge is still a pill");
       assert.equal(narrow.scroll, 0, "no horizontal overflow");
+      const tableLines = await page.evaluate(() => {
+        const b = document.getElementById("badge-table");
+        const label = document.createRange();
+        label.selectNodeContents(b);
+        return label.getClientRects().length;
+      });
+      assert.equal(tableLines, 1, "a one-word badge in a squeezed table column stays whole");
       const accent = await page.evaluate(() => [getComputedStyle(document.getElementById("badge-accent")).backgroundColor, resolveColor("var(--peak-accent-fill)").css]);
       assert.equal(accent[0], accent[1], "accent badge uses the accent fill");
       await page.close();

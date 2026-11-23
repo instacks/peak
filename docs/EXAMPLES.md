@@ -1,9 +1,11 @@
 # Example page layouts: plan
 
-Status: **steps 1–2 done** (23 Nov 2026): the builder, the gallery page
-(`site/pages/examples.html`), the tests, and the landing page. The landing page found B24–B29
-(`docs/PLAN.md` §5, all fixed in `src/` with tests) and added two small APIs
-(`--peak-media-min`, `.site-footer-nav.stacked`), so the next release is a minor one.
+Status: **steps 1–3 done** (23 Nov 2026): the builder, the gallery page
+(`site/pages/examples.html`), the tests, the landing page and the admin dashboard. They found
+B24–B33 (`docs/PLAN.md` §5; all fixed in `src/` with tests except the B33 note) and added a few
+small APIs (`--peak-media-min`, `.site-footer-nav.stacked`, `.peak-hide-below-*`/`-from-*`,
+sidebar-nav group labels), so the next release is a minor one. Not built, logged in PLAN §7.3:
+charts, a compact button, a highlighted card.
 
 Decided in step 1: examples are not counted as documentation by the class/input coverage tests
 (`all` in `test/docs.test.mjs` holds the docs pages only). Besides `<style data-peak-theme>`, the

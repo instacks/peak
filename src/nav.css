@@ -168,6 +168,20 @@
   font-weight: 600;
 }
 
+/* A heading or paragraph between the lists labels the group of links below it */
+.peak-sidebar-nav > :is(h2, h3, h4, h5, h6, p) {
+  margin-block: calc(var(--pico-spacing) * 1.5) calc(var(--pico-spacing) * 0.375);
+  color: var(--pico-h6-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.peak-sidebar-nav > :is(h2, h3, h4, h5, h6, p):first-child {
+  margin-block-start: 0;
+}
+
 .peak-sidebar-nav ul ul a {
   padding-inline-start: calc(var(--pico-nav-link-spacing-horizontal) * 2.5);
 }

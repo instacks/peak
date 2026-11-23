@@ -43,6 +43,37 @@ description: A dialog element with an article inside. It fades and zooms in, fad
   </p>
 </aside>
 
+<h3>A form in a dialog</h3>
+<p>
+  <code>method="dialog"</code> closes the dialog when the form is submitted, after the browser checks
+  the required fields. The submit button can sit in the footer with the others: <code>form="…"</code>
+  ties it to the form. Peak keeps it in the footer's row (Pico makes submit buttons full width).
+</p>
+<peak-example>
+  <button command="show-modal" commandfor="dialog-form">Add a contact</button>
+  <dialog id="dialog-form" closedby="any">
+    <article>
+      <header>
+        <button aria-label="Close" rel="prev" command="close" commandfor="dialog-form"></button>
+        <h3>New contact</h3>
+      </header>
+      <form method="dialog" id="contact-form">
+        <label>Name <input name="name" autocomplete="name" required></label>
+        <label>Email <input type="email" name="email" autocomplete="email" required></label>
+      </form>
+      <footer>
+        <button type="button" class="secondary" command="close" commandfor="dialog-form">Cancel</button>
+        <button type="submit" form="contact-form">Save</button>
+      </footer>
+    </article>
+  </dialog>
+</peak-example>
+<p>
+  A button does one thing without script: it closes the dialog or opens a
+  <a href="callouts.html#toasts">toast</a>, not both. Showing a toast after the form is saved takes a
+  line of script.
+</p>
+
 <h2>Sizes</h2>
 <p><code>.peak-wide</code> allows up to 64rem; <code>.peak-full</code> fills the viewport.</p>
 <peak-example>
