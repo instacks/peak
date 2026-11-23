@@ -105,7 +105,9 @@ description: Layouts that adapt to the space they get, not to the viewport. None
   <code>.peak-with-sidebar</code> puts an <code>&lt;aside&gt;</code> (or <code>.peak-sidebar</code>) next
   to the content, in either order. When the content would get narrower than 60%, the aside wraps
   above or below it: no breakpoint. <code>.sticky</code> keeps the aside in view while the content
-  scrolls (offset by <code>--peak-sticky-offset</code>).
+  scrolls (offset by <code>--peak-sticky-offset</code>; under a sticky header, set it to the header's
+  height). It applies from a layout width of 45rem, where the default aside stops wrapping: a
+  wrapped aside scrolls with the page instead of sliding over the content.
 </p>
 <peak-example>
   <div class="peak-with-sidebar" style="--peak-sidebar-width: 12rem">

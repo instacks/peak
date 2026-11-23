@@ -100,9 +100,11 @@
  * Blades has no body > footer spacing. When Peak applies only to stacks with the class peak, the
  * footer is a scope root itself, and inside @scope a plain .site-footer only matches descendants:
  * hence :scope.site-footer (which never matches in the global build, where :scope is :root).
+ * Pico gives paragraphs and lists color: var(--pico-color), so the muted color is set there too.
  */
 .site-footer,
 :scope.site-footer {
+  --pico-color: var(--pico-muted-color);
   padding-block: calc(var(--pico-spacing) * 2);
   border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
   color: var(--pico-muted-color);
@@ -222,8 +224,9 @@
   color: inherit;
 }
 
+/* On a link, --pico-color is the link color: the current page takes the text color instead */
 .site-footer-nav a[aria-current="page"] {
-  color: var(--pico-color);
+  color: var(--peak-text);
 }
 
 .site-footer-text {

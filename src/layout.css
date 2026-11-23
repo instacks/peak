@@ -216,6 +216,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--peak-gap, calc(var(--pico-spacing) * 2));
+  container: peak-sidebar / inline-size;
 }
 
 .peak-with-sidebar > :is(aside, .peak-sidebar),
@@ -228,11 +229,18 @@
   min-inline-size: 60%;
 }
 
-.peak-with-sidebar.sticky > :is(aside, .peak-sidebar),
-.peak-with-sidebar.sticky > .out:has(> .peak-sidebar) {
-  position: sticky;
-  inset-block-start: var(--peak-sticky-offset, var(--pico-spacing));
-  align-self: start;
+/*
+ * Sticky only while the aside is beside the content: wrapped above it, a sticky aside would slide
+ * over the text the whole way down. A container query can't read --peak-sidebar-width, so it
+ * switches at 45rem, where the default 16rem aside and its gap stop wrapping (like the grid spans).
+ */
+@container peak-sidebar (width >= 45rem) {
+  .peak-with-sidebar.sticky > :is(aside, .peak-sidebar),
+  .peak-with-sidebar.sticky > .out:has(> .peak-sidebar) {
+    position: sticky;
+    inset-block-start: var(--peak-sticky-offset, var(--pico-spacing));
+    align-self: start;
+  }
 }
 
 /* Media object: an image or icon beside text; the text wraps below it when there's no room */

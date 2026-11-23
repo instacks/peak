@@ -1,0 +1,205 @@
+---
+title: Blog
+description: The index of an invented field-notes blog: a hero, a featured post as a horizontal card, a tag row, a grid of post cards with authors, pagination and a newsletter band. The post itself is the next example.
+order: 3
+uses: layout.html grids.html cards.html badges.html typography.html navigation.html forms.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Field Notes · Blog example</title>
+<meta name="description" content="An example blog index built with Peak.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/peak.min.css">
+<script src="../assets/peak-scheme.js"></script>
+<style data-peak-theme>
+  :root {
+    --peak-hue: 35;
+    --peak-chroma: 0.13;
+    --peak-neutral-hue: 60;
+    --peak-neutral-chroma: 0.014;
+    --peak-font-family-heading: Charter, "Bitstream Charter", "Sitka Text", Cambria, serif;
+    --peak-heading-font-weight: 700;
+    --peak-radius: 0.125rem;
+    --peak-section-spacing: 3rem;
+  }
+</style>
+</head>
+<body id="top">
+<a class="peak-skip-link" href="#content">Skip to content</a>
+
+<header class="site-header" data-nav-style="bordered">
+  <nav class="site-nav container" data-peak-menu="576" aria-label="Site">
+    <ul>
+      <li><a class="site-title contrast" href="blog.html">Field Notes</a></li>
+    </ul>
+    <div class="site-menu" data-peak-anchor>
+      <button type="button" class="site-menu-toggle outline secondary" popovertarget="site-menu"><span aria-hidden="true">☰</span> Menu</button>
+      <div class="site-menu-popover" id="site-menu" popover>
+        <ul>
+          <li><a href="blog.html" class="secondary" aria-current="page">Articles</a></li>
+          <li><a href="#" class="secondary">About</a></li>
+          <li><a href="#newsletter" class="secondary">Newsletter</a></li>
+          <li><a href="../examples.html" class="secondary">All examples</a></li>
+        </ul>
+      </div>
+    </div>
+    <ul>
+      <li><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="content" class="container" tabindex="-1">
+  <section class="peak-hero">
+    <hgroup>
+      <p>Field Notes</p>
+      <h1 class="peak-display">Notes from the workbench</h1>
+    </hgroup>
+    <p class="peak-lead">Essays on making things slowly: tools, materials, mistakes, and what we learned from each.</p>
+  </section>
+
+  <section aria-labelledby="featured">
+    <h2 id="featured" class="peak-visually-hidden">Featured</h2>
+    <article class="peak-card horizontal">
+      <img src="../assets/landscape.svg" alt="Mountains at dusk" width="640" height="400">
+      <p><span class="peak-badge accent">Featured</span> <span class="peak-badge secondary">Process</span></p>
+      <h3 class="peak-h2 peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">What a year of sketchbooks taught us about planning</a></h3>
+      <p>We kept one sketchbook per project for twelve months. The plans were wrong; the margins were where the useful ideas lived.</p>
+      <div class="peak-media center" style="--peak-media-min: 8rem">
+        <span class="peak-avatar" role="img" aria-label="Noor Haddad">NH</span>
+        <div><strong>Noor Haddad</strong><br><small class="peak-text-muted"><time datetime="2026-11-18">18 Nov 2026</time> · 9 min read</small></div>
+      </div>
+    </article>
+  </section>
+
+  <section aria-labelledby="latest">
+    <div class="peak-cluster justify-between">
+      <h2 id="latest" class="peak-mb-0">Latest articles</h2>
+      <nav aria-label="Tags">
+        <p class="peak-cluster" style="--peak-gap: 0.5rem">
+          <a class="peak-chip" href="blog.html" aria-current="page">All</a>
+          <a class="peak-chip" href="#">Process</a>
+          <a class="peak-chip" href="#">Materials</a>
+          <a class="peak-chip" href="#">Tools</a>
+          <a class="peak-chip" href="#">Interviews</a>
+        </p>
+      </nav>
+    </div>
+
+    <div class="peak-grid-auto">
+      <article>
+        <img src="../assets/shapes.svg" alt="Colored paper shapes on a table" width="640" height="400">
+        <p><span class="peak-badge secondary">Materials</span></p>
+        <h3 class="peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">Choosing paper that survives a field trip</a></h3>
+        <p>Weight, sizing and why the cheapest notebook won our rain test.</p>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 6rem">
+            <span class="peak-avatar" role="img" aria-label="Ravi Iyer" style="--peak-avatar-size: 2rem">RI</span>
+            <small><strong>Ravi Iyer</strong><br><time datetime="2026-11-12" class="peak-text-muted">12 Nov 2026</time></small>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <img src="../assets/product.svg" alt="A laptop with a document open" width="640" height="400">
+        <p><span class="peak-badge secondary">Tools</span></p>
+        <h3 class="peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">A plain-text system for project notes</a></h3>
+        <p>Folders, one file per day, and a search that finds things by the words we actually used.</p>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 6rem">
+            <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 2rem">NH</span>
+            <small><strong>Noor Haddad</strong><br><time datetime="2026-11-05" class="peak-text-muted">5 Nov 2026</time></small>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <img src="../assets/landscape.svg" alt="Mountains under a low sun" width="640" height="400">
+        <p><span class="peak-badge secondary">Interviews</span></p>
+        <h3 class="peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">Twenty years at the same bench</a></h3>
+        <p>A conversation with a bookbinder about habits, patience and good light.</p>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 6rem">
+            <span class="peak-avatar" role="img" aria-label="Mila Novak" style="--peak-avatar-size: 2rem">MN</span>
+            <small><strong>Mila Novak</strong><br><time datetime="2026-10-29" class="peak-text-muted">29 Oct 2026</time></small>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <img src="../assets/shapes.svg" alt="Paper shapes arranged as a still life" width="640" height="400">
+        <p><span class="peak-badge secondary">Process</span></p>
+        <h3 class="peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">Prototypes you are allowed to throw away</a></h3>
+        <p>Cardboard first, wood later: how cheap models make better decisions.</p>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 6rem">
+            <span class="peak-avatar" role="img" aria-label="Ravi Iyer" style="--peak-avatar-size: 2rem">RI</span>
+            <small><strong>Ravi Iyer</strong><br><time datetime="2026-10-21" class="peak-text-muted">21 Oct 2026</time></small>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <img src="../assets/product.svg" alt="A laptop on a desk" width="640" height="400">
+        <p><span class="peak-badge secondary">Tools</span></p>
+        <h3 class="peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">The three measuring tools we actually use</a></h3>
+        <p>Everything else in the drawer is there for the one job a year that needs it.</p>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 6rem">
+            <span class="peak-avatar" role="img" aria-label="Mila Novak" style="--peak-avatar-size: 2rem">MN</span>
+            <small><strong>Mila Novak</strong><br><time datetime="2026-10-14" class="peak-text-muted">14 Oct 2026</time></small>
+          </div>
+        </footer>
+      </article>
+      <article>
+        <img src="../assets/landscape.svg" alt="A mountain ridge" width="640" height="400">
+        <p><span class="peak-badge secondary">Materials</span></p>
+        <h3 class="peak-mt-0"><a class="peak-card-link contrast" href="blog-post.html">Finishing oils, compared over a winter</a></h3>
+        <p>Six oils, six boards, one damp workshop. The results surprised us.</p>
+        <footer>
+          <div class="peak-media center" style="--peak-media-min: 6rem">
+            <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 2rem">NH</span>
+            <small><strong>Noor Haddad</strong><br><time datetime="2026-10-07" class="peak-text-muted">7 Oct 2026</time></small>
+          </div>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <nav class="peak-pagination" aria-label="Article pages">
+    <ul>
+      <li><a aria-current="page">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#" rel="next">Older</a></li>
+    </ul>
+  </nav>
+
+  <section id="newsletter" class="peak-band surface">
+    <div class="peak-hero center">
+      <h2>One letter a month</h2>
+      <p class="peak-lead">The new articles, one tool we liked and one mistake we made. No tracking, unsubscribe in one click.</p>
+      <form action="#" aria-label="Newsletter">
+        <div role="group">
+          <input type="email" name="email" placeholder="you@example.com" aria-label="Email address" autocomplete="email" required>
+          <button type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer container">
+  <nav class="site-footer-nav" aria-label="Footer">
+    <ul>
+      <li><a href="blog.html" aria-current="page">Articles</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Feed</a></li>
+      <li><a href="../examples.html">More Peak examples</a></li>
+    </ul>
+  </nav>
+  <p class="site-footer-text">© 2026 Field Notes, an invented blog.</p>
+  <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+</footer>
+</body>
+</html>

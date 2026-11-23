@@ -68,6 +68,18 @@ description: Small labels for status and counts, interactive chips for tags and 
   </div>
 </peak-example>
 <p>
+  A row of link chips is a tag list; <code>aria-current="page"</code> marks the one you're on:
+</p>
+<peak-example>
+  <nav aria-label="Tags">
+    <p class="peak-cluster" style="--peak-gap: 0.5rem">
+      <a class="peak-chip" href="#chips" aria-current="page">All</a>
+      <a class="peak-chip" href="#chips">Design</a>
+      <a class="peak-chip" href="#chips">Release notes</a>
+    </p>
+  </nav>
+</peak-example>
+<p>
   Radios make a single choice; wrap them in a <code>&lt;fieldset&gt;</code> with a legend for screen
   readers:
 </p>

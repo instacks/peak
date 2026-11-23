@@ -72,6 +72,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const [a, c] = [await rect(phone, "aside"), await rect(phone, "content")];
     assert.ok(c.top >= a.bottom, "stacked");
     assert.equal(await overflow(phone), 0);
+    // Wrapped, a sticky aside would slide over the content while scrolling
+    assert.equal(await style(phone, "aside-2", "position"), "static", "not sticky while wrapped");
     await phone.close();
   });
 
@@ -141,6 +143,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const button = await rect(page, "chip-button");
     assert.ok(button.width >= 24 && button.height >= 24, `remove target ${button.width}×${button.height}`);
     assert.ok((await rect(page, "chip-link")).height >= 32 - 0.5, "chips at least 2rem tall");
+    assert.equal(await style(page, "chip-current", "backgroundColor"), tint, "a link chip to the current page looks selected");
+    assert.notEqual(await style(page, "chip-not-current", "backgroundColor"), tint, "aria-current=false doesn't");
     await page.close();
   });
 
@@ -435,6 +439,15 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.ok(two.top >= one.bottom && Math.abs(two.left - one.left) < 0.5, "one link per line");
     assert.ok(Math.abs(one.left - heading.left) < 0.5, `links start under the heading: ${one.left} vs ${heading.left}`);
     assert.ok(Math.abs(row1.top - row2.top) < 0.5 && row2.left > row1.right, "a row without .stacked");
+    // Muted text and links (Pico colors p and ul itself); the current page in the text color
+    await page.evaluate(colorHelpers);
+    const c = await page.evaluate(() => {
+      const color = (id) => getComputedStyle(document.getElementById(id)).color;
+      return { text: color("footer-text"), link: color("frow-1"), current: color("frow-current"), muted: resolveColor("var(--peak-muted)").css, body: resolveColor("var(--peak-text)").css };
+    });
+    assert.equal(c.text, c.muted, "footer text muted");
+    assert.equal(c.link, c.muted, "footer links muted");
+    assert.equal(c.current, c.body, "the current page in the text color");
     await page.close();
   });
 

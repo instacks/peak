@@ -33,6 +33,8 @@
 
       <p class="peak-cluster" id="chips">
         <a class="peak-chip" href="#" id="chip-link">Link</a>
+        <a class="peak-chip" href="#" aria-current="page" id="chip-current">Current</a>
+        <a class="peak-chip" href="#" aria-current="false" id="chip-not-current">Not current</a>
         <label class="peak-chip" id="chip-check"><input type="checkbox" id="chip-input" /> Filter</label>
         <span class="peak-chip" id="chip-remove">Tag <button type="button" aria-label="Remove" id="chip-button">×</button></span>
       </p>
@@ -133,7 +135,8 @@
           <nav class="site-footer-nav stacked" aria-label="Product"><p id="fcol-heading"><strong>Product</strong></p><ul><li><a href="#" id="fcol-1">One</a></li><li><a href="#" id="fcol-2">Two</a></li></ul></nav>
           <nav class="site-footer-nav stacked" aria-label="Company"><p><strong>Company</strong></p><ul><li><a href="#">Three</a></li></ul></nav>
         </div>
-        <nav class="site-footer-nav" aria-label="Footer"><ul><li><a href="#" id="frow-1">Imprint</a></li><li><a href="#" id="frow-2">Privacy</a></li></ul></nav>
+        <nav class="site-footer-nav" aria-label="Footer"><ul><li><a href="#" id="frow-1">Imprint</a></li><li><a href="#" id="frow-2">Privacy</a></li><li><a href="#" aria-current="page" id="frow-current">Current</a></li></ul></nav>
+        <p class="site-footer-text" id="footer-text">© Example</p>
       </footer>
     </main>
   </body>

@@ -44,7 +44,9 @@
   overflow: hidden;
 }
 
-.peak-chip:has(> input:checked) {
+/* Selected: a checked filter, or the link to the page you're on (a tag list) */
+.peak-chip:has(> input:checked),
+a.peak-chip[aria-current]:not([aria-current="false"]) {
   border-color: var(--peak-primary);
   background-color: var(--peak-primary-tint);
   color: var(--peak-primary-hover);
