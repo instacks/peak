@@ -31,12 +31,14 @@
 }
 
 /*
- * Cards in a grid line up: every card fills its row's height and its footer sits at the bottom.
+ * Cards in a grid line up: every card fills its row's height and its footer sits at the bottom, in
+ * every Peak grid and Blades' .grid. A switcher sizes its items with flex-basis, so there the card
+ * is a flex column without flex: 1 (which would reset that basis).
  * The content above the footer keeps its own bottom margin, so the gap never disappears. Here, not
  * in layout.css, because the card's own margins (this layer) would win over a layout rule.
  * In Stacks, a card is inside the item's wrappers (src/stacks.css stretches those).
  */
-:is(.peak-grid-auto, .grid) > :is(article, .peak-card),
+:is(.peak-grid-auto, .peak-grid, .grid) > :is(article, .peak-card),
 .peak-grid-auto > .out > .stacks_in > :is(article, .peak-card):only-child,
 .peak-grid-auto > .out > .stacks_in.peak-card {
   display: flex;
@@ -45,7 +47,13 @@
   margin-block: 0;
 }
 
-:is(.peak-grid-auto, .grid) > :is(article, .peak-card) > footer,
+.peak-switcher > :is(article, .peak-card) {
+  display: flex;
+  flex-direction: column;
+  margin-block: 0;
+}
+
+:is(.peak-grid-auto, .peak-grid, .peak-switcher, .grid) > :is(article, .peak-card) > footer,
 .peak-grid-auto > .out > .stacks_in > :is(article, .peak-card):only-child > footer,
 .peak-grid-auto > .out > .stacks_in.peak-card > footer {
   margin-block-start: auto;

@@ -120,6 +120,15 @@
   align-items: baseline;
 }
 
+/*
+ * A row is a block of its own: the space below it that a <p class="peak-cluster"> would have, also
+ * on a <div> (a Stacks Row stack writes one). Zero specificity, so a grid's or another cluster's
+ * margin reset on its children still wins.
+ */
+:where(.peak-cluster) {
+  margin-block-end: var(--pico-typography-spacing-vertical);
+}
+
 /* Buttons and figures bring their own block margins; in a row they would only misalign it */
 .peak-cluster > * {
   margin-block: 0;

@@ -81,6 +81,19 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.ok(footers.every((f, i) => Math.abs(f.bottom - cards[i].bottom) < 0.5), "footers at the card bottom");
     assert.equal(await style(page, "card-1", "marginBottom"), "0px");
     assert.equal(await style(page, "card-3", "marginBottom"), "0px", ".peak-card too (its own margin is in a later layer)");
+    // The same in a column grid and a switcher
+    for (const [prefix, n] of [["col", 3], ["sw", 2]]) {
+      const ids = [...Array(n).keys()].map((i) => i + 1);
+      const c = await Promise.all(ids.map((i) => rect(page, `${prefix}-${i}`)));
+      const f = await Promise.all(ids.map((i) => rect(page, `${prefix}-footer-${i}`)));
+      assert.equal(new Set(c.map((x) => Math.round(x.top))).size, 1, `${prefix}: one row`);
+      assert.ok(c.every((x) => Math.abs(x.height - c[1].height) < 0.5), `${prefix}: heights ${c.map((x) => x.height)}`);
+      assert.ok(f.every((x, i) => Math.abs(x.bottom - c[i].bottom) < 0.5), `${prefix}: footers at the card bottom`);
+      for (const i of ids) assert.equal(await style(page, `${prefix}-${i}`, "marginBottom"), "0px", `${prefix}-${i}: no margin`);
+    }
+    // A switcher's cards keep its basis: two equal columns, not squeezed by flex: 1
+    const [s1, s2] = await Promise.all([rect(page, "sw-1"), rect(page, "sw-2")]);
+    assert.ok(Math.abs(s1.width - s2.width) < 0.5, "switcher items share the row equally");
     await page.close();
   });
 
@@ -90,6 +103,11 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.equal(await style(page, "cluster", "display"), "flex");
     assert.equal(await style(page, "cluster", "alignItems"), "end");
     assert.equal(px(await style(page, "cluster", "columnGap")), 2 * rootSize, "--peak-gap");
+    // A <div> row has a paragraph's space below it, like a <p class="peak-cluster">
+    const gap = (await rect(page, "after-cluster")).top - (await rect(page, "div-cluster")).bottom;
+    assert.ok(gap > 0 && Math.abs(gap - px(await style(page, "div-cluster", "marginBottom"))) < 0.5, `space below a div row: ${gap}`);
+    assert.ok(px(await style(page, "div-cluster", "marginBottom")) > 0, "a div row has a margin below");
+
     assert.equal(px(await style(page, "hero", "paddingTop")), 4 * rootSize);
     assert.equal(px(await style(page, "hero", "paddingBottom")), 2.5 * rootSize);
     assert.equal(px(await style(page, "hero", "maxWidth")), 46 * rootSize);
