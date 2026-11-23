@@ -14,7 +14,9 @@ or `npm install @instacks/peak` and import `@instacks/peak` (minified) or
 `@instacks/peak/unminified`.
 
 **Documentation:** <https://instacks.github.io/peak/>, with live examples of every component, a
-token reference and a customizer that writes your theme's CSS. Build it locally with
+token reference, a customizer that writes your theme's CSS, and
+[example pages](https://instacks.github.io/peak/examples.html) (a landing page, an admin
+dashboard, a blog and a shop) built with Peak's classes alone. Build it locally with
 `npm run build && npm run docs` (output in `_site/`, `npm run docs:serve` to browse it).
 
 ### Scoped build

@@ -36,6 +36,7 @@ scripts/tokens.mjs      generates src/inputs.css and the README table
 scripts/build-scoped.mjs  wraps the scoped bundle in @scope (.peak) to (.peak-ignore)
 scripts/watch.mjs       dev rebuild, driven by `node --watch-path=src`
 site/pages/*.html       documentation pages: front matter + HTML with <peak-example>, <peak-code>…
+site/examples/*.html    example pages: complete documents + front matter, gallery in site/pages/examples.html
 site/assets/            docs chrome only (docs.css, docs.js, images); the pages are styled by Peak
 scripts/docs.mjs        builds the docs into _site/ (gitignored); .github/workflows/docs.yml
                         publishes it on GitHub Pages from main
@@ -174,6 +175,12 @@ highlighted source; `<peak-inputs>` and the customizer are generated from `token
 - `site/assets/docs.css` is unlayered docs chrome on `.docs-*` classes; never style Peak's own
   classes there to make an example look right. Fix Peak instead (that is how B17–B19 were
   found).
+- `site/examples/*.html` are whole pages (plan and rules: `docs/EXAMPLES.md`). Their only CSS is
+  one `<style data-peak-theme>` that sets `--peak-*` inputs on `:root`, plus `style` attributes
+  that set `--peak-*` knobs; the builder fails on anything else, and they never load `docs.css`
+  or `docs.js`. If an example needs more, fix Peak or log the gap in PLAN (B24–B36 came from
+  this). Front matter `uses` lists the docs pages it demonstrates; links between examples are
+  relative, back to the docs with `../`.
 
 ## Publishing
 

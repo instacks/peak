@@ -1,6 +1,6 @@
 # Example page layouts: plan
 
-Status: **steps 1–6 done** (23 Nov 2026): the builder, the gallery page
+Status: **done** (steps 1–7) (23 Nov 2026): the builder, the gallery page
 (`site/pages/examples.html`), the tests and all six examples (landing page, admin dashboard,
 blog index and post, shop listing and product page), each checked at 390px and 1280px in light
 and dark in Chromium (Safari wasn't available). They found B24–B36 (`docs/PLAN.md` §5; all fixed
@@ -13,8 +13,9 @@ article that isn't a card.
 Decided in step 1: examples are not counted as documentation by the class/input coverage tests
 (`all` in `test/docs.test.mjs` holds the docs pages only). Besides `<style data-peak-theme>`, the
 builder allows inline `style` attributes that only set `--peak-*` knobs (e.g. `--peak-grid-min`),
-and fails on any other CSS, on `docs.css`/`docs.js`, and on a `uses` entry that is no docs page. This file is the handoff for the session that
-builds it. Read `CLAUDE.md` and the "Documentation site" part of it first; this plan follows its
+and fails on any other CSS, on `docs.css`/`docs.js`, and on a `uses` entry that is no docs page.
+
+This file was the handoff for the session that built it. Read `CLAUDE.md` and the "Documentation site" part of it first; this plan follows its
 rules.
 
 ## Goal
