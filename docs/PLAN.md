@@ -2,7 +2,7 @@
 
 Status: steps 1–7 implemented; step 3 resolved as both builds (§8.5), step 7 in §8.6. See §8 for where the
 implementation departs from this plan. · Scope: `src/tokens.css`, `src/popover-anchor.css`, `src/starting-style.css`, build config.
-Upstream baseline: `@anyblades/blades@3.1.4`, `lightningcss-cli@1.33.0`.
+Upstream baseline: `@sveti/blades@3.1.4`, `lightningcss-cli@1.33.0`.
 
 Every claim marked **(verified)** below was reproduced against this repository: either by building
 with the installed Lightning CSS and grepping `dist/`, or by loading the output in headless Chromium
@@ -562,7 +562,7 @@ that Lightning CSS itself compiled, so it never sees CSS written by Stacks or by
 
 ### 4.4 Bundling
 
-- The CLI bundler only resolves relative paths, which is why `../node_modules/@anyblades/blades/css/blades.css`
+- The CLI bundler only resolves relative paths, which is why `../node_modules/@sveti/blades/css/blades.css`
   is used. That path breaks under pnpm or hoisted workspaces. If that ever matters, switch to the
   JS API with a `resolver`.
 - `css/blades.css` is the full bundle, including float-label and the standalone kit. If size
@@ -894,7 +894,7 @@ B17, B18 and B19 (found while building the documentation site), B20 (found on th
 
 ## Appendix A: How the findings were verified
 
-Environment: Node 22, `lightningcss-cli@1.33.0`, `@anyblades/blades@3.1.4`, and headless Chromium
+Environment: Node 22, `lightningcss-cli@1.33.0`, `@sveti/blades@3.1.4`, and headless Chromium
 via the globally installed Playwright.
 
 **Build checks** (run after `npm run build`, or with alternative targets):
@@ -947,7 +947,7 @@ The same pattern verified these other findings:
 reads the `browserslist` field from `package.json`; tested in a scratch directory, the output kept
 `light-dark()` and `:dir()`.
 
-**Upstream facts** used in §0 and §2–3 were read from `node_modules/@anyblades/blades/src/`:
+**Upstream facts** used in §0 and §2–3 were read from `node_modules/@sveti/blades/src/`:
 `blades/components/_dropdown-popover.css`, `blades/components/_modal-modern.css`,
 `pico/components/{_tooltip,_dropdown,_card}.css`, `pico/_variables.css`,
 `pico/_utilities.css` (the reduced-motion rule) and `pico/layout/_container.css`.

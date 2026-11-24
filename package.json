@@ -64,10 +64,10 @@
     "docs": "node scripts/docs.mjs",
     "docs:serve": "python3 -m http.server 8001 --bind 0.0.0.0 --directory _site",
     "prepublishOnly": "npm run build",
-    "update:upstream": "npm update @anyblades/blades && npm run build"
+    "update:upstream": "npm update @sveti/blades && npm run build"
   },
   "devDependencies": {
-    "@anyblades/blades": "~3.1.4",
+    "@sveti/blades": "~3.1.4",
     "lightningcss-cli": "1.33.0"
   },
   "allowScripts": {
