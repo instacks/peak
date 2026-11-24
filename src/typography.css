@@ -144,6 +144,18 @@ figure figcaption {
 }
 
 /*
+ * Blades makes only images without a height attribute fluid, so an <img width height> (the markup
+ * that reserves its space while loading) kept its full width and ran off a phone screen. With
+ * both attributes the browser knows the aspect ratio, so the height can follow the width. One
+ * attribute alone stays as written: <img height="20"> is a fixed-size icon. Zero specificity, so
+ * any class (a logo size, a card image) wins.
+ */
+:where(img[width][height]) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/*
  * Prose: running text from a CMS or a long article (Poster CMS output, a blog post). A readable
  * line length, media that fit the column, and tables that scroll instead of widening the page.
  */

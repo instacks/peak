@@ -15,8 +15,16 @@
 //       live color swatches of tokens
 //   <peak-customizer></peak-customizer>
 //       the controls of the theme customizer, generated from tokens.json (site/assets/docs.js)
+//   <peak-examples></peak-examples>
+//       the gallery of site/examples/*.html: per example an h2, its description, a live preview in
+//       an iframe, links to the full page and its source, the docs pages it uses (front matter
+//       `uses`) and its theme (the contents of its <style data-peak-theme>)
 // h2 and h3 outside examples get an id (from their text) and a .peak-anchor link; the h2s make
 // the page's table of contents.
+//
+// site/examples/*.html are complete documents (front matter, then doctype, head and body), styled
+// by Peak alone: they're copied to _site/examples/ with the front matter stripped and the
+// customizer's theme script added to <head>, and never get docs.css or docs.js.
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, copyFileSync, rmSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -31,7 +39,11 @@ const tokens = JSON.parse(read("tokens.json"));
 const repoUrl = "https://github.com/instacks/peak";
 
 // Sidebar groups, in order. A page's `group` must be one of these.
-const GROUPS = ["Getting started", "Foundations", "Layout", "Components", "Reference"];
+const GROUPS = ["Getting started", "Foundations", "Layout", "Components", "Examples", "Reference"];
+
+// A theme saved by the customizer, applied before the first paint (docs pages and examples)
+const THEME_SCRIPT =
+  `<script>/* A theme saved by the customizer, before the first paint */try{const t=JSON.parse(localStorage.getItem("peak-docs-theme")||"{}");for(const k in t)if(k.startsWith("--peak-"))document.documentElement.style.setProperty(k,t[k])}catch{}</script>`;
 
 // ---------------------------------------------------------------------------------------------
 // Helpers
@@ -269,8 +281,7 @@ function customizer() {
 // Pages
 // ---------------------------------------------------------------------------------------------
 
-function parsePage(file) {
-  const source = read("site", "pages", file);
+function frontMatter(source, file) {
   const m = source.match(/^---\n([\s\S]*?)\n---\n/);
   if (!m) throw new Error(`${file}: missing front matter`);
   const meta = Object.fromEntries(
@@ -279,11 +290,72 @@ function parsePage(file) {
       return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
     }),
   );
-  if (!GROUPS.includes(meta.group)) throw new Error(`${file}: unknown group "${meta.group}"`);
-  return { file, ...meta, order: Number(meta.order ?? 0), body: source.slice(m[0].length) };
+  return { ...meta, order: Number(meta.order ?? 0), body: source.slice(m[0].length) };
 }
 
-function renderBody(page) {
+function parsePage(file) {
+  const page = { file, ...frontMatter(read("site", "pages", file), file) };
+  if (!GROUPS.includes(page.group)) throw new Error(`${file}: unknown group "${page.group}"`);
+  return page;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Examples: whole pages built with Peak (site/examples/)
+// ---------------------------------------------------------------------------------------------
+
+function parseExample(file) {
+  const name = `examples/${file}`;
+  const example = { file, ...frontMatter(read("site", "examples", file), name) };
+  for (const key of ["title", "description"]) if (!example[key]) throw new Error(`${name}: no ${key} in the front matter`);
+  if (!/^<!doctype html>/i.test(example.body)) throw new Error(`${name}: not a complete document`);
+  if (/docs\.(css|js)/.test(example.body)) throw new Error(`${name}: examples are styled by Peak alone, no docs.css or docs.js`);
+  const themes = [...example.body.matchAll(/<style data-peak-theme>([\s\S]*?)<\/style>/g)];
+  if (themes.length !== 1) throw new Error(`${name}: needs exactly one <style data-peak-theme>`);
+  // Inline styles may only set Peak's knobs (--peak-grid-min…), as a user would
+  const custom = [...example.body.matchAll(/\sstyle="([^"]*)"/g)]
+    .flatMap((m) => m[1].split(";"))
+    .filter((d) => d.trim() && !/^\s*--peak-[\w-]+\s*:/.test(d));
+  if ((example.body.match(/<style\b/g) ?? []).length !== 1 || custom.length) {
+    throw new Error(`${name}: no CSS besides <style data-peak-theme> and --peak-* knobs (a gap in Peak goes in docs/PLAN.md)`);
+  }
+  example.theme = dedent(themes[0][1]);
+  example.uses = (example.uses ?? "").split(/\s+/).filter(Boolean);
+  return example;
+}
+
+function renderExample(example) {
+  if (!/<\/head>/i.test(example.body)) throw new Error(`examples/${example.file}: no </head>`);
+  return example.body.replace(/<\/head>/i, `${THEME_SCRIPT}\n</head>`);
+}
+
+// The gallery; `hold` keeps the generated markup out of the heading pass, the h2s go through it
+function gallery(examples, pages, hold) {
+  return examples
+    .map((x) => {
+      const href = `examples/${x.file}`;
+      const uses = x.uses
+        .map((file) => {
+          const page = pages.find((p) => p.file === file);
+          if (!page) throw new Error(`examples/${x.file}: uses "${file}", which is no docs page`);
+          return `<a href="${file}">${esc(page.title)}</a>`;
+        })
+        .join(", ");
+      return (
+        `<h2>${esc(x.title)}</h2>\n` +
+        hold(
+          `<p>${esc(x.description)}</p>\n` +
+            `<div class="docs-frame"><iframe src="${href}" loading="lazy" title="${esc(x.title)} (example)"></iframe></div>\n` +
+            `<div class="peak-cluster docs-frame-actions"><a href="${href}" role="button">Open full page</a>` +
+            `<a href="${repoUrl}/blob/main/site/examples/${x.file}" role="button" class="secondary outline">View source</a></div>\n` +
+            (uses ? `<p><small>Built with: ${uses}</small></p>\n` : "") +
+            `<p><small>Its theme:</small></p>\n${codeBlock(x.theme, "css")}`,
+        )
+      );
+    })
+    .join("\n");
+}
+
+function renderBody(page, pages, examples) {
   // Examples and code first, kept out of the heading pass by placeholders
   const held = [];
   const hold = (html) => `\u0000${held.push(html) - 1}\u0000`;
@@ -302,7 +374,8 @@ function renderBody(page) {
     )
     .replace(/<peak-inputs(?:\s+group="([^"]*)")?><\/peak-inputs>/g, (all, group) => hold(inputsTable(group)))
     .replace(/<peak-swatches names="([^"]*)"><\/peak-swatches>/g, (all, names) => hold(swatches(names)))
-    .replace(/<peak-customizer><\/peak-customizer>/g, () => hold(customizer()));
+    .replace(/<peak-customizer><\/peak-customizer>/g, () => hold(customizer()))
+    .replace(/<peak-examples><\/peak-examples>/g, () => gallery(examples, pages, hold));
 
   // Headings: ids, anchor links, table of contents
   const toc = [];
@@ -365,7 +438,7 @@ function layout(page, pages, { body, toc }) {
 <link rel="stylesheet" href="assets/peak.min.css">
 <link rel="stylesheet" href="assets/docs.css">
 <script src="assets/peak-scheme.js"></script>
-<script>/* A theme saved by the customizer, before the first paint */try{const t=JSON.parse(localStorage.getItem("peak-docs-theme")||"{}");for(const k in t)if(k.startsWith("--peak-"))document.documentElement.style.setProperty(k,t[k])}catch{}</script>
+${THEME_SCRIPT}
 <script src="assets/docs.js" defer></script>
 </head>
 <body id="top" class="docs" data-page="${page.file.replace(/\.html$/, "")}">
@@ -379,6 +452,7 @@ function layout(page, pages, { body, toc }) {
 <ul>
 <li class="docs-header-link"><a href="getting-started.html" class="secondary">Docs</a></li>
 <li class="docs-header-link"><a href="customize.html" class="secondary">Customize</a></li>
+<li class="docs-header-link"><a href="examples.html" class="secondary">Examples</a></li>
 <li class="docs-header-link"><a href="${repoUrl}" class="secondary">GitHub</a></li>
 <li><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
 </ul>
@@ -430,10 +504,17 @@ const pages = readdirSync(path.join(root, "site", "pages"))
   .map(parsePage)
   .sort((a, b) => GROUPS.indexOf(a.group) - GROUPS.indexOf(b.group) || a.order - b.order);
 
+const examples = readdirSync(path.join(root, "site", "examples"))
+  .filter((f) => f.endsWith(".html"))
+  .map(parseExample)
+  .sort((a, b) => a.order - b.order);
+
 rmSync(out, { recursive: true, force: true });
 mkdirSync(path.join(out, "assets"), { recursive: true });
+mkdirSync(path.join(out, "examples"), { recursive: true });
 
-for (const page of pages) writeFileSync(path.join(out, page.file), layout(page, pages, renderBody(page)));
+for (const page of pages) writeFileSync(path.join(out, page.file), layout(page, pages, renderBody(page, pages, examples)));
+for (const example of examples) writeFileSync(path.join(out, "examples", example.file), renderExample(example));
 
 copyFileSync(css, path.join(out, "assets", "peak.min.css"));
 copyFileSync(path.join(root, "src", "js", "peak-scheme.js"), path.join(out, "assets", "peak-scheme.js"));
@@ -443,4 +524,4 @@ for (const f of readdirSync(path.join(root, "site", "assets"))) {
 // GitHub Pages: serve files as they are (no Jekyll, which would skip paths starting with _)
 writeFileSync(path.join(out, ".nojekyll"), "");
 
-console.log(`docs: ${pages.length} pages → ${path.relative(root, out) || out}`);
+console.log(`docs: ${pages.length} pages, ${examples.length} examples → ${path.relative(root, out) || out}`);

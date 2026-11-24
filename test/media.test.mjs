@@ -140,6 +140,16 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.keyboard.press("Shift+Tab");
     await page.keyboard.press("Tab");
     assert.equal(await style(page, "button", "outlineStyle"), "solid", "visible focus");
+    assert.equal(await style(page, "band", "borderImageSource"), "none", "no band fill behind the system colors");
+    assert.equal(await style(page, "prose-article", "borderTopStyle"), "none", "a prose article isn't boxed");
+    assert.equal(await style(page, "featured-card", "borderTopWidth"), "2px", "a featured card keeps a stronger border than the others");
+    const rating = await page.evaluate(() => {
+      const el = document.getElementById("rating");
+      return { adjust: getComputedStyle(el).forcedColorAdjust, fill: getComputedStyle(el).getPropertyValue("--_peak-rating-fill").trim(), empty: getComputedStyle(el).getPropertyValue("--peak-border-strong").trim() };
+    });
+    assert.deepEqual(rating, { adjust: "none", fill: "CanvasText", empty: "GrayText" }, "stars in system colors, not forced flat");
+    assert.equal(await style(page, "header", "borderImageSource"), "none");
+    assert.equal(await style(page, "header", "borderBottomStyle"), "solid", "the header keeps a rule");
     assert.equal(await style(page, "current-page", "backgroundColor"), await page.evaluate(() => {
       const i = document.createElement("i");
       i.style.cssText = "background-color: Highlight; forced-color-adjust: none";
@@ -157,6 +167,7 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.match(await style(page, "external", "content", "::after"), /https:\/\/example\.com\/docs/);
     assert.equal(await style(page, "internal", "content", "::after"), "none", "internal links stay as they are");
     assert.equal(await style(page, "card", "boxShadow"), "none");
+    assert.equal(await style(page, "band", "borderImageSource"), "none", "no band backgrounds");
     await page.close();
   });
 }

@@ -14,12 +14,14 @@
   /*
    * A long label wraps inside its container instead of running out of it (a badge in a narrow
    * card). Half a line plus the padding is a pill on one line and round corners when it wraps;
-   * 999px would turn a wrapped badge into a lozenge.
+   * 999px would turn a wrapped badge into a lozenge. break-word, not anywhere: it breaks a word
+   * only when it can't fit, while anywhere also lowers the badge's minimum width, so a table
+   * squeezed a short status label into pieces.
    */
   max-inline-size: 100%;
   padding: 0.125rem 0.5rem;
   border-radius: calc(0.5lh + 0.125rem);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   background-color: var(--_peak-badge-bg);
   color: var(--_peak-badge-fg);
   font-size: 0.75em;

@@ -1,0 +1,20 @@
+/*
+ * Form element defaults on top of Blades (docs: site/pages/forms.html).
+ *
+ * Blades styles <progress> as a full-width bar and leaves <meter> at the browser's small default:
+ * a meter takes the same width and space below, so the two line up in a list of figures.
+ */
+meter {
+  inline-size: 100%;
+  margin-block-end: calc(var(--pico-spacing) * 0.5);
+}
+
+/*
+ * In a group, Pico lets every child shrink, and a text field is 100% wide, so the field and its
+ * button share the shortfall: a <button> label wraps onto two lines (Pico's own examples use
+ * <input type="submit">, whose label can't wrap). With a field in the group, the field gives up
+ * the room and buttons keep their label on one line. A group of buttons alone is unchanged.
+ */
+:is([role="group"], [role="search"]):has(> :is(input, select, textarea)) > :is(button, [role="button"]) {
+  flex-shrink: 0;
+}

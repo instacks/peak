@@ -2,7 +2,7 @@
 title: Badges, chips and avatars
 group: Components
 order: 2
-description: Small labels for status and counts, interactive chips for tags and filters, and round avatars with pictures or initials.
+description: Small labels for status and counts, interactive chips for tags and filters, round avatars with pictures or initials, and star ratings.
 ---
 
 <h2>Badges</h2>
@@ -68,6 +68,18 @@ description: Small labels for status and counts, interactive chips for tags and 
   </div>
 </peak-example>
 <p>
+  A row of link chips is a tag list; <code>aria-current="page"</code> marks the one you're on:
+</p>
+<peak-example>
+  <nav aria-label="Tags">
+    <p class="peak-cluster" style="--peak-gap: 0.5rem">
+      <a class="peak-chip" href="#chips" aria-current="page">All</a>
+      <a class="peak-chip" href="#chips">Design</a>
+      <a class="peak-chip" href="#chips">Release notes</a>
+    </p>
+  </nav>
+</peak-example>
+<p>
   Radios make a single choice; wrap them in a <code>&lt;fieldset&gt;</code> with a legend for screen
   readers:
 </p>
@@ -102,3 +114,23 @@ description: Small labels for status and counts, interactive chips for tags and 
     <span class="peak-avatar" role="img" aria-label="12 more">+12</span>
   </div>
 </peak-example>
+
+<h2>Ratings</h2>
+<p>
+  <code>.peak-rating</code> shows five stars, filled up to <code>--peak-rating</code> (0 to 5, halves
+  and tenths too). It's for display: give it <code>role="img"</code> and a label that says the
+  value, and show the number as text where it matters. The stars take the size of the text around
+  them; right to left, they fill from the right.
+</p>
+<peak-example>
+  <p>
+    <span class="peak-rating" style="--peak-rating: 4.5" role="img" aria-label="4.5 out of 5"></span>
+    <small>4.5 · <a href="#ratings">38 reviews</a></small>
+  </p>
+  <p class="peak-h3"><span class="peak-rating" style="--peak-rating: 3" role="img" aria-label="3 out of 5"></span></p>
+</peak-example>
+<p>
+  The filled stars use the warning hue (<code>--peak-warning-hue</code>), darker on light pages so
+  they keep 3:1 against the background. To let visitors rate something, use radio buttons.
+</p>
+

@@ -87,6 +87,11 @@
   margin: 0;
 }
 
+/* Blades' nav is a row that doesn't center its items: below the breakpoint the menu's box would sit at the top of the bar */
+.site-nav .site-menu {
+  align-self: center;
+}
+
 /* In the open menu the links stack, and sub-page dropdowns open in place instead of floating */
 .site-nav .site-menu-popover:popover-open > ul {
   flex-direction: column;
@@ -161,6 +166,20 @@
   border-inline-start-color: var(--pico-primary);
   color: var(--pico-primary);
   font-weight: 600;
+}
+
+/* A heading or paragraph between the lists labels the group of links below it */
+.peak-sidebar-nav > :is(h2, h3, h4, h5, h6, p) {
+  margin-block: calc(var(--pico-spacing) * 1.5) calc(var(--pico-spacing) * 0.375);
+  color: var(--pico-h6-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.peak-sidebar-nav > :is(h2, h3, h4, h5, h6, p):first-child {
+  margin-block-start: 0;
 }
 
 .peak-sidebar-nav ul ul a {

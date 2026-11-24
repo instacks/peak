@@ -1,0 +1,44 @@
+/*
+ * Rating (docs: site/pages/badges.html): five stars, filled up to a value, for display only.
+ *   <span class="peak-rating" style="--peak-rating: 4.5" role="img" aria-label="4.5 out of 5"></span>
+ * The stars are text, so they take the font size around them. The filled part is a gradient
+ * clipped to the glyphs, so 4.5 fills four and a half stars.
+ *
+ * The filled color is the warning hue, darker in light mode than --peak-warning: gold at the
+ * warning fill's lightness is about 2:1 on a light page, and stars need 3:1 (WCAG 1.4.11);
+ * lightness 0.56 keeps 3:1 over the whole warning hue and saturation range (cyan at full
+ * saturation is the closest). It's declared here, not in tokens.css, so it resolves against the
+ * element's own inputs and scheme.
+ */
+.peak-rating {
+  --_peak-rating-fill: light-dark(
+    oklch(0.56 var(--peak-status-chroma) var(--peak-warning-hue)),
+    oklch(0.8 var(--peak-status-chroma) var(--peak-warning-hue))
+  );
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  vertical-align: -0.05em;
+}
+
+.peak-rating::before {
+  content: "★★★★★";
+  background: linear-gradient(
+    to right,
+    var(--_peak-rating-fill) calc(clamp(0, var(--peak-rating, 0), 5) / 5 * 100%),
+    var(--peak-border-strong) 0
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+/* Right to left, the stars fill from the right */
+.peak-rating:dir(rtl)::before {
+  background: linear-gradient(
+    to left,
+    var(--_peak-rating-fill) calc(clamp(0, var(--peak-rating, 0), 5) / 5 * 100%),
+    var(--peak-border-strong) 0
+  );
+  background-clip: text;
+}

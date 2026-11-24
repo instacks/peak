@@ -3,7 +3,7 @@
 // wrapper markup with Stacks' own CSS.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { launch, fixtureUrl, colorHelpers, contrast } from "./helpers.mjs";
+import { launch, fixtureUrl, colorHelpers, contrast, pixel } from "./helpers.mjs";
 
 let browser;
 before(async () => {
@@ -72,6 +72,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const [a, c] = [await rect(phone, "aside"), await rect(phone, "content")];
     assert.ok(c.top >= a.bottom, "stacked");
     assert.equal(await overflow(phone), 0);
+    // Wrapped, a sticky aside would slide over the content while scrolling
+    assert.equal(await style(phone, "aside-2", "position"), "static", "not sticky while wrapped");
     await phone.close();
   });
 
@@ -141,6 +143,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const button = await rect(page, "chip-button");
     assert.ok(button.width >= 24 && button.height >= 24, `remove target ${button.width}×${button.height}`);
     assert.ok((await rect(page, "chip-link")).height >= 32 - 0.5, "chips at least 2rem tall");
+    assert.equal(await style(page, "chip-current", "backgroundColor"), tint, "a link chip to the current page looks selected");
+    assert.notEqual(await style(page, "chip-not-current", "backgroundColor"), tint, "aria-current=false doesn't");
     await page.close();
   });
 
@@ -301,6 +305,203 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await phone.close();
   });
 
+  test(`${file}: a field and a button in a group: the label stays on one line; buttons alone still share`, async () => {
+    const page = await open(file);
+    const r = await page.evaluate(() => {
+      const label = document.createRange();
+      label.selectNodeContents(document.getElementById("group-button"));
+      const lines = label.getClientRects().length;
+      const shrink = [...document.getElementById("button-group").children].map((b) => getComputedStyle(b).flexShrink);
+      return { lines, shrink, inputW: document.getElementById("group-input").getBoundingClientRect().width };
+    });
+    assert.equal(r.lines, 1, "button label on one line");
+    assert.ok(r.inputW > 0, "the field keeps some room");
+    assert.deepEqual(r.shrink, ["1", "1"], "a group of buttons alone is unchanged");
+    await page.close();
+  });
+
+  test(`${file}: mobile menu: a row when wide; a centered toggle and a stacked popover when narrow`, async () => {
+    const page = await open(file);
+    const wide = await page.evaluate(() => {
+      const r = (id) => document.getElementById(id).closest("li").getBoundingClientRect().toJSON();
+      return { toggle: getComputedStyle(document.getElementById("menu-toggle")).display, one: r("menu-link-1"), two: r("menu-link-2") };
+    });
+    assert.equal(wide.toggle, "none");
+    assert.ok(Math.abs(wide.one.top - wide.two.top) < 0.5 && wide.two.left >= wide.one.right - 0.5, "links in a row");
+    await page.close();
+
+    const phone = await open(file, { width: 390 });
+    const mid = async (id) => {
+      const r = await rect(phone, id);
+      return (r.top + r.bottom) / 2;
+    };
+    const title = await mid("menu-title");
+    for (const id of ["menu-toggle", "menu-select"]) {
+      const m = await mid(id);
+      assert.ok(Math.abs(m - title) < 2, `${id} centered on the title: ${m} vs ${title}`);
+    }
+    assert.equal(await phone.isVisible("#menu-link-1"), false);
+    await phone.click("#menu-toggle");
+    await phone.waitForTimeout(400);
+    const [toggle, one, two] = await phone.evaluate(() =>
+      ["menu-toggle", "menu-link-1", "menu-link-2"].map((id) => (document.getElementById(id).closest("li") ?? document.getElementById(id)).getBoundingClientRect().toJSON()),
+    );
+    assert.ok(one.top >= toggle.bottom - 1, "the menu opens below its toggle");
+    assert.ok(two.top >= one.bottom - 1, "links stacked");
+    await phone.close();
+  });
+
+  test(`${file}: header styles: background and rule to the viewport edges; a dropdown hangs out of the header`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => {
+      const h = document.getElementById("bordered-header");
+      h.dataset.navStyle = "surface";
+      h.scrollIntoView({ block: "center" });
+    });
+    await page.evaluate(colorHelpers);
+    const colors = await page.evaluate(() => {
+      const h = document.getElementById("bordered-header");
+      const rgb = (v) => {
+        const c = resolveColor(v, h);
+        return [c.r, c.g, c.b];
+      };
+      return { surface: rgb("var(--peak-surface)"), rule: rgb("var(--pico-muted-border-color)"), bg: rgb("var(--peak-bg)") };
+    });
+    const h = await rect(page, "bordered-header");
+    const near = (a, b) => a.every((v, i) => Math.abs(v - b[i]) <= 3);
+    for (const x of [1, 1278]) {
+      const inside = await pixel(page, x, Math.round(h.top + h.height / 2));
+      assert.ok(near(inside, colors.surface), `surface at x=${x}: ${inside} vs ${colors.surface}`);
+      const below = await pixel(page, x, Math.ceil(h.bottom));
+      assert.ok(near(below, colors.rule), `rule below at x=${x}: ${below} vs ${colors.rule}`);
+      const under = await pixel(page, x, Math.ceil(h.bottom) + 3);
+      assert.ok(near(under, colors.bg), `page below the rule at x=${x}: ${under} vs ${colors.bg}`);
+    }
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0, "no horizontal overflow");
+    await page.click("#header-dropdown > summary");
+    const last = await rect(page, "header-dropdown-last");
+    assert.ok(last.top > h.bottom, "the dropdown's last item is below the header");
+    const hit = await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [last.left + 5, (last.top + last.bottom) / 2]);
+    assert.equal(hit, "header-dropdown-last", "visible and clickable below the header");
+    await page.close();
+  });
+
+  test(`${file}: sidebar nav: current link marked, other branches closed, group labels spaced; a meter as wide as a progress bar`, async () => {
+    const page = await open(file);
+    const r = await page.evaluate(() => {
+      const cs = (id) => getComputedStyle(document.getElementById(id));
+      const box = (id) => document.getElementById(id).getBoundingClientRect();
+      return {
+        currentWeight: cs("sidenav-current").fontWeight,
+        currentEdge: cs("sidenav-current").borderInlineStartColor,
+        primary: getComputedStyle(document.body).getPropertyValue("--pico-primary"),
+        openChild: cs("sidenav-open-child").display,
+        hiddenChild: document.getElementById("sidenav-hidden-child").closest("ul").checkVisibility(),
+        labelGap: box("sidenav-label").top - box("sidenav-list-1").bottom,
+        firstLabelMargin: parseFloat(cs("sidenav-first-label").marginBlockStart),
+        labelSize: parseFloat(cs("sidenav-label").fontSize),
+        root: parseFloat(getComputedStyle(document.documentElement).fontSize),
+        transform: cs("sidenav-label").textTransform,
+        meter: box("meter").width,
+        progress: box("progress").width,
+      };
+    });
+    assert.equal(Number(r.currentWeight), 600);
+    assert.notEqual(r.openChild, "none", "the current branch is open");
+    assert.equal(r.hiddenChild, false, "other branches are closed");
+    assert.ok(r.labelGap > r.root, `space above a group label: ${r.labelGap}`);
+    assert.equal(r.firstLabelMargin, 0, "none above the first");
+    assert.ok(Math.abs(r.labelSize - 0.75 * r.root) < 0.01, `label size ${r.labelSize}`);
+    assert.equal(r.transform, "uppercase");
+    assert.ok(Math.abs(r.meter - r.progress) < 0.5, `meter ${r.meter} vs progress ${r.progress}`);
+    await page.close();
+  });
+
+  test(`${file}: a form's submit button in a dialog footer sits in the row with the others`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => document.getElementById("form-dialog").showModal());
+    await page.waitForTimeout(300);
+    const [cancel, submit] = await Promise.all([rect(page, "dialog-cancel"), rect(page, "dialog-submit")]);
+    assert.ok(Math.abs(cancel.top - submit.top) < 1 && submit.left > cancel.right, `one row: ${JSON.stringify({ cancel, submit })}`);
+    await page.close();
+  });
+
+  test(`${file}: rating: filled up to the value, from the inline start, clamped to five stars`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => document.getElementById("rating-2").scrollIntoView({ block: "center" }));
+    await page.evaluate(colorHelpers);
+    const colors = await page.evaluate(() => {
+      const el = document.getElementById("rating-2");
+      const rgb = (v) => {
+        const c = resolveColor(v, el);
+        return [c.r, c.g, c.b];
+      };
+      return { fill: rgb("var(--_peak-rating-fill)"), empty: rgb("var(--peak-border-strong)") };
+    });
+    const near = (a, b) => a.every((v, i) => Math.abs(v - b[i]) <= 12);
+    // The middle of star n, measured along the glyphs, at the vertical middle of the line
+    const star = async (id, n) => {
+      const r = await rect(page, id);
+      return pixel(page, Math.round(r.left + (r.width * (n - 0.5)) / 5), Math.round(r.top + r.height * 0.55));
+    };
+    assert.ok(near(await star("rating-2", 1), colors.fill), `first star filled: ${await star("rating-2", 1)} vs ${colors.fill}`);
+    assert.ok(near(await star("rating-2", 5), colors.empty), `last star empty: ${await star("rating-2", 5)} vs ${colors.empty}`);
+    assert.ok(near(await star("rating-rtl", 5), colors.fill), "right to left, the rightmost star is filled");
+    assert.ok(near(await star("rating-rtl", 1), colors.empty), "and the leftmost empty");
+    assert.ok(near(await star("rating-over", 5), colors.fill), "a value over 5 fills all five");
+    await page.close();
+  });
+
+  for (const colorScheme of ["light", "dark"]) {
+    test(`${file}: ${colorScheme}: the stars' fill has 3:1 on the page and on cards, across the warning inputs`, async () => {
+      const page = await open(file, { colorScheme });
+      await page.evaluate(colorHelpers);
+      const low = await page.evaluate(() => {
+        const el = document.getElementById("rating-2");
+        const out = [];
+        for (let hue = 0; hue < 360; hue += 30) {
+          for (const chroma of [0, 0.1, 0.25]) {
+            document.documentElement.style.setProperty("--peak-warning-hue", hue);
+            document.documentElement.style.setProperty("--peak-status-chroma", chroma);
+            out.push({ hue, chroma, fill: resolveColor("var(--_peak-rating-fill)", el), bg: resolveColor("var(--peak-bg)", el), surface: resolveColor("var(--peak-surface)", el) });
+          }
+        }
+        return out;
+      });
+      const failing = low
+        .map((x) => ({ ...x, bg: contrast(x.fill, x.bg), surface: contrast(x.fill, x.surface) }))
+        .filter((x) => x.bg < 3 || x.surface < 3)
+        .map((x) => `hue ${x.hue} chroma ${x.chroma}: ${x.bg.toFixed(2)} / ${x.surface.toFixed(2)}`);
+      assert.deepEqual(failing, []);
+      await page.close();
+    });
+  }
+
+  test(`${file}: footer columns: a heading above stacked links; a plain footer nav is a row`, async () => {
+    const page = await open(file);
+    // The list items: Pico pads nav links and pulls them out by the same amount
+    const [heading, one, two, row1, row2] = await page.evaluate(() =>
+      ["fcol-heading", "fcol-1", "fcol-2", "frow-1", "frow-2"].map((id) => {
+        const el = document.getElementById(id);
+        return (el.closest("li") ?? el).getBoundingClientRect().toJSON();
+      }),
+    );
+    assert.ok(one.top >= heading.bottom, "the links below the heading");
+    assert.ok(two.top >= one.bottom && Math.abs(two.left - one.left) < 0.5, "one link per line");
+    assert.ok(Math.abs(one.left - heading.left) < 0.5, `links start under the heading: ${one.left} vs ${heading.left}`);
+    assert.ok(Math.abs(row1.top - row2.top) < 0.5 && row2.left > row1.right, "a row without .stacked");
+    // Muted text and links (Pico colors p and ul itself); the current page in the text color
+    await page.evaluate(colorHelpers);
+    const c = await page.evaluate(() => {
+      const color = (id) => getComputedStyle(document.getElementById(id)).color;
+      return { text: color("footer-text"), link: color("frow-1"), current: color("frow-current"), muted: resolveColor("var(--peak-muted)").css, body: resolveColor("var(--peak-text)").css };
+    });
+    assert.equal(c.text, c.muted, "footer text muted");
+    assert.equal(c.link, c.muted, "footer links muted");
+    assert.equal(c.current, c.body, "the current page in the text color");
+    await page.close();
+  });
+
   test(`${file}: toast in the inline-end bottom corner, with its status edge`, async () => {
     const page = await open(file);
     await page.evaluate(() => document.getElementById("toast").showPopover());
@@ -359,6 +560,12 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById("s-aside").parentElement).position), "sticky");
     assert.equal(await style(page, "s-media", "display"), "flex");
     assert.ok(parseFloat(await style(page, "s-callout", "paddingTop")) > 0);
+    assert.equal(await style(page, "s-hide-below", "display"), "block");
+    assert.equal(await style(page, "s-hide-from", "display"), "none", "over Stacks' display: block");
+    assert.notEqual(await style(page, "s-band", "borderImageSource"), "none", "the band's full-width background survives Stacks' border: 0");
+    await page.setViewportSize({ width: 390, height: 800 });
+    assert.equal(await style(page, "s-hide-below", "display"), "none");
+    assert.equal(await style(page, "s-hide-from", "display"), "block");
     await page.close();
   });
 }

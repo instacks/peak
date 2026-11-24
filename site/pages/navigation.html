@@ -84,9 +84,14 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
 <h2>Dropdowns in the bar</h2>
 <p>Two ways to give a link sub-pages:</p>
 <ul>
-  <li>Pico's <code>&lt;details class="dropdown"&gt;</code>, drawn like a nav link.</li>
+  <li>Pico's <code>&lt;details class="dropdown"&gt;</code>, drawn like a small select field (Pico's look, kept as it is).</li>
   <li>A <code>.site-dropdown-toggle</code> button and a <code>ul[popover]</code> in the same <code>&lt;li&gt;</code>: drawn as a link with a chevron that turns while open, and anchored (see <a href="overlays.html#menus">Menus</a>). Its color follows <code>data-link-style</code> (<code>secondary</code> or <code>contrast</code>).</li>
 </ul>
+<p>
+  In an open <a href="#mobile-menu">mobile menu</a>, a <code>&lt;details&gt;</code> dropdown opens in
+  place and pushes the links below it down. A popover can't: it sits in the top layer and floats
+  over them. For a header that folds into a mobile menu, prefer <code>&lt;details&gt;</code>.
+</p>
 <peak-example preview-class="tall visible">
   <nav class="site-nav">
     <ul><li><strong>Brand</strong></li></ul>
@@ -116,6 +121,7 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
   <code>.peak-sidebar-nav</code> is a vertical list of links, the current page marked by a colored
   edge. Nested lists are open only on the branch that holds the current page (with
   <code>aria-current="page"</code>), so a long site stays short. The page list of these docs is one.
+  A paragraph or heading between two lists labels the group below it.
 </p>
 <peak-example>
   <aside style="max-inline-size: 16rem">
@@ -133,6 +139,10 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
             <li><a href="#sidebar-navigation">Hidden: not the current branch</a></li>
           </ul>
         </li>
+      </ul>
+      <p>Account</p>
+      <ul>
+        <li><a href="#sidebar-navigation">Settings <span class="peak-badge">2</span></a></li>
       </ul>
     </nav>
   </aside>
@@ -234,6 +244,31 @@ description: The site header, a mobile menu without JavaScript, dropdowns, sideb
     </nav>
     <p class="site-footer-text">© 2026 Example. All rights reserved.</p>
     <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+  </footer>
+</peak-example>
+<p>
+  For columns of links, put several footer navs in a grid, each with a heading, and add
+  <code>.stacked</code> to put one link per line:
+</p>
+<peak-example>
+  <footer class="site-footer">
+    <div class="peak-grid-auto" style="--peak-grid-min: 9rem">
+      <nav class="site-footer-nav stacked" aria-labelledby="footer-col-product">
+        <p id="footer-col-product"><strong>Product</strong></p>
+        <ul>
+          <li><a href="#footer">Features</a></li>
+          <li><a href="#footer">Pricing</a></li>
+        </ul>
+      </nav>
+      <nav class="site-footer-nav stacked" aria-labelledby="footer-col-legal">
+        <p id="footer-col-legal"><strong>Legal</strong></p>
+        <ul>
+          <li><a href="#footer">Imprint</a></li>
+          <li><a href="#footer">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="site-footer-text">© 2026 Example.</p>
   </footer>
 </peak-example>
 <p>When printing, the header, sidebar, breadcrumb, footer links, skip link and scheme switch are left out.</p>

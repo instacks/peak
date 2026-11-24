@@ -143,6 +143,48 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
+  test(`${file}: an image with width and height fits its container and keeps its ratio`, async () => {
+    const page = await open(file);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const r = await page.evaluate(() => {
+      const box = (id) => document.getElementById(id).getBoundingClientRect();
+      return { fig: box("wide-figure"), img: box("wide-img"), icon: box("icon-img"), overflow: document.documentElement.scrollWidth - innerWidth };
+    });
+    assert.ok(Math.abs(r.img.width - r.fig.width) < 0.5, `img ${r.img.width} in figure ${r.fig.width}`);
+    assert.ok(Math.abs(r.img.width / r.img.height - 2) < 0.01, `ratio ${r.img.width / r.img.height}`);
+    assert.equal(r.icon.height, 20, "a height attribute alone stays fixed");
+    assert.equal(r.overflow, 0);
+    await page.close();
+  });
+
+  test(`${file}: a visually hidden header at the end of a scrolling table doesn't widen the page`, async () => {
+    const page = await open(file);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const r = await page.evaluate(() => {
+      const h = document.getElementById("hidden-th");
+      return { overflow: document.documentElement.scrollWidth - innerWidth, width: h.getBoundingClientRect().width, clip: getComputedStyle(h).clipPath };
+    });
+    assert.equal(r.overflow, 0, "no sideways scroll");
+    assert.ok(r.width <= 1 && r.clip !== "none", "still hidden");
+    await page.close();
+  });
+
+  test(`${file}: hide-below and hide-from utilities switch at 576, 768, 1024 and 1280px`, async () => {
+    const page = await open(file);
+    const widths = { sm: 576, md: 768, lg: 1024, xl: 1280 };
+    for (const w of [390, 575, 576, 767, 768, 1023, 1024, 1279, 1280]) {
+      await page.setViewportSize({ width: w, height: 800 });
+      const shown = await page.evaluate(() =>
+        Object.fromEntries([...document.querySelectorAll("[id^=below-], [id^=from-]")].map((e) => [e.id, getComputedStyle(e).display !== "none"])),
+      );
+      for (const [name, at] of Object.entries(widths)) {
+        assert.equal(shown[`below-${name}`], w >= at, `${w}px: .peak-hide-below-${name}`);
+        assert.equal(shown[`from-${name}`], w < at, `${w}px: .peak-hide-from-${name}`);
+      }
+    }
+    await page.close();
+  });
+
   test(`${file}: display, lead and utilities`, async () => {
     const page = await open(file);
     const s = await read(page);

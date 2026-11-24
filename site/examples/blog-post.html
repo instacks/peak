@@ -1,0 +1,235 @@
+---
+title: Blog post
+description: An article from the same blog: breadcrumb, an article header with author and reading time, prose with heading anchors, a figure, a quote, code, a table and a callout, an "On this page" sidebar, tags, an author card, previous and next links and related posts.
+order: 4
+uses: typography.html grids.html navigation.html elements.html callouts.html badges.html cards.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>What a year of sketchbooks taught us about planning · Field Notes</title>
+<meta name="description" content="An example blog post built with Peak.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/peak.min.css">
+<script src="../assets/peak-scheme.js"></script>
+<style data-peak-theme>
+  :root {
+    --peak-hue: 35;
+    --peak-chroma: 0.13;
+    --peak-neutral-hue: 60;
+    --peak-neutral-chroma: 0.014;
+    --peak-font-family-heading: Charter, "Bitstream Charter", "Sitka Text", Cambria, serif;
+    --peak-heading-font-weight: 700;
+    --peak-radius: 0.125rem;
+    --peak-section-spacing: 3rem;
+  }
+</style>
+</head>
+<body id="top">
+<a class="peak-skip-link" href="#content">Skip to content</a>
+
+<header class="site-header nav-sticky" data-nav-style="bordered">
+  <nav class="site-nav container" data-peak-menu="576" aria-label="Site">
+    <ul>
+      <li><a class="site-title contrast" href="blog.html">Field Notes</a></li>
+    </ul>
+    <div class="site-menu" data-peak-anchor>
+      <button type="button" class="site-menu-toggle outline secondary" popovertarget="site-menu"><span aria-hidden="true">☰</span> Menu</button>
+      <div class="site-menu-popover" id="site-menu" popover>
+        <ul>
+          <li><a href="blog.html" class="secondary" aria-current="page">Articles</a></li>
+          <li><a href="#" class="secondary">About</a></li>
+          <li><a href="blog.html#newsletter" class="secondary">Newsletter</a></li>
+          <li><a href="../examples.html" class="secondary">All examples</a></li>
+        </ul>
+      </div>
+    </div>
+    <ul>
+      <li><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="content" class="container site-main" tabindex="-1">
+  <nav aria-label="breadcrumb" class="site-breadcrumb">
+    <ul>
+      <li><a href="blog.html">Articles</a></li>
+      <li><a href="#">Process</a></li>
+      <li><span aria-current="page">A year of sketchbooks</span></li>
+    </ul>
+  </nav>
+
+  <div class="peak-with-sidebar sticky" style="--peak-sticky-offset: 5rem">
+    <aside>
+      <nav class="peak-sidebar-nav" aria-labelledby="on-this-page">
+        <p id="on-this-page">On this page</p>
+        <ul>
+          <li><a href="#the-rule">The rule</a></li>
+          <li><a href="#what-the-plans-got-wrong">What the plans got wrong</a></li>
+          <li><a href="#the-margins">The margins</a></li>
+          <li><a href="#numbers">Numbers</a></li>
+          <li><a href="#try-it">Try it</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <article class="peak-prose">
+      <header>
+        <hgroup>
+          <p>Process</p>
+          <h1>What a year of sketchbooks taught us about planning</h1>
+        </hgroup>
+        <p class="peak-lead">We kept one sketchbook per project for twelve months. The plans were wrong; the margins were where the useful ideas lived.</p>
+        <div class="peak-media center" style="--peak-media-min: 8rem">
+          <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 3rem">NH</span>
+          <div><strong>Noor Haddad</strong><br><small class="peak-text-muted"><time datetime="2026-11-18">18 November 2026</time> · 9 min read</small></div>
+        </div>
+      </header>
+      <p>
+        At the start of the year we made one rule for the studio: every project gets its own
+        sketchbook, and nothing about the project is planned anywhere else. No boards, no
+        documents, no tickets. Twelve months and nineteen sketchbooks later, here is what we found.
+      </p>
+
+      <h2 id="the-rule">The rule <a class="peak-anchor" href="#the-rule" aria-label="Link to this section">#</a></h2>
+      <p>
+        A sketchbook is opened on the first day of a project and closed on the last. The first
+        page is the plan: what we're making, for whom, by when. Every page after that is dated.
+      </p>
+      <ul>
+        <li>One book per project, never shared between two.</li>
+        <li>Pages are dated, nothing is torn out.</li>
+        <li>The plan on page one is never edited, only answered later in the book.</li>
+      </ul>
+
+      <figure>
+        <img src="../assets/shapes.svg" alt="Paper shapes arranged on a table" width="640" height="400">
+        <figcaption>Page one of the shelf project: a plan we answered eleven times.</figcaption>
+      </figure>
+
+      <h2 id="what-the-plans-got-wrong">What the plans got wrong <a class="peak-anchor" href="#what-the-plans-got-wrong" aria-label="Link to this section">#</a></h2>
+      <p>
+        Almost everything about time. Of nineteen plans, three finished on the date on page one.
+        The others weren't late because of the work we had planned; they were late because of work
+        that only appeared once we started.
+      </p>
+      <blockquote>
+        <p>The plan was never the useful part. Writing it was.</p>
+        <footer><cite>Ravi, in the margin of book 7</cite></footer>
+      </blockquote>
+
+      <h3 id="estimates">Estimates <a class="peak-anchor" href="#estimates" aria-label="Link to this section">#</a></h3>
+      <p>
+        We now write an estimate as a range and a reason: <q>two to four weeks, because we haven't
+        used this veneer before</q>. The reason is what we check later.
+      </p>
+
+      <h2 id="the-margins">The margins <a class="peak-anchor" href="#the-margins" aria-label="Link to this section">#</a></h2>
+      <p>
+        The ideas we kept came from the margins: a note beside a sketch, a question written
+        sideways. We started marking them with a star, and once a week someone copies the starred
+        notes into a plain text file. We search it with <kbd>Ctrl</kbd> + <kbd>F</kbd>, which is
+        enough.
+      </p>
+      <pre><code>2026-03-14  shelf   ★ the back panel can be the bracing
+2026-04-02  lamp    ★ cord exits through the base, not the arm
+2026-06-19  stool   ★ test the joint in cardboard first</code></pre>
+      <p>Each line is a date, the project's short name and the note. The file is called <code>margins.txt</code>.</p>
+
+      <aside class="peak-callout info">
+        <strong>Try the star</strong>
+        <p>You don't need a sketchbook for this. Any notes you take by hand or in a file can get a margin and a symbol.</p>
+      </aside>
+
+      <h2 id="numbers">Numbers <a class="peak-anchor" href="#numbers" aria-label="Link to this section">#</a></h2>
+      <table class="striped">
+        <thead>
+          <tr><th scope="col">Project type</th><th scope="col" class="peak-text-end">Books</th><th scope="col" class="peak-text-end">On time</th><th scope="col" class="peak-text-end">Starred notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Furniture</td><td class="peak-text-end peak-tabular">8</td><td class="peak-text-end peak-tabular">1</td><td class="peak-text-end peak-tabular">142</td></tr>
+          <tr><td>Lighting</td><td class="peak-text-end peak-tabular">5</td><td class="peak-text-end peak-tabular">1</td><td class="peak-text-end peak-tabular">87</td></tr>
+          <tr><td>Commissions</td><td class="peak-text-end peak-tabular">6</td><td class="peak-text-end peak-tabular">1</td><td class="peak-text-end peak-tabular">53</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="try-it">Try it <a class="peak-anchor" href="#try-it" aria-label="Link to this section">#</a></h2>
+      <ol>
+        <li>Pick your next project, however small.</li>
+        <li>Write the plan on page one, with a date.</li>
+        <li>Star what surprises you, and read the stars once a week.</li>
+      </ol>
+
+      <footer>
+        <nav aria-label="Tags">
+          <p class="peak-cluster" style="--peak-gap: 0.5rem">
+            <a class="peak-chip" href="#">Process</a>
+            <a class="peak-chip" href="#">Planning</a>
+            <a class="peak-chip" href="#">Sketchbooks</a>
+          </p>
+        </nav>
+
+        <div class="peak-card flat">
+          <div class="peak-media center">
+            <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 4rem">NH</span>
+            <div>
+              <h2 class="peak-h4">Noor Haddad</h2>
+              <p>Noor runs the studio's furniture projects and keeps the margins file. Before that, they built stage sets for a touring theater.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  <nav class="peak-grid-auto" aria-label="Previous and next article">
+    <article>
+      <small class="peak-text-muted">Previous</small>
+      <p class="peak-mb-0"><a class="peak-card-link" href="blog.html">Choosing paper that survives a field trip</a></p>
+    </article>
+    <article class="peak-text-end">
+      <small class="peak-text-muted">Next</small>
+      <p class="peak-mb-0"><a class="peak-card-link" href="blog.html">A plain-text system for project notes</a></p>
+    </article>
+  </nav>
+
+  <section aria-labelledby="related">
+    <h2 id="related">Related articles</h2>
+    <div class="peak-grid-auto">
+      <article>
+        <img src="../assets/shapes.svg" alt="Paper shapes arranged as a still life" width="640" height="400">
+        <h3><a class="peak-card-link contrast" href="blog.html">Prototypes you are allowed to throw away</a></h3>
+        <p>Cardboard first, wood later.</p>
+      </article>
+      <article>
+        <img src="../assets/product.svg" alt="A laptop on a desk" width="640" height="400">
+        <h3><a class="peak-card-link contrast" href="blog.html">A plain-text system for project notes</a></h3>
+        <p>One file per day, and a search that works.</p>
+      </article>
+      <article>
+        <img src="../assets/landscape.svg" alt="Mountains under a low sun" width="640" height="400">
+        <h3><a class="peak-card-link contrast" href="blog.html">Twenty years at the same bench</a></h3>
+        <p>A conversation about habits and good light.</p>
+      </article>
+    </div>
+  </section>
+
+  <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+</main>
+
+<footer class="site-footer container">
+  <nav class="site-footer-nav" aria-label="Footer">
+    <ul>
+      <li><a href="blog.html">Articles</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Feed</a></li>
+      <li><a href="../examples.html">More Peak examples</a></li>
+    </ul>
+  </nav>
+  <p class="site-footer-text">© 2026 Field Notes, an invented blog.</p>
+</footer>
+</body>
+</html>

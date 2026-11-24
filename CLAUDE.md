@@ -16,13 +16,14 @@ src/peak.scoped.css     entry, scoped build (see below)
 tokens.json             single source for the --peak-* inputs (ranges, labels, editor hints); in the npm package
 src/inputs.css          GENERATED from tokens.json: @property + :root defaults (never scoped)
 src/tokens.css          semantic --peak-* tokens and the --pico-* bridge
-src/typography.css      peak.base: headings, eyebrow, .peak-display/-lead/-prose, .peak-anchor, section, pre
+src/typography.css      peak.base: headings, eyebrow, .peak-display/-lead/-prose, .peak-anchor, section, pre, img
+src/forms.css           peak.base: form element defaults (a field and a button in role="group")
 src/utilities.css       peak.utilities: .peak-text-*, .peak-h1…h6, .peak-tabular
 src/media.css           peak.utilities: forced colors and print
 src/layout.css          peak.layout: section/band/hero, .peak-grid-auto/.peak-grid, cluster, sidebar, media
 src/stacks.css          peak.layout: Peak classes on Stacks 6 wrappers (.stacks_in.peak-*, !important)
 src/components/*.css    peak.components: card, badge, table, accordion, tabs, chip, callout,
-                        pagination, dialog (drawer), toast, stats, steps, avatar
+                        pagination, dialog (drawer), toast, stats, steps, avatar, rating
 src/js/peak-scheme.js   the only script: remembers the light/dark switch (build:js copies it to dist/)
 src/nav.css             peak.components: mobile menu (popover, per-breakpoint blocks), sidebar nav
 src/scoped.css          rules for the scoped build only
@@ -35,6 +36,7 @@ scripts/tokens.mjs      generates src/inputs.css and the README table
 scripts/build-scoped.mjs  wraps the scoped bundle in @scope (.peak) to (.peak-ignore)
 scripts/watch.mjs       dev rebuild, driven by `node --watch-path=src`
 site/pages/*.html       documentation pages: front matter + HTML with <peak-example>, <peak-code>…
+site/examples/*.html    example pages: complete documents + front matter, gallery in site/pages/examples.html
 site/assets/            docs chrome only (docs.css, docs.js, images); the pages are styled by Peak
 scripts/docs.mjs        builds the docs into _site/ (gitignored); .github/workflows/docs.yml
                         publishes it on GitHub Pages from main
@@ -173,12 +175,20 @@ highlighted source; `<peak-inputs>` and the customizer are generated from `token
 - `site/assets/docs.css` is unlayered docs chrome on `.docs-*` classes; never style Peak's own
   classes there to make an example look right. Fix Peak instead (that is how B17–B19 were
   found).
+- `site/examples/*.html` are whole pages (plan and rules: `docs/EXAMPLES.md`). Their only CSS is
+  one `<style data-peak-theme>` that sets `--peak-*` inputs on `:root`, plus `style` attributes
+  that set `--peak-*` knobs; the builder fails on anything else, and they never load `docs.css`
+  or `docs.js`. If an example needs more, fix Peak or log the gap in PLAN (B24–B36 came from
+  this). Front matter `uses` lists the docs pages it demonstrates; links between examples are
+  relative, back to the docs with `../`.
 
 ## Publishing
 
 - Versions follow semver for the public API above. `release.yml` publishes when a `v*` tag that
   matches `package.json` is pushed (a prerelease such as `1.1.0-beta.1` goes to the `next`
   dist-tag), after the CI tests pass, through npm trusted publishing (no token in the repository).
+  **Currently switched off:** the publish job in `release.yml` is commented out because the npm
+  step doesn't work yet; a tag only runs the tests until it's fixed and uncommented.
 - To release: bump `version` in `package.json` and `package-lock.json` (`npm version x.y.z
   --no-git-tag-version`), commit, then tag `vx.y.z` on main and push the tag.
 - `npm pack --dry-run` lists what ships: `dist/` and `tokens.json` (plus README, LICENSE).

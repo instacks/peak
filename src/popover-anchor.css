@@ -6,6 +6,11 @@
  * Anything that reuses one anchor name also needs `anchor-scope`; without it every popover
  * anchors to the last element in the document that carries the name.
  *
+ * position-visibility uses the singular anchor-visible (the CSSWG renamed anchors-visible in
+ * 2026; the plural stays an alias). Chromium logs a deprecation warning wherever the plural
+ * appears, even in an @supports block that doesn't apply, so it isn't declared as a fallback:
+ * engines that only know the plural keep an open menu shown when its trigger scrolls out of view.
+ *
  * Legacy markup keeps working unchanged: `details.dropdown` is only re-anchored with the opt-in
  * [data-peak-anchor], and [data-tooltip] is only touched where anchor-scope is supported.
  */
@@ -65,7 +70,7 @@
       flip-block,
       flip-inline,
       flip-block flip-inline;
-    position-visibility: anchors-visible;
+    position-visibility: anchor-visible;
   }
 
   /* Opt-in anchoring for generic popovers: on the popover, or on a wrapper around its trigger */
@@ -80,7 +85,7 @@
       flip-block,
       flip-inline,
       flip-block flip-inline;
-    position-visibility: anchors-visible;
+    position-visibility: anchor-visible;
   }
 
   :is([popover="hint"], [role="tooltip"][popover]) {

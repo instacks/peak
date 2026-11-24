@@ -48,6 +48,23 @@ test("menu opens below its trigger, at least as wide", async () => {
   await page.close();
 });
 
+test("a menu hides when its trigger scrolls out of its scroll box; no deprecated values", async () => {
+  const page = await browser.newPage({ viewport: VIEWPORT, reducedMotion: "reduce" });
+  const warnings = [];
+  page.on("console", (m) => /position-visibility|deprecated/i.test(m.text()) && warnings.push(m.text()));
+  await page.goto(fixtureUrl("components.html"));
+  await page.evaluate(() => document.getElementById("markup-open").close());
+  const { m } = await openMenu(page, "scroll-trigger", "scroll-menu");
+  const hit = (r) => page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest("#scroll-menu") !== null, [r.left + 10, r.top + r.height / 2]);
+  assert.equal(await hit(m), true, "visible while the trigger is in view");
+  await page.evaluate(() => (document.getElementById("scroll-box").scrollTop = 300));
+  await page.waitForTimeout(200);
+  const after = await rect(page, "scroll-menu");
+  assert.equal(await hit(after), false, "hidden once the trigger has scrolled away");
+  assert.deepEqual(warnings, [], "no deprecation warnings from Peak's CSS");
+  await page.close();
+});
+
 test("side-by-side menus anchor to their own triggers, also without { source }", async () => {
   const page = await open();
   const { t, m } = await openMenu(page, "menu2-trigger", "menu2", { viaClick: false });

@@ -3,7 +3,8 @@
  * on a Stacks container stack (class field); src/stacks.css adapts them to Stacks' wrappers.
  *
  * Per-element knobs, set with a style attribute (or by a Peak stack): --peak-gap on grids and
- * clusters, --peak-grid-min on a grid. Both inherit, like any custom property.
+ * clusters, --peak-grid-min on a grid, --peak-media-min on a media object. They inherit, like any
+ * custom property.
  */
 
 /* A section as a class, for elements that can't be a <section> (a Stacks container) */
@@ -13,15 +14,16 @@
 
 /*
  * Band: a section whose background runs to the viewport edges while its content stays in the
- * container. The background is extended with a spread shadow clipped to the band's own height,
- * which moves no layout: no 100vw margins, so no horizontal scrollbar, and nothing to flip in RTL.
+ * container. A border image with a sideways outset paints the background 100vmax beyond each
+ * side. That is ink overflow, which moves no layout: no 100vw margins, so no horizontal
+ * scrollbar, and nothing to flip in RTL. Unlike a clip-path it clips nothing, so a dropdown or a
+ * tooltip in the band can hang out of it.
  */
 .peak-band {
   --_peak-band-bg: var(--peak-surface-sunken);
   padding-block: var(--peak-section-spacing, calc(var(--pico-block-spacing-vertical) * 2));
   background-color: var(--_peak-band-bg);
-  box-shadow: 0 0 0 100vmax var(--_peak-band-bg);
-  clip-path: inset(0 -100vmax);
+  border-image: linear-gradient(var(--_peak-band-bg), var(--_peak-band-bg)) fill 0 / 0 / 0 100vmax;
 }
 
 .peak-band.surface {
@@ -35,14 +37,38 @@
 
 .peak-band.primary {
   --_peak-band-bg: var(--peak-primary-fill);
-  --pico-color: var(--peak-on-primary);
-  color: var(--peak-on-primary);
+  --_peak-band-fg: var(--peak-on-primary);
 }
 
 .peak-band.contrast {
   --_peak-band-bg: var(--peak-contrast);
-  --pico-color: var(--peak-on-contrast);
-  color: var(--peak-on-contrast);
+  --_peak-band-fg: var(--peak-on-contrast);
+}
+
+/*
+ * On a filled band, everything that takes the page's text, muted or primary color would be dark on
+ * the fill, or the fill's own color: headings, lead text, eyebrows, links and the focus ring take
+ * the band's text color instead. The bridge resolves at the theme root, so the --pico-* colors
+ * are set here too. Filled buttons keep theirs (a primary button needs .contrast or .secondary).
+ */
+.peak-band:is(.primary, .contrast) {
+  --pico-color: var(--_peak-band-fg);
+  --pico-h1-color: var(--_peak-band-fg);
+  --pico-h2-color: var(--_peak-band-fg);
+  --pico-h3-color: var(--_peak-band-fg);
+  --pico-h4-color: var(--_peak-band-fg);
+  --pico-h5-color: var(--_peak-band-fg);
+  --pico-h6-color: var(--_peak-band-fg);
+  --peak-heading: var(--_peak-band-fg);
+  --peak-muted: var(--_peak-band-fg);
+  --pico-muted-color: var(--_peak-band-fg);
+  --peak-primary: var(--_peak-band-fg);
+  --pico-primary: var(--_peak-band-fg);
+  --pico-primary-hover: var(--_peak-band-fg);
+  --pico-primary-underline: color-mix(in srgb, var(--_peak-band-fg) 60%, transparent);
+  --pico-primary-hover-underline: var(--_peak-band-fg);
+  --pico-primary-focus: var(--_peak-band-fg);
+  color: var(--_peak-band-fg);
 }
 
 /*
@@ -129,9 +155,31 @@
   margin-block-end: var(--pico-typography-spacing-vertical);
 }
 
+/*
+ * A grid of cards is spaced like a card: the cards drop their own margins inside it, so without
+ * this the next block (pagination, a heading) touched the last row. Not when it's the last child,
+ * where the section or card around it already spaces it. Zero specificity, like the cluster.
+ */
+:where(.peak-grid-auto, .peak-grid, .peak-switcher):where(:not(:last-child)) {
+  margin-block-end: var(--pico-block-spacing-vertical);
+}
+
 /* Buttons and figures bring their own block margins; in a row they would only misalign it */
 .peak-cluster > * {
   margin-block: 0;
+}
+
+/*
+ * Fields in a row keep their own width instead of Pico's 100%: a quantity, a sort order, a short
+ * filter. Sized to their content where field-sizing is supported (Chromium), with a floor so an
+ * empty or one-digit field stays a usable target; elsewhere the browser's default width.
+ */
+.peak-cluster > :is(input:not([type="checkbox"], [type="radio"], [type="range"]), select, textarea) {
+  flex: none;
+  inline-size: auto;
+  min-inline-size: 5rem;
+  max-inline-size: 100%;
+  field-sizing: content;
 }
 
 /*
@@ -190,6 +238,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--peak-gap, calc(var(--pico-spacing) * 2));
+  container: peak-sidebar / inline-size;
 }
 
 .peak-with-sidebar > :is(aside, .peak-sidebar),
@@ -202,11 +251,18 @@
   min-inline-size: 60%;
 }
 
-.peak-with-sidebar.sticky > :is(aside, .peak-sidebar),
-.peak-with-sidebar.sticky > .out:has(> .peak-sidebar) {
-  position: sticky;
-  inset-block-start: var(--peak-sticky-offset, var(--pico-spacing));
-  align-self: start;
+/*
+ * Sticky only while the aside is beside the content: wrapped above it, a sticky aside would slide
+ * over the text the whole way down. A container query can't read --peak-sidebar-width, so it
+ * switches at 45rem, where the default 16rem aside and its gap stop wrapping (like the grid spans).
+ */
+@container peak-sidebar (width >= 45rem) {
+  .peak-with-sidebar.sticky > :is(aside, .peak-sidebar),
+  .peak-with-sidebar.sticky > .out:has(> .peak-sidebar) {
+    position: sticky;
+    inset-block-start: var(--peak-sticky-offset, var(--pico-spacing));
+    align-self: start;
+  }
 }
 
 /* Media object: an image or icon beside text; the text wraps below it when there's no room */
@@ -224,8 +280,9 @@
   margin-block: 0;
 }
 
+/* --peak-media-min: the narrowest the text gets beside the image before it wraps below (a byline in a card needs less) */
 .peak-media > :last-child {
-  flex: 1 1 16rem;
+  flex: 1 1 var(--peak-media-min, 16rem);
   min-inline-size: 0;
 }
 
@@ -249,9 +306,11 @@
   gap: var(--peak-gap, var(--pico-spacing));
 }
 
+/* min-inline-size: a stacked item is as wide as the switcher, not as its widest content (an image's width attribute) */
 .peak-switcher > * {
   flex-grow: 1;
   flex-basis: calc((var(--peak-switch-at, 40rem) - 100%) * 999);
+  min-inline-size: 0;
   margin-block: 0;
 }
 

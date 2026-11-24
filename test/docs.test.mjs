@@ -1,5 +1,6 @@
 // The documentation site (scripts/docs.mjs, site/): it builds, documents every class and input,
-// has no broken internal links, loads without errors, fits a phone, and the customizer works.
+// has no broken internal links, loads without errors, fits a phone, and the customizer works. The
+// example pages (_site/examples/) are checked for links, errors and width too.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -11,9 +12,15 @@ import { launch, root } from "./helpers.mjs";
 
 const out = mkdtempSync(path.join(tmpdir(), "peak-docs-"));
 execFileSync(process.execPath, [path.join(root, "scripts", "docs.mjs"), "--out", out]);
-const pages = readdirSync(out).filter((f) => f.endsWith(".html"));
+const docs = readdirSync(out).filter((f) => f.endsWith(".html"));
+const examples = readdirSync(path.join(out, "examples"))
+  .filter((f) => f.endsWith(".html"))
+  .map((f) => `examples/${f}`);
+const pages = [...docs, ...examples];
 const html = Object.fromEntries(pages.map((f) => [f, readFileSync(path.join(out, f), "utf8")]));
-const all = Object.values(html).join("\n");
+// What counts as documentation: the docs pages, not the examples (a class shown only in an
+// example isn't documented)
+const all = docs.map((f) => html[f]).join("\n");
 const url = (file) => pathToFileURL(path.join(out, file)).href;
 
 let browser;
@@ -60,15 +67,17 @@ test("internal links point to pages and anchors that exist", () => {
   const ids = Object.fromEntries(pages.map((f) => [f, new Set([...html[f].matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]))]));
   const broken = [];
   for (const file of pages) {
+    // Relative to the file's folder (examples/ links up with ../)
+    const resolve = (target) => path.posix.normalize(path.posix.join(path.posix.dirname(file), target));
     for (const [, href] of html[file].matchAll(/\shref="([^"]+)"/g)) {
       if (/^(https?:|mailto:)/.test(href)) continue;
       const [target, hash] = href.split("#");
-      const page = target || file;
-      if (target && !existsSync(path.join(out, target))) broken.push(`${file}: ${href}`);
+      const page = target ? resolve(target) : file;
+      if (target && !existsSync(path.join(out, page))) broken.push(`${file}: ${href}`);
       else if (hash && page.endsWith(".html") && !ids[page]?.has(hash)) broken.push(`${file}: ${href}`);
     }
     for (const [, src] of html[file].matchAll(/\ssrc="([^"]+)"/g)) {
-      if (!/^https?:/.test(src) && !existsSync(path.join(out, src))) broken.push(`${file}: src ${src}`);
+      if (!/^https?:/.test(src) && !existsSync(path.join(out, resolve(src)))) broken.push(`${file}: src ${src}`);
     }
   }
   assert.deepEqual(broken, []);
@@ -143,6 +152,10 @@ test("the customizer writes CSS, themes every page, and resets", async () => {
   assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--peak-hue").trim()), "30");
   assert.equal(await page.isVisible(".docs-custom-theme"), true);
 
+  // And for the examples, over their own theme
+  await page.goto(url("examples/landing.html"));
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--peak-hue").trim()), "30");
+
   await page.goto(url("customize.html"));
   assert.equal(await page.inputValue("#c-hue"), "30", "controls restored");
   await page.click("#customizer-reset");
@@ -185,4 +198,33 @@ test("dialogs in examples open centered, whatever the docs' example styles do", 
     await page.waitForTimeout(300);
   }
   await page.close();
+});
+
+test("the example gallery: one live preview per example, links to the full pages", async () => {
+  assert.ok(examples.length > 0);
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await page.goto(url("examples.html"));
+  const gallery = await page.evaluate(() => ({
+    frames: [...document.querySelectorAll(".docs-frame iframe")].map((f) => f.getAttribute("src")),
+    open: [...document.querySelectorAll("a")].filter((a) => a.textContent === "Open full page").map((a) => a.getAttribute("href")),
+    toc: [...document.querySelectorAll(".docs-toc a")].length,
+  }));
+  assert.deepEqual(gallery.frames.toSorted(), examples.toSorted());
+  assert.deepEqual(gallery.open.toSorted(), examples.toSorted());
+  assert.equal(gallery.toc, examples.length, "one table of contents entry per example");
+  // The preview renders the page, styled by Peak
+  await page.locator(".docs-frame iframe").first().scrollIntoViewIfNeeded();
+  const styled = await page.frameLocator(".docs-frame iframe").first().locator("body").evaluate((b) => getComputedStyle(b).getPropertyValue("--peak-hue").trim());
+  assert.notEqual(styled, "");
+  await page.close();
+});
+
+test("examples are styled by Peak alone", () => {
+  for (const file of examples) {
+    assert.doesNotMatch(html[file], /docs\.(css|js)/, file);
+    assert.match(html[file], /<a class="peak-skip-link" href="#content">/, file);
+    assert.match(html[file], /<meta name="color-scheme" content="light dark">/, file);
+    assert.match(html[file], /peak-docs-theme/, `${file}: the customizer's theme script`);
+    assert.doesNotMatch(html[file], /^---/, `${file}: front matter stripped`);
+  }
 });

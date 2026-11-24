@@ -33,6 +33,8 @@
 
       <p class="peak-cluster" id="chips">
         <a class="peak-chip" href="#" id="chip-link">Link</a>
+        <a class="peak-chip" href="#" aria-current="page" id="chip-current">Current</a>
+        <a class="peak-chip" href="#" aria-current="false" id="chip-not-current">Not current</a>
         <label class="peak-chip" id="chip-check"><input type="checkbox" id="chip-input" /> Filter</label>
         <span class="peak-chip" id="chip-remove">Tag <button type="button" aria-label="Remove" id="chip-button">×</button></span>
       </p>
@@ -54,6 +56,7 @@
       <dialog class="peak-drawer start" id="drawer-start-cb" closedby="any"><article id="drawer-start-cb-panel"><p>Start, closedby</p></article></dialog>
       <dialog class="peak-wide" id="wide-cb" closedby="any"><article id="wide-cb-panel"><p>Wide, closedby</p></article></dialog>
       <dialog class="peak-full" id="full-cb" closedby="any"><article id="full-cb-panel"><p>Full, closedby</p></article></dialog>
+      <dialog id="form-dialog" closedby="any"><article><form method="dialog" id="dialog-form"><input aria-label="Name" /></form><footer><button type="button" class="secondary" id="dialog-cancel">Cancel</button><button type="submit" form="dialog-form" id="dialog-submit">Save</button></footer></article></dialog>
       <div class="peak-toast success" popover="manual" role="status" id="toast">Saved. <button type="button" popovertarget="toast" popovertargetaction="hide">Close</button></div>
 
       <dl class="peak-stats" id="stats">
@@ -88,6 +91,9 @@
       <div class="out"><div class="stacks_in stack_stack in peak-grid" id="s-grid"><div class="out"><div class="stacks_in text_stack"><p>a</p></div></div><div class="out"><div class="stacks_in text_stack"><p>b</p></div></div></div></div>
       <div class="out"><div class="stacks_in stack_stack in peak-with-sidebar sticky" id="s-sidebar"><div class="out"><div class="stacks_in stack_stack in peak-sidebar" id="s-aside"><p>Aside</p></div></div><div class="out"><div class="stacks_in text_stack" id="s-content"><p>Content that is long enough to fill the remaining width of the layout.</p></div></div></div></div>
       <div class="out"><div class="stacks_in stack_stack in peak-media" id="s-media"><div class="out"><div class="stacks_in html_stack"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='%23888'/%3E%3C/svg%3E" width="80" height="80" alt="" /></div></div><div class="out"><div class="stacks_in text_stack"><p>Text</p></div></div></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-hide-below-md" id="s-hide-below"><p>Wide only</p></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-hide-from-md" id="s-hide-from"><p>Narrow only</p></div></div>
+      <div class="out"><div class="stacks_in stack_stack in peak-band" id="s-band"><div class="out"><div class="stacks_in text_stack"><p>Band stack</p></div></div></div></div>
       <div class="out"><div class="stacks_in stack_stack in peak-callout warning" id="s-callout"><div class="out"><div class="stacks_in text_stack"><p>Callout stack</p></div></div></div></div>
       <header class="site-header" id="logo-header">
         <nav class="site-nav">
@@ -100,6 +106,43 @@
           <ul><li><a href="#" id="logo-link">Home</a></li></ul>
         </nav>
       </header>
+      <form style="inline-size: 20rem"><div role="group" id="field-group"><input type="email" aria-label="Email" id="group-input" /><button type="submit" id="group-button">Sign up now</button></div></form>
+      <div role="group" id="button-group"><button>One label</button><button>Another label</button></div>
+      <p style="font-size: 3rem">
+        <span class="peak-rating" style="--peak-rating: 2" role="img" aria-label="2 out of 5" id="rating-2"></span><br />
+        <span class="peak-rating" style="--peak-rating: 2" role="img" aria-label="2 out of 5" id="rating-rtl" dir="rtl"></span><br />
+        <span class="peak-rating" style="--peak-rating: 9" role="img" aria-label="5 out of 5" id="rating-over"></span>
+      </p>
+      <aside style="inline-size: 16rem" id="sidenav-aside">
+        <nav class="peak-sidebar-nav" aria-label="Sections">
+          <p id="sidenav-first-label">Store</p>
+          <ul id="sidenav-list-1"><li><a href="#">Overview</a></li><li><a href="#" aria-current="page" id="sidenav-current">Orders</a><ul><li><a href="#" id="sidenav-open-child">Open</a></li></ul></li><li><a href="#">Customers</a><ul><li><a href="#" id="sidenav-hidden-child">Hidden</a></li></ul></li></ul>
+          <p id="sidenav-label">Settings</p>
+          <ul><li><a href="#">Team</a></li></ul>
+        </nav>
+        <progress value="3" max="10" id="progress"></progress>
+        <meter value="0.3" id="meter">30%</meter>
+      </aside>
+      <header class="site-header" data-nav-style="bordered" id="bordered-header">
+        <nav class="site-nav" data-peak-menu="768" id="menu-nav">
+          <ul><li><a href="#" class="site-title contrast" id="menu-title"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'/%3E" alt="" width="28" height="28" /> Brand</a></li></ul>
+          <div class="site-menu" data-peak-anchor>
+            <button type="button" class="site-menu-toggle outline secondary" popovertarget="fixture-menu" id="menu-toggle">Menu</button>
+            <div class="site-menu-popover" id="fixture-menu" popover>
+              <ul><li><a href="#" id="menu-link-1">One</a></li><li><a href="#" id="menu-link-2">Two</a></li><li><details class="dropdown" id="header-dropdown"><summary>More</summary><ul><li><a href="#">One</a></li><li><a href="#">Two</a></li><li><a href="#" id="header-dropdown-last">Three</a></li></ul></details></li></ul>
+            </div>
+          </div>
+          <ul><li><select aria-label="Scheme" id="menu-select"><option>Auto</option></select></li></ul>
+        </nav>
+      </header>
+      <footer class="site-footer">
+        <div class="peak-grid-auto" style="--peak-grid-min: 10rem">
+          <nav class="site-footer-nav stacked" aria-label="Product"><p id="fcol-heading"><strong>Product</strong></p><ul><li><a href="#" id="fcol-1">One</a></li><li><a href="#" id="fcol-2">Two</a></li></ul></nav>
+          <nav class="site-footer-nav stacked" aria-label="Company"><p><strong>Company</strong></p><ul><li><a href="#">Three</a></li></ul></nav>
+        </div>
+        <nav class="site-footer-nav" aria-label="Footer"><ul><li><a href="#" id="frow-1">Imprint</a></li><li><a href="#" id="frow-2">Privacy</a></li><li><a href="#" aria-current="page" id="frow-current">Current</a></li></ul></nav>
+        <p class="site-footer-text" id="footer-text">© Example</p>
+      </footer>
     </main>
   </body>
 </html>

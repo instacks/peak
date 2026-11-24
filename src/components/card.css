@@ -1,6 +1,7 @@
 /*
  * Card (docs: site/pages/cards.html). Blades styles <article> as a card; .peak-card gives any
- * element (a Stacks container) the same look, with the same header and footer bands.
+ * element (a Stacks container) the same look, with the same header and footer bands, and
+ * article.peak-prose takes it away (running text).
  */
 .peak-card {
   margin-block-end: var(--pico-block-spacing-vertical);
@@ -60,12 +61,12 @@
 }
 
 /* A card's heading sits close to its text, like a title rather than a section heading */
-:is(article, .peak-card) > :is(h2, h3, h4, h5, h6) {
+:is(article:not(.peak-prose), .peak-card) > :is(h2, h3, h4, h5, h6) {
   margin-block-end: calc(var(--pico-typography-spacing-vertical) * 0.5);
 }
 
 /* An image (or figure) first in a card runs to its edges, under the rounded corners */
-:is(article, .peak-card) > :is(img, picture, figure):first-child {
+:is(article:not(.peak-prose), .peak-card) > :is(img, picture, figure):first-child {
   display: block;
   inline-size: calc(100% + var(--pico-block-spacing-horizontal) * 2);
   max-inline-size: none;
@@ -78,6 +79,34 @@
   overflow: hidden;
 }
 
+/*
+ * Running text in an <article> (a blog post, CMS output) isn't a card: Blades draws every article
+ * as one, so .peak-prose on it takes back the box and the header and footer bands. Peak's own card
+ * rules above skip it too (title spacing, the bleeding image, the linked card).
+ */
+article.peak-prose {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+article.peak-prose > :is(header, footer) {
+  margin-inline: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+article.peak-prose > header {
+  margin-block: 0 var(--pico-block-spacing-vertical);
+}
+
+article.peak-prose > footer {
+  margin-block: var(--pico-block-spacing-vertical) 0;
+}
+
 .peak-card.outline {
   box-shadow: 0 0 0 var(--pico-border-width) var(--pico-card-border-color);
 }
@@ -88,11 +117,21 @@
 }
 
 /*
+ * Featured: the one to pick in a row (the popular plan in a pricing table), ringed in the primary
+ * color on top of the card's shadow. The ring is a shadow, so it moves no layout in a grid.
+ */
+.peak-card.featured {
+  box-shadow:
+    0 0 0 calc(var(--pico-border-width) * 2) var(--peak-primary),
+    var(--pico-card-box-shadow);
+}
+
+/*
  * Linked card: .peak-card-link on one link in the card stretches it over the whole card, so the
  * card is a single click target. Other links and controls in the card stay on top and clickable.
  * The card lifts on hover and shows the link's focus ring around itself.
  */
-:is(article, .peak-card):has(.peak-card-link) {
+:is(article:not(.peak-prose), .peak-card):has(.peak-card-link) {
   position: relative;
   transition:
     transform var(--pico-transition),
@@ -106,17 +145,17 @@
   border-radius: inherit;
 }
 
-:is(article, .peak-card):has(.peak-card-link)
+:is(article:not(.peak-prose), .peak-card):has(.peak-card-link)
   :is(a, button, input, select, textarea, summary, label):not(.peak-card-link) {
   position: relative;
   z-index: 1;
 }
 
-:is(article, .peak-card):has(.peak-card-link):hover {
+:is(article:not(.peak-prose), .peak-card):has(.peak-card-link):hover {
   transform: translateY(-2px);
 }
 
-:is(article, .peak-card):has(.peak-card-link:focus-visible) {
+:is(article:not(.peak-prose), .peak-card):has(.peak-card-link:focus-visible) {
   outline: var(--pico-outline-width) solid var(--pico-primary-focus);
   outline-offset: 2px;
 }
@@ -128,7 +167,7 @@
 
 /* Blades' reduced-motion rule makes the lift instant; without motion it shouldn't move at all */
 @media (prefers-reduced-motion: reduce) {
-  :is(article, .peak-card):has(.peak-card-link):hover {
+  :is(article:not(.peak-prose), .peak-card):has(.peak-card-link):hover {
     transform: none;
   }
 }

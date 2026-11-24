@@ -1,0 +1,357 @@
+---
+title: Admin dashboard
+description: An app screen for an invented online shop: a sticky header with search and a user menu, a sidebar that is a drawer on phones, tabs for the period, numbers, goals, an orders table with row menus and filters, an activity feed, a dialog and a toast.
+order: 2
+uses: navigation.html grids.html utilities.html accordion.html data.html badges.html forms.html overlays.html dialogs.html callouts.html elements.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Orders · Admin dashboard example</title>
+<meta name="description" content="An example admin dashboard built with Peak.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/peak.min.css">
+<script src="../assets/peak-scheme.js"></script>
+<style data-peak-theme>
+  :root {
+    --peak-hue: 200;
+    --peak-chroma: 0.11;
+    --peak-neutral-chroma: 0.006;
+    --peak-density: 0.8;
+    --peak-radius: 0.25rem;
+    --peak-font-size-max: 1.0625rem;
+    --peak-sidebar-width: 14rem;
+  }
+</style>
+</head>
+<body id="top">
+<a class="peak-skip-link" href="#content">Skip to content</a>
+
+<header class="site-header nav-sticky" data-nav-style="surface">
+  <nav class="site-nav container-fluid" aria-label="Site">
+    <ul>
+      <li class="peak-hide-from-lg"><button type="button" class="secondary outline" command="show-modal" commandfor="nav-drawer" aria-label="Open the navigation"><span aria-hidden="true">☰</span></button></li>
+      <li><a class="site-title contrast" href="#top"><img src="../assets/favicon.svg" alt="" width="28" height="28"> Larkspur</a></li>
+    </ul>
+    <ul>
+      <li class="peak-hide-below-md">
+        <form role="search" action="#" aria-label="Search orders and customers">
+          <input type="search" name="q" placeholder="Search orders, customers…" aria-label="Search">
+        </form>
+      </li>
+      <li>
+        <button type="button" class="peak-avatar" popovertarget="user-menu" aria-label="Account menu for Sam Reyes">SR</button>
+        <ul id="user-menu" popover>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Team settings</a></li>
+          <li><a href="../examples.html">All examples</a></li>
+          <li><a href="#">Sign out</a></li>
+        </ul>
+      </li>
+      <li><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    </ul>
+  </nav>
+</header>
+
+<dialog class="peak-drawer start" id="nav-drawer" closedby="any" aria-label="Navigation">
+  <article>
+    <header><button aria-label="Close" rel="prev" command="close" commandfor="nav-drawer"></button><strong>Larkspur Admin</strong></header>
+    <nav class="peak-sidebar-nav" aria-label="Sections">
+      <ul>
+        <li><a href="#">Overview</a></li>
+        <li><a href="#" aria-current="page">Orders <span class="peak-badge">12</span></a></li>
+        <li><a href="#">Customers</a></li>
+        <li><a href="#">Products <span class="peak-badge warning">3</span></a></li>
+        <li><a href="#">Discounts</a></li>
+      </ul>
+      <p>Settings</p>
+      <ul>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Payments</a></li>
+        <li><a href="#">Team</a></li>
+      </ul>
+    </nav>
+  </article>
+</dialog>
+
+<div class="container-fluid">
+  <div class="peak-with-sidebar sticky" style="--peak-sticky-offset: 5rem">
+    <aside class="site-sidebar peak-hide-below-lg">
+      <nav class="peak-sidebar-nav" aria-label="Sections">
+        <ul>
+          <li><a href="#">Overview</a></li>
+          <li><a href="#" aria-current="page">Orders <span class="peak-badge">12</span></a></li>
+          <li><a href="#">Customers</a></li>
+          <li><a href="#">Products <span class="peak-badge warning">3</span></a></li>
+          <li><a href="#">Discounts</a></li>
+        </ul>
+        <p>Settings</p>
+        <ul>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Payments</a></li>
+          <li><a href="#">Team</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="content" class="site-main" tabindex="-1">
+      <nav aria-label="breadcrumb" class="site-breadcrumb">
+        <ul>
+          <li><a href="#">Store</a></li>
+          <li><span aria-current="page">Orders</span></li>
+        </ul>
+      </nav>
+
+      <div class="peak-cluster justify-between">
+        <h1 class="peak-mb-0">Orders</h1>
+        <div class="peak-cluster">
+          <button type="button" class="secondary outline" popovertarget="toast-export" popovertargetaction="show">Export CSV</button>
+          <button type="button" command="show-modal" commandfor="new-customer">New customer</button>
+        </div>
+      </div>
+
+      <div class="peak-tabs">
+        <details name="period" open>
+          <summary>Today</summary>
+          <dl class="peak-stats">
+            <div class="peak-card"><dt>Revenue</dt><dd>€ 2,340</dd></div>
+            <div class="peak-card"><dt>Orders</dt><dd>38</dd></div>
+            <div class="peak-card"><dt>Average order</dt><dd>€ 61.58</dd></div>
+            <div class="peak-card"><dt>Refunds</dt><dd>1</dd></div>
+          </dl>
+        </details>
+        <details name="period">
+          <summary>7 days</summary>
+          <dl class="peak-stats">
+            <div class="peak-card"><dt>Revenue</dt><dd>€ 15,912</dd></div>
+            <div class="peak-card"><dt>Orders</dt><dd>251</dd></div>
+            <div class="peak-card"><dt>Average order</dt><dd>€ 63.39</dd></div>
+            <div class="peak-card"><dt>Refunds</dt><dd>6</dd></div>
+          </dl>
+        </details>
+        <details name="period">
+          <summary>30 days</summary>
+          <dl class="peak-stats">
+            <div class="peak-card"><dt>Revenue</dt><dd>€ 64,180</dd></div>
+            <div class="peak-card"><dt>Orders</dt><dd>1,033</dd></div>
+            <div class="peak-card"><dt>Average order</dt><dd>€ 62.13</dd></div>
+            <div class="peak-card"><dt>Refunds</dt><dd>19</dd></div>
+          </dl>
+        </details>
+      </div>
+
+      <div class="peak-grid">
+        <section class="peak-span-2" aria-labelledby="recent-orders">
+          <div class="peak-cluster justify-between">
+            <h2 id="recent-orders" class="peak-h4 peak-mb-0">Recent orders</h2>
+            <fieldset class="peak-cluster" style="--peak-gap: 0.5rem">
+              <legend class="peak-visually-hidden">Show</legend>
+              <label class="peak-chip"><input type="radio" name="status" checked> All</label>
+              <label class="peak-chip"><input type="radio" name="status"> Paid</label>
+              <label class="peak-chip"><input type="radio" name="status"> Pending</label>
+              <label class="peak-chip"><input type="radio" name="status"> Refunded</label>
+            </fieldset>
+          </div>
+          <div class="overflow-auto">
+            <table class="striped">
+              <thead>
+                <tr>
+                  <th scope="col">Order</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="peak-text-end">Total</th>
+                  <th scope="col"><span class="peak-visually-hidden">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="peak-tabular">#1048</td>
+                  <td>Ines Duarte</td>
+                  <td><time datetime="2026-11-23">23 Nov</time></td>
+                  <td><span class="peak-badge success">Paid</span></td>
+                  <td class="peak-tabular peak-text-end">€ 128.00</td>
+                  <td class="peak-text-end">
+                    <span data-peak-anchor>
+                      <button type="button" class="secondary outline" popovertarget="row-1048" aria-label="Actions for order 1048">⋯</button>
+                      <ul id="row-1048" popover>
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Print invoice</a></li>
+                        <li><a href="#">Refund</a></li>
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="peak-tabular">#1047</td>
+                  <td>Tomasz Wilk</td>
+                  <td><time datetime="2026-11-23">23 Nov</time></td>
+                  <td><span class="peak-badge warning">Pending</span></td>
+                  <td class="peak-tabular peak-text-end">€ 54.90</td>
+                  <td class="peak-text-end">
+                    <span data-peak-anchor>
+                      <button type="button" class="secondary outline" popovertarget="row-1047" aria-label="Actions for order 1047">⋯</button>
+                      <ul id="row-1047" popover>
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Send reminder</a></li>
+                        <li><a href="#">Cancel</a></li>
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="peak-tabular">#1046</td>
+                  <td>Aiko Mori</td>
+                  <td><time datetime="2026-11-22">22 Nov</time></td>
+                  <td><span class="peak-badge success">Paid</span></td>
+                  <td class="peak-tabular peak-text-end">€ 312.40</td>
+                  <td class="peak-text-end">
+                    <span data-peak-anchor>
+                      <button type="button" class="secondary outline" popovertarget="row-1046" aria-label="Actions for order 1046">⋯</button>
+                      <ul id="row-1046" popover>
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Print invoice</a></li>
+                        <li><a href="#">Refund</a></li>
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="peak-tabular">#1045</td>
+                  <td>Kofi Mensah</td>
+                  <td><time datetime="2026-11-22">22 Nov</time></td>
+                  <td><span class="peak-badge danger">Refunded</span></td>
+                  <td class="peak-tabular peak-text-end">€ 19.00</td>
+                  <td class="peak-text-end">
+                    <span data-peak-anchor>
+                      <button type="button" class="secondary outline" popovertarget="row-1045" aria-label="Actions for order 1045">⋯</button>
+                      <ul id="row-1045" popover>
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Print credit note</a></li>
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="peak-tabular">#1044</td>
+                  <td>Elena Petrova</td>
+                  <td><time datetime="2026-11-21">21 Nov</time></td>
+                  <td><span class="peak-badge success">Paid</span></td>
+                  <td class="peak-tabular peak-text-end">€ 76.25</td>
+                  <td class="peak-text-end">
+                    <span data-peak-anchor>
+                      <button type="button" class="secondary outline" popovertarget="row-1044" aria-label="Actions for order 1044">⋯</button>
+                      <ul id="row-1044" popover>
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Print invoice</a></li>
+                        <li><a href="#">Refund</a></li>
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <nav class="peak-pagination" aria-label="Order pages">
+            <ul>
+              <li><a href="#" rel="prev">Previous</a></li>
+              <li><a aria-current="page">1</a></li>
+              <li><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><span aria-disabled="true">…</span></li>
+              <li><a href="#">21</a></li>
+              <li><a href="#" rel="next">Next</a></li>
+            </ul>
+          </nav>
+        </section>
+
+        <aside aria-label="Store status">
+          <article>
+            <header><strong>Goals this month</strong></header>
+            <p><label for="goal-revenue">Revenue: € 64k of € 80k</label><progress id="goal-revenue" value="64" max="80"></progress></p>
+            <p><label for="goal-orders">Orders: 1,033 of 1,200</label><progress id="goal-orders" value="1033" max="1200"></progress></p>
+            <p><label for="goal-stock">Stock level</label><meter id="goal-stock" value="0.3" low="0.25" high="0.75" optimum="1">30%</meter></p>
+          </article>
+
+          <article>
+            <header><strong>Activity</strong></header>
+            <div class="peak-media center" style="--peak-media-min: 8rem">
+              <span class="peak-avatar" role="img" aria-label="Ines Duarte">ID</span>
+              <div><small>Ines Duarte paid order #1048</small><br><small class="peak-text-muted"><time datetime="2026-11-23T10:42">10:42</time></small></div>
+            </div>
+            <div class="peak-media center" style="--peak-media-min: 8rem">
+              <span class="peak-avatar" role="img" aria-label="Kofi Mensah">KM</span>
+              <div><small>Kofi Mensah's order was refunded</small><br><small class="peak-text-muted"><time datetime="2026-11-22T16:05">Yesterday</time></small></div>
+            </div>
+            <footer>
+              <div class="peak-cluster justify-between">
+                <small class="peak-text-muted">On duty</small>
+                <div class="peak-avatar-group" role="group" aria-label="Team on duty">
+                  <span class="peak-avatar" role="img" aria-label="Sam Reyes">SR</span>
+                  <span class="peak-avatar" role="img" aria-label="Lina Haas">LH</span>
+                  <span class="peak-avatar" role="img" aria-label="2 more">+2</span>
+                </div>
+              </div>
+            </footer>
+          </article>
+
+          <article>
+            <header><strong>Set up your store</strong></header>
+            <ol class="peak-steps">
+              <li><strong>Add products</strong></li>
+              <li><strong>Connect payments</strong></li>
+              <li aria-current="step"><strong>Set shipping rates</strong><br><small class="peak-text-muted">Two zones left.</small></li>
+              <li><strong>Go live</strong></li>
+            </ol>
+          </article>
+
+          <aside class="peak-callout warning">
+            <strong>Three products are low on stock</strong>
+            <p>Reorder before Friday to ship in time for the weekend. <a href="#">See products</a></p>
+          </aside>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+
+<dialog id="new-customer" closedby="any">
+  <article>
+    <header>
+      <button aria-label="Close" rel="prev" command="close" commandfor="new-customer"></button>
+      <h2 class="peak-h3">New customer</h2>
+    </header>
+    <form method="dialog" id="new-customer-form">
+      <div class="grid">
+        <label>First name <input name="first" autocomplete="given-name" required></label>
+        <label>Last name <input name="last" autocomplete="family-name" required></label>
+      </div>
+      <label>Email <input type="email" name="email" autocomplete="email" required></label>
+      <label>Customer group
+        <select name="group">
+          <option>Retail</option>
+          <option>Wholesale</option>
+        </select>
+      </label>
+      <label><input type="checkbox" role="switch" name="newsletter"> Subscribed to the newsletter</label>
+    </form>
+    <footer>
+      <button type="button" class="secondary" command="close" commandfor="new-customer">Cancel</button>
+      <button type="submit" form="new-customer-form">Save customer</button>
+    </footer>
+  </article>
+</dialog>
+
+<div id="toast-export" class="peak-toast success" popover="manual" role="status">
+  Export started: we'll email you the CSV.
+  <button class="secondary outline" popovertarget="toast-export" popovertargetaction="hide">Close</button>
+</div>
+
+<footer class="site-footer container-fluid">
+  <p class="site-footer-text">Larkspur is an invented shop. This dashboard is a <a href="../examples.html">Peak example</a>.</p>
+</footer>
+</body>
+</html>

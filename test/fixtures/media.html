@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../dist/peak.css" />
   </head>
   <body class="container">
-    <header class="site-header nav-sticky" id="header"><nav class="site-nav"><ul><li><a class="site-title" href="#">Site</a></li></ul></nav></header>
+    <header class="site-header nav-sticky" data-nav-style="bordered" id="header"><nav class="site-nav"><ul><li><a class="site-title" href="#">Site</a></li></ul></nav></header>
     <main class="site-main">
       <article class="peak-prose" id="prose">
         <h2 id="setup">Setup <a class="peak-anchor" href="#setup" aria-label="Link to this section" id="anchor">#</a></h2>
@@ -21,9 +21,13 @@
 
 </code></pre>
       <article class="peak-card" id="card"><p>Card</p></article>
+      <article class="peak-card featured" id="featured-card"><p>Featured</p></article>
+      <span class="peak-rating" style="--peak-rating: 3" role="img" aria-label="3 out of 5" id="rating"></span>
+      <article class="peak-prose" id="prose-article"><p>An article of running text</p></article>
       <p><span class="peak-badge" id="badge">Badge</span> <button id="button">Button</button></p>
       <nav class="peak-pagination" aria-label="Pages"><ul><li><a href="#">1</a></li><li><a aria-current="page" id="current-page">2</a></li></ul></nav>
       <div style="height: 2000px"></div>
+    <section class="peak-band primary" id="band"><p>Band</p></section>
     </main>
   </body>
 </html>

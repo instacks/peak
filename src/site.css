@@ -100,9 +100,11 @@
  * Blades has no body > footer spacing. When Peak applies only to stacks with the class peak, the
  * footer is a scope root itself, and inside @scope a plain .site-footer only matches descendants:
  * hence :scope.site-footer (which never matches in the global build, where :scope is :root).
+ * Pico gives paragraphs and lists color: var(--pico-color), so the muted color is set there too.
  */
 .site-footer,
 :scope.site-footer {
+  --pico-color: var(--pico-muted-color);
   padding-block: calc(var(--pico-spacing) * 2);
   border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
   color: var(--pico-muted-color);
@@ -173,24 +175,32 @@
 
 /*
  * Nav styles: a surface or the page color, with a rule below, running to the viewport edges like a
- * band (spread shadows clipped to the header's height plus the rule: no 100vw, no horizontal
- * scrollbar). Both shadows are shifted up by their spread, so the background ends at the header's
- * bottom edge and the rule, shifted one border width less, shows only below it.
+ * band. A border image with an outset paints the background 100vmax beyond each side and the rule
+ * one border width below the header. What a border image paints outside the box is ink overflow:
+ * no horizontal scrollbar, no 100vw, and unlike a clip-path it clips nothing, so a <details>
+ * dropdown or a tooltip can hang out of the header.
  */
 :is(.site-header, :scope.site-header):is([data-nav-style="surface"], [data-nav-style="bordered"]) {
   --_peak-nav-bg: var(--peak-bg);
   background-color: var(--_peak-nav-bg);
-  box-shadow:
-    0 -100vmax 0 100vmax var(--_peak-nav-bg),
-    0 calc(var(--pico-border-width) - 100vmax) 0 100vmax var(--pico-muted-border-color);
-  clip-path: inset(0 -100vmax calc(var(--pico-border-width) * -1));
+  border-image:
+    linear-gradient(var(--_peak-nav-bg) calc(100% - var(--pico-border-width)), var(--pico-muted-border-color) 0)
+    fill 0 / 0 / 0 100vmax var(--pico-border-width);
 }
 
 :is(.site-header, :scope.site-header)[data-nav-style="surface"] {
   --_peak-nav-bg: var(--peak-surface);
 }
 
-/* Footer links and the back-to-top link */
+/*
+ * Footer links and the back-to-top link. Blades lays out every nav as a row; a footer nav is a
+ * block, so a heading above its links (a footer column) stays above them. .stacked puts one link
+ * per line, for columns side by side in a grid.
+ */
+.site-footer-nav {
+  display: block;
+}
+
 .site-footer-nav ul {
   display: flex;
   flex-wrap: wrap;
@@ -198,6 +208,11 @@
   margin: 0 0 calc(var(--pico-spacing) * 0.75);
   padding: 0;
   list-style: none;
+}
+
+.site-footer-nav.stacked ul {
+  flex-direction: column;
+  align-items: start;
 }
 
 .site-footer-nav li {
@@ -209,8 +224,9 @@
   color: inherit;
 }
 
+/* On a link, --pico-color is the link color: the current page takes the text color instead */
 .site-footer-nav a[aria-current="page"] {
-  color: var(--pico-color);
+  color: var(--peak-text);
 }
 
 .site-footer-text {

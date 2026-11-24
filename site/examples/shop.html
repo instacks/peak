@@ -1,0 +1,227 @@
+---
+title: Shop
+description: The product listing of an invented shop: a cart button with a count, breadcrumb, sort, filters in a sidebar (accordions, checkboxes, a range, color chips), removable filter chips, a grid of product cards with sale prices, pagination and a cart drawer. The product page is the next example.
+order: 5
+uses: grids.html cards.html badges.html forms.html accordion.html dialogs.html data.html navigation.html typography.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Lamps · Hearth &amp; Grain shop example</title>
+<meta name="description" content="An example shop listing built with Peak.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/peak.min.css">
+<script src="../assets/peak-scheme.js"></script>
+<style data-peak-theme>
+  :root {
+    --peak-hue: 20;
+    --peak-chroma: 0.14;
+    --peak-accent-hue: 150;
+    --peak-neutral-hue: 50;
+    --peak-neutral-chroma: 0.01;
+    --peak-font-family: Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif;
+    --peak-radius: 0.875rem;
+    --peak-sidebar-width: 15rem;
+  }
+</style>
+</head>
+<body id="top">
+<a class="peak-skip-link" href="#content">Skip to content</a>
+
+<header class="site-header" data-nav-style="surface">
+  <nav class="site-nav container" data-peak-menu="768" aria-label="Site">
+    <ul>
+      <li><a class="site-title contrast" href="shop.html">Hearth &amp; Grain</a></li>
+    </ul>
+    <div class="site-menu" data-peak-anchor>
+      <button type="button" class="site-menu-toggle outline secondary" popovertarget="site-menu"><span aria-hidden="true">☰</span> Menu</button>
+      <div class="site-menu-popover" id="site-menu" popover>
+        <ul>
+          <li><a href="shop.html" class="secondary" aria-current="page">Lamps</a></li>
+          <li><a href="#" class="secondary">Furniture</a></li>
+          <li><a href="#" class="secondary">Textiles</a></li>
+          <li><a href="../examples.html" class="secondary">All examples</a></li>
+          <li class="peak-hide-from-md"><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+        </ul>
+      </div>
+    </div>
+    <ul>
+      <li><button type="button" class="secondary outline" command="show-modal" commandfor="cart">Cart <span class="peak-badge solid" aria-label="2 items">2</span></button></li>
+      <li class="peak-hide-below-md"><select class="peak-scheme" aria-label="Color scheme"><option value="">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="content" class="container site-main" tabindex="-1">
+  <nav aria-label="breadcrumb" class="site-breadcrumb">
+    <ul>
+      <li><a href="shop.html">Shop</a></li>
+      <li><span aria-current="page">Lamps</span></li>
+    </ul>
+  </nav>
+
+  <div class="peak-cluster justify-between align-end">
+    <hgroup class="peak-mb-0">
+      <h1>Lamps</h1>
+      <p>24 products</p>
+    </hgroup>
+    <label class="peak-cluster peak-mb-0" style="--peak-gap: 0.5rem">Sort by
+      <select name="sort">
+        <option>Featured</option>
+        <option>Newest</option>
+        <option>Price, low to high</option>
+        <option>Price, high to low</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="peak-with-sidebar">
+    <aside aria-label="Filters">
+      <form action="#">
+        <div class="peak-accordion">
+          <details open>
+            <summary>Category</summary>
+            <fieldset>
+              <legend class="peak-visually-hidden">Category</legend>
+              <label><input type="checkbox" name="cat" value="table" checked> Table lamps</label>
+              <label><input type="checkbox" name="cat" value="floor"> Floor lamps</label>
+              <label><input type="checkbox" name="cat" value="pendant" checked> Pendants</label>
+              <label><input type="checkbox" name="cat" value="wall"> Wall lights</label>
+            </fieldset>
+          </details>
+          <details>
+            <summary>Price</summary>
+            <label>Up to € 300 <input type="range" name="max-price" min="20" max="500" step="10" value="300"></label>
+          </details>
+          <details>
+            <summary>Color</summary>
+            <fieldset class="peak-cluster" style="--peak-gap: 0.5rem">
+              <legend class="peak-visually-hidden">Color</legend>
+              <label class="peak-chip"><input type="radio" name="color" value="any" checked> Any</label>
+              <label class="peak-chip"><input type="radio" name="color" value="brass"> Brass</label>
+              <label class="peak-chip"><input type="radio" name="color" value="black"> Black</label>
+              <label class="peak-chip"><input type="radio" name="color" value="white"> White</label>
+              <label class="peak-chip"><input type="radio" name="color" value="oak"> Oak</label>
+            </fieldset>
+          </details>
+        </div>
+        <button type="submit" class="secondary">Apply filters</button>
+      </form>
+    </aside>
+
+    <section aria-labelledby="results">
+      <h2 id="results" class="peak-visually-hidden">Products</h2>
+      <p class="peak-cluster" style="--peak-gap: 0.5rem">
+        <span class="peak-chip">Table lamps <button type="button" aria-label="Remove the filter Table lamps">×</button></span>
+        <span class="peak-chip">Pendants <button type="button" aria-label="Remove the filter Pendants">×</button></span>
+        <span class="peak-chip">Up to € 300 <button type="button" aria-label="Remove the filter Up to € 300">×</button></span>
+        <a href="shop.html" class="secondary"><small>Clear all</small></a>
+      </p>
+
+      <div class="peak-grid-auto" style="--peak-grid-min: 10rem">
+        <article>
+          <img src="../assets/product.svg" alt="Arc table lamp in brass" width="640" height="400">
+          <p class="peak-mb-0"><span class="peak-badge danger">Sale</span></p>
+          <h3 class="peak-h5 peak-mt-0"><a class="peak-card-link contrast" href="product.html">Arc table lamp</a></h3>
+          <p class="peak-tabular"><strong>€ 89</strong> <s class="peak-text-muted">€ 119</s><br><small><span class="peak-rating" style="--peak-rating: 4.7" role="img" aria-label="Rated 4.7 out of 5"></span> 38</small></p>
+        </article>
+        <article>
+          <img src="../assets/shapes.svg" alt="Globe pendant in white glass" width="640" height="400">
+          <p class="peak-mb-0"><span class="peak-badge accent">New</span></p>
+          <h3 class="peak-h5 peak-mt-0"><a class="peak-card-link contrast" href="product.html">Globe pendant</a></h3>
+          <p class="peak-tabular"><strong>€ 145</strong></p>
+        </article>
+        <article>
+          <img src="../assets/landscape.svg" alt="Dune table lamp with a linen shade" width="640" height="400">
+          <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Dune table lamp</a></h3>
+          <p class="peak-tabular"><strong>€ 120</strong><br><small><span class="peak-rating" style="--peak-rating: 4.2" role="img" aria-label="Rated 4.2 out of 5"></span> 12</small></p>
+        </article>
+        <article>
+          <img src="../assets/product.svg" alt="Cone pendant in black steel" width="640" height="400">
+          <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Cone pendant</a></h3>
+          <p class="peak-tabular"><strong>€ 98</strong></p>
+        </article>
+        <article>
+          <img src="../assets/shapes.svg" alt="Pebble table lamp in oak" width="640" height="400">
+          <p class="peak-mb-0"><span class="peak-badge danger">Sale</span></p>
+          <h3 class="peak-h5 peak-mt-0"><a class="peak-card-link contrast" href="product.html">Pebble table lamp</a></h3>
+          <p class="peak-tabular"><strong>€ 64</strong> <s class="peak-text-muted">€ 79</s></p>
+        </article>
+        <article>
+          <img src="../assets/landscape.svg" alt="Halo pendant, a ring of light" width="640" height="400">
+          <h3 class="peak-h5"><a class="peak-card-link contrast" href="product.html">Halo pendant</a></h3>
+          <p class="peak-tabular"><strong>€ 260</strong></p>
+        </article>
+      </div>
+
+      <nav class="peak-pagination" aria-label="Product pages">
+        <ul>
+          <li><a aria-current="page">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">4</a></li>
+          <li><a href="#" rel="next">Next</a></li>
+        </ul>
+      </nav>
+    </section>
+  </div>
+</main>
+
+<dialog class="peak-drawer" id="cart" closedby="any" aria-labelledby="cart-title">
+  <article>
+    <header>
+      <button aria-label="Close" rel="prev" command="close" commandfor="cart"></button>
+      <h2 class="peak-h4 peak-mb-0" id="cart-title">Your cart</h2>
+    </header>
+    <ol class="peak-steps">
+      <li aria-current="step"><strong>Cart</strong></li>
+      <li><strong>Shipping</strong></li>
+      <li><strong>Payment</strong></li>
+    </ol>
+    <div class="peak-media center" style="--peak-media-min: 10rem">
+      <img src="../assets/product.svg" alt="" width="96" height="60">
+      <div>
+        <strong>Arc table lamp</strong><br><small class="peak-text-muted peak-tabular">Brass · € 89</small>
+        <label class="peak-cluster peak-mb-0" style="--peak-gap: 0.5rem"><small>Quantity</small> <input type="number" name="qty-arc" value="1" min="0" max="9"></label>
+      </div>
+    </div>
+    <div class="peak-media center" style="--peak-media-min: 10rem">
+      <img src="../assets/shapes.svg" alt="" width="96" height="60">
+      <div>
+        <strong>Globe pendant</strong><br><small class="peak-text-muted peak-tabular">White · € 145</small>
+        <label class="peak-cluster peak-mb-0" style="--peak-gap: 0.5rem"><small>Quantity</small> <input type="number" name="qty-globe" value="1" min="0" max="9"></label>
+      </div>
+    </div>
+    <table>
+      <tbody>
+        <tr><th scope="row">Subtotal</th><td class="peak-text-end peak-tabular">€ 234.00</td></tr>
+        <tr><th scope="row">Shipping</th><td class="peak-text-end peak-tabular">€ 0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><th scope="row">Total</th><td class="peak-text-end peak-tabular">€ 234.00</td></tr>
+      </tfoot>
+    </table>
+    <footer>
+      <button type="button" class="secondary" command="close" commandfor="cart">Keep shopping</button>
+      <button type="button" command="close" commandfor="cart">Checkout</button>
+    </footer>
+  </article>
+</dialog>
+
+<footer class="site-footer container">
+  <nav class="site-footer-nav" aria-label="Footer">
+    <ul>
+      <li><a href="#">Shipping</a></li>
+      <li><a href="#">Returns</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="../examples.html">More Peak examples</a></li>
+    </ul>
+  </nav>
+  <p class="site-footer-text">© 2026 Hearth &amp; Grain, an invented shop.</p>
+  <p class="site-back-to-top"><a href="#top">Back to top ↑</a></p>
+</footer>
+</body>
+</html>

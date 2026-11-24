@@ -16,13 +16,16 @@ description: Layouts that adapt to the space they get, not to the viewport. None
   <li><code>--peak-cols</code>: the most columns of <code>.peak-grid</code> (3).</li>
   <li><code>--peak-sidebar-width</code>: the sidebar's width in <code>.peak-with-sidebar</code> (an input, 16rem).</li>
   <li><code>--peak-switch-at</code>: where <code>.peak-switcher</code> stacks (40rem).</li>
+  <li><code>--peak-media-min</code>: the narrowest the text of <code>.peak-media</code> gets before it wraps below the image (16rem).</li>
 </ul>
 
 <h2>Auto grid</h2>
 <p>
   <code>.peak-grid-auto</code> fits as many columns of at least <code>--peak-grid-min</code> as there is
   room for, and a single column never overflows a narrow container. Cards in it line up: each fills
-  its row's height and its footer sits at the bottom.
+  its row's height and its footer sits at the bottom. Like a card, a grid has space below it,
+  except as the last child of its section (this goes for <code>.peak-grid</code> and
+  <code>.peak-switcher</code> too).
 </p>
 <peak-example>
   <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
@@ -92,6 +95,23 @@ description: Layouts that adapt to the space they get, not to the viewport. None
     <span class="peak-badge success dot">Saved 2 min ago</span>
   </div>
 </peak-example>
+<p>
+  Fields in a cluster keep their own width instead of filling the line: sized to their content
+  where the browser supports <code>field-sizing</code>, at least 5rem. Put the label text and the
+  field in a <code>&lt;label class="peak-cluster"&gt;</code> for a short field beside its label.
+</p>
+<peak-example>
+  <form onsubmit="return false">
+    <label class="peak-cluster" style="--peak-gap: 0.5rem">
+      Quantity <input type="number" name="qty" value="1" min="1" max="9">
+    </label>
+    <div class="peak-cluster" style="--peak-gap: 0.5rem">
+      <label for="cluster-sort">Sort by</label>
+      <select id="cluster-sort" name="sort"><option>Newest</option><option>Price, low to high</option></select>
+      <button type="submit" class="secondary">Apply</button>
+    </div>
+  </form>
+</peak-example>
 <peak-example>
   <div class="peak-cluster justify-between" style="--peak-gap: 0.5rem">
     <strong>Left</strong>
@@ -104,7 +124,9 @@ description: Layouts that adapt to the space they get, not to the viewport. None
   <code>.peak-with-sidebar</code> puts an <code>&lt;aside&gt;</code> (or <code>.peak-sidebar</code>) next
   to the content, in either order. When the content would get narrower than 60%, the aside wraps
   above or below it: no breakpoint. <code>.sticky</code> keeps the aside in view while the content
-  scrolls (offset by <code>--peak-sticky-offset</code>).
+  scrolls (offset by <code>--peak-sticky-offset</code>; under a sticky header, set it to the header's
+  height). It applies from a layout width of 45rem, where the default aside stops wrapping: a
+  wrapped aside scrolls with the page instead of sliding over the content.
 </p>
 <peak-example>
   <div class="peak-with-sidebar" style="--peak-sidebar-width: 12rem">
@@ -122,7 +144,8 @@ description: Layouts that adapt to the space they get, not to the viewport. None
 <h2>Media object</h2>
 <p>
   <code>.peak-media</code>: an image or icon beside text. The text wraps below the image when there
-  is no room for at least 16rem of it. <code>.center</code> centers them vertically.
+  is no room for at least 16rem of it (<code>--peak-media-min</code>). <code>.center</code> centers
+  them vertically.
 </p>
 <peak-example>
   <div class="peak-media">
@@ -132,6 +155,18 @@ description: Layouts that adapt to the space they get, not to the viewport. None
       <p>The first child keeps its size; the last takes the rest and wraps below when the row gets narrow.</p>
     </div>
   </div>
+</peak-example>
+<p>A byline in a narrow card keeps the name beside the avatar with a smaller minimum:</p>
+<peak-example>
+  <article style="max-inline-size: 18rem">
+    <p>A quote or a post excerpt.</p>
+    <footer>
+      <div class="peak-media center" style="--peak-media-min: 8rem">
+        <span class="peak-avatar" role="img" aria-label="Grace Hopper">GH</span>
+        <div><strong>Grace Hopper</strong><br><small class="peak-text-muted">Rear admiral</small></div>
+      </div>
+    </footer>
+  </article>
 </peak-example>
 
 <h2>Switcher</h2>

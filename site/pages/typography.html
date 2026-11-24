@@ -101,6 +101,21 @@ description: A fluid base size, a modular heading scale, and a few text patterns
     <blockquote>Quotes and code blocks work as everywhere else.</blockquote>
   </div>
 </peak-example>
+<p>
+  Blades draws every <code>&lt;article&gt;</code> as a card. On an article, <code>.peak-prose</code>
+  turns it back into running text: no box, and its <code>&lt;header&gt;</code> and
+  <code>&lt;footer&gt;</code> are no bands. That's the markup for a blog post or CMS output.
+</p>
+<peak-example>
+  <article class="peak-prose">
+    <header>
+      <h3>A blog post</h3>
+      <p><small class="peak-text-muted">By Ada · 18 November 2026</small></p>
+    </header>
+    <p>An article of running text, not a card.</p>
+    <footer><small>Filed under <a href="#prose">Process</a></small></footer>
+  </article>
+</peak-example>
 <p>When printed, links in prose show their address after the text.</p>
 
 <h2>Heading anchors</h2>

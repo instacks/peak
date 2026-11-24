@@ -32,12 +32,36 @@
         <article id="sw-1"><h3>One</h3><p>Text.</p><footer id="sw-footer-1">Footer</footer></article>
         <article id="sw-2"><h3>Two</h3><p>Much longer text that wraps onto several lines so this card is the taller one.</p><footer id="sw-footer-2">Footer</footer></article>
       </div>
+      <div class="peak-grid-auto" id="spaced-grid"><article>Card</article><article>Card</article></div>
+      <nav id="after-grid"><p>Pagination</p></nav>
+      <section id="grid-section"><div class="peak-grid" id="last-grid"><article>Card</article></div></section>
       <div class="peak-cluster" id="div-cluster"><button>A</button><button>B</button></div>
       <p id="after-cluster">After a div row</p>
 
       <div class="peak-cluster align-end" id="cluster" style="--peak-gap: 2rem"><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" width="40" height="40" alt="" /></figure><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23888'/%3E%3C/svg%3E" width="20" height="20" alt="" /></figure></div>
 
-      <section class="peak-band" id="band"><p>Band</p></section>
+      <section class="peak-band" id="band"><p>Band</p>
+        <details class="dropdown" id="band-dropdown"><summary>Menu</summary><ul><li><a href="#">One</a></li><li><a href="#">Two</a></li><li><a href="#">Three</a></li><li><a href="#" id="band-dropdown-last">Four</a></li></ul></details>
+      </section>
+      <!-- A filled band: every text color follows the fill (the docs needed an inline style before) -->
+      <section class="peak-band primary" id="band-primary">
+        <hgroup><p id="band-eyebrow">Eyebrow</p><h2 id="band-h2">Heading</h2></hgroup>
+        <h3 id="band-h3">Heading</h3>
+        <p class="peak-lead" id="band-lead">Lead with <a href="#band" id="band-link">a link</a>, <small class="peak-text-muted" id="band-muted">muted</small> and <span class="peak-text-primary" id="band-text-primary">primary</span> text.</p>
+      </section>
+      <section class="peak-band contrast" id="band-contrast"><h3 id="band-contrast-h3">Heading</h3><p class="peak-lead" id="band-contrast-lead">Lead</p></section>
+
+      <!-- A switcher whose code and image are wider than a phone: the stacked items shrink to the switcher -->
+      <div class="peak-switcher" id="switcher-image">
+        <div id="switcher-code"><pre><code>a_long_line_of_code_that_does_not_wrap_and_is_wider_than_any_phone_screen = 1</code></pre></div>
+        <figure id="switcher-figure"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Crect width='640' height='400' fill='%23888'/%3E%3C/svg%3E" width="640" height="400" alt="" /></figure>
+      </div>
+
+      <!-- A byline in a narrow card: --peak-media-min keeps the name beside the avatar -->
+      <article style="inline-size: 18rem">
+        <div class="peak-media center" id="media-byline" style="--peak-media-min: 8rem"><span class="peak-avatar" id="media-avatar">AB</span><div id="media-text"><strong>A name</strong><br /><small>A role</small></div></div>
+        <div class="peak-media" id="media-default"><span class="peak-avatar" id="media-default-avatar">AB</span><div id="media-default-text"><strong>A name</strong></div></div>
+      </article>
 
       <p id="badges">
         <span class="peak-badge" id="badge-primary">Primary</span>
@@ -53,6 +77,14 @@
         <span class="peak-badge outline" id="badge-outline">Outline</span>
         <span class="peak-badge dot success" id="badge-dot">Online</span>
       </p>
+      <!-- A status column in a table that is too wide for its box: the table scrolls, the label stays whole -->
+      <div class="overflow-auto" style="inline-size: 14rem"><table><tbody><tr><td>A customer with a long name</td><td>23 November 2026</td><td><span class="peak-badge warning" id="badge-table">Refunded</span></td></tr></tbody></table></div>
+      <div class="peak-grid-auto" id="featured-row"><article class="peak-card outline" id="plain-plan"><p>Starter</p></article><article class="peak-card featured" id="featured-plan"><p>Team</p></article></div>
+      <!-- Fields in a row keep their own width -->
+      <form><label class="peak-cluster" id="field-row">Quantity <input type="number" value="1" min="1" id="field-qty" /> Sort <select id="field-sort"><option>Newest</option><option>Price, low to high</option></select></label></form>
+      <form><label id="field-block">Name <input id="field-full" /></label></form>
+      <!-- An article of running text: not a card, its header and footer not bands -->
+      <article class="peak-prose" id="prose-article"><header id="prose-header"><h1>Post</h1></header><img id="prose-img" alt="" width="640" height="400" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'/%3E" /><h2 id="prose-h2">Section</h2><p>Text.</p><footer id="prose-footer">Tags</footer></article>
       <!-- A long label in a narrow card (the Stacks probe found it running out of the card) -->
       <article id="narrow-card" style="inline-size: 12rem">
         <header>Category <span class="peak-badge accent dot" id="badge-long">A long badge label that cannot fit on one line here</span></header>

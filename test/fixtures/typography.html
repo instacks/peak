@@ -39,6 +39,9 @@
       <p class="peak-text-center" id="text-center">Centered</p>
       <p class="peak-text-end" id="text-end">At the end</p>
       <div dir="rtl"><p class="peak-text-end" id="text-end-rtl">في النهاية</p></div>
+      <p><span class="peak-hide-below-sm" id="below-sm">below sm</span><span class="peak-hide-from-sm" id="from-sm">from sm</span><span class="peak-hide-below-md" id="below-md">below md</span><span class="peak-hide-from-md" id="from-md">from md</span><span class="peak-hide-below-lg" id="below-lg">below lg</span><span class="peak-hide-from-lg" id="from-lg">from lg</span><span class="peak-hide-below-xl" id="below-xl">below xl</span><span class="peak-hide-from-xl" id="from-xl">from xl</span></p>
+      <!-- A hidden column header at the end of a table wider than a phone: the table scrolls, the page doesn't -->
+      <div class="overflow-auto"><table><thead><tr><th>Order</th><th>Customer name</th><th>Date of the order</th><th>Status of the order</th><th>Total amount</th><th><span class="peak-visually-hidden" id="hidden-th">Actions</span></th></tr></thead></table></div>
       <hgroup class="peak-text-center" id="center-group">
         <p id="center-eyebrow">Eyebrow</p>
         <h2 id="center-heading">Centered heading</h2>
@@ -54,6 +57,9 @@
       <section id="section"><p>Section</p></section>
       <pre id="pre"><code>line</code></pre>
       <figure><img alt="" width="10" height="10" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" /><figcaption id="caption">Caption</figcaption></figure>
+      <!-- Wider than a phone: with both attributes it shrinks to fit and keeps its ratio; a height alone is a fixed icon -->
+      <figure id="wide-figure"><img id="wide-img" alt="" width="1600" height="800" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='800'/%3E" /></figure>
+      <p><img id="icon-img" alt="" height="20" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'/%3E" /></p>
     </main>
   </body>
 </html>

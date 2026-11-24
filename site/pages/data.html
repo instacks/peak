@@ -28,6 +28,13 @@ description: Big numbers with labels, and a numbered sequence of steps with the 
   </dl>
 </peak-example>
 
+<p>
+  Peak has no chart component: for a trend or a comparison, draw an inline SVG (it takes
+  <code>currentColor</code> and the <code>--peak-*</code> colors) or use a chart library next to Peak.
+  For a single figure against a target, <a href="elements.html#progress-and-meter"><code>&lt;progress&gt;</code>
+  and <code>&lt;meter&gt;</code></a> are enough.
+</p>
+
 <h2>Steps</h2>
 <p>
   <code>.peak-steps</code> on an ordered list: numbered circles joined by a line. Mark the current
