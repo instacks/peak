@@ -77,6 +77,22 @@ description: A deliberately small set of single-purpose classes. They live in th
   <button><span aria-hidden="true">🔍</span><span class="peak-visually-hidden">Search</span></button>
 </peak-example>
 
+<h2>Image fit</h2>
+<p>
+  <code>.peak-fit-cover</code> and <code>.peak-fit-contain</code> put an image in a box whose shape
+  you set with <code>--peak-ratio</code> (<code>1</code> for a square, <code>16 / 9</code>…):
+  <code>-cover</code> fills the box and crops what doesn't fit, <code>-contain</code> shows the whole
+  image with space around it. Either way it's centered and never distorted, even when the
+  <code>width</code> and <code>height</code> attributes don't match the image, and the box still
+  shrinks with its column.
+</p>
+<peak-example>
+  <div class="peak-cluster align-start">
+    <img src="assets/landscape.svg" alt="Mountains, cropped to a square" width="160" height="160" class="peak-fit-cover" style="--peak-ratio: 1">
+    <img src="assets/landscape.svg" alt="Mountains, whole in a square" width="160" height="160" class="peak-fit-contain" style="--peak-ratio: 1">
+  </div>
+</peak-example>
+
 <h2>Show and hide by width</h2>
 <p>
   Hide an element below a viewport width, or from that width up. The usual pair: a sidebar on wide
