@@ -243,7 +243,7 @@ test("no --pico-* color keeps Blades' default value", async () => {
         }
         return out;
       });
-    const blades = await open(scheme, { stylesheet: "../../node_modules/@anyblades/blades/css/blades.css" });
+    const blades = await open(scheme, { stylesheet: "../../node_modules/@sveti/blades/css/blades.css" });
     const before = await read(blades);
     await blades.close();
     const peak = await open(scheme);

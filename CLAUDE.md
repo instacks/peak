@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Peak (`@instacks/peak`) is a public, CSS-first layer on top of `@anyblades/blades` (a Pico CSS
+Peak (`@instacks/peak`) is a public, CSS-first layer on top of `@sveti/blades` (a Pico CSS
 fork), published on npm. It is CSS only, bundled with Lightning CSS. Downstream projects (themes
 for page builders) build on the published package and read `dist/*` and `tokens.json`: treat
 those files as API, so changing their names or shape is a breaking change. The roadmap and analysis are in `docs/PLAN.md`; read it before changing tokens,
@@ -45,7 +45,7 @@ dist/                   build output (gitignored; published to npm with tokens.j
 
 ## Hard rules
 
-- **Never edit upstream.** `node_modules/@anyblades/blades/**` is read-only. It is imported whole into
+- **Never edit upstream.** `node_modules/@sveti/blades/**` is read-only. It is imported whole into
   `@layer blades` from `src/peak.css`. Override it from Peak; don't patch or copy it.
 - **All Peak code lives in a `peak.*` sub-layer**, after Blades:
   `@layer blades, peak.tokens, peak.base, peak.layout, peak.components, peak.utilities;` (the
