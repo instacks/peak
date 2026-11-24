@@ -2,7 +2,7 @@
 
 /* Scoped build: scripts/build-scoped.mjs wraps all of this in @scope (.peak) to (.peak-ignore)
    and adds src/inputs.css unscoped. */
-@import "../node_modules/@anyblades/blades/css/blades.css" layer(blades);
+@import "../node_modules/@sveti/blades/css/blades.css" layer(blades);
 @import "./tokens.css" layer(peak.tokens);
 @import "./scoped.css" layer(peak.base);
 @import "./typography.css" layer(peak.base);

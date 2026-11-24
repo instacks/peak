@@ -1,6 +1,6 @@
 @layer blades, peak.tokens, peak.base, peak.layout, peak.components, peak.utilities;
 
-@import "../node_modules/@anyblades/blades/css/blades.css" layer(blades);
+@import "../node_modules/@sveti/blades/css/blades.css" layer(blades);
 @import "./inputs.css" layer(peak.tokens);
 @import "./tokens.css" layer(peak.tokens);
 @import "./typography.css" layer(peak.base);

@@ -107,6 +107,25 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
+  // B37: labels that don't fit on one line used to widen the grid, and the panel, past the page
+  test(`${file}: tabs: labels on one line when there's room, wrapped between words when not`, async () => {
+    const ids = ["long-1", "long-2", "long-3"];
+    const wide = await open(file);
+    const lineHeight = parseFloat(await style(wide, "long-1", "lineHeight"));
+    for (const id of ids) assert.ok(parseFloat(await style(wide, id, "height")) < lineHeight * 2, `${id} on one line when wide`);
+    await wide.close();
+
+    const narrow = await open(file, { width: 390 });
+    assert.equal(await overflow(narrow), 0, "no sideways scroll");
+    const tabs = await rect(narrow, "tabs-long");
+    assert.ok(tabs.right <= 390 && (await rect(narrow, "long-panel")).right <= tabs.right + 0.5, `tabs and panel inside the page: ${tabs.right}`);
+    const tops = await Promise.all(ids.map(async (id) => Math.round((await rect(narrow, id)).top)));
+    assert.equal(new Set(tops).size, 1, `still one row: ${tops}`);
+    const wrapped = await Promise.all(ids.map(async (id) => parseFloat(await style(narrow, id, "height")) > lineHeight * 1.5));
+    assert.ok(wrapped.includes(true), "labels wrap");
+    await narrow.close();
+  });
+
   test(`${file}: accordions open with an animation, not with reduced motion; dropdowns untouched`, async () => {
     const page = await open(file);
     await page.click("#acc-1 > summary");
@@ -222,10 +241,13 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const vh = 900;
     const show = (id) => page.evaluate((id) => document.getElementById(id).showModal(), id);
     const hide = (id) => page.evaluate((id) => document.getElementById(id).close(), id);
+    // Wait for the entry transitions to end, not a fixed time: a busy CI runner can still be
+    // scaling the dialog in after 400ms
+    const settle = () => page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.finished)));
     await show("drawer");
     await page.waitForTimeout(30);
     const early = await rect(page, "drawer-panel");
-    await page.waitForTimeout(500);
+    await settle();
     const panel = await rect(page, "drawer-panel");
     const rootSize = parseFloat(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize));
     assert.ok(early.left > panel.left + 1, `slides in: ${early.left} → ${panel.left}`);
@@ -234,40 +256,40 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await hide("drawer");
     for (const id of ["drawer-start", "drawer-rtl"]) {
       await show(id);
-      await page.waitForTimeout(500);
+      await settle();
       const r = await rect(page, `${id}-panel`);
       assert.ok(Math.abs(r.left) < 1, `${id} at the left edge`);
       await hide(id);
     }
     await show("wide");
-    await page.waitForTimeout(400);
+    await settle();
     const wide = await rect(page, "wide-panel");
     assert.ok(wide.width > 700 && wide.width <= 64 * rootSize + 1, `wide ${wide.width}`);
     await hide("wide");
     await show("full");
-    await page.waitForTimeout(400);
+    await settle();
     const full = await rect(page, "full-panel");
     assert.ok(Math.abs(full.width - vw) < 1 && Math.abs(full.height - vh) < 1, "full screen");
     await hide("full");
 
     // closedby switches Blades to its modern modal, where the dialog itself is a centered box
     await show("drawer-cb");
-    await page.waitForTimeout(500);
+    await settle();
     const cb = await rect(page, "drawer-cb-panel");
     assert.ok(Math.abs(cb.right - vw) < 1 && Math.abs(cb.top) < 1 && Math.abs(cb.height - vh) < 1, `closedby drawer: ${JSON.stringify(cb)}`);
     assert.ok(Math.abs(cb.width - 24 * rootSize) < 1, "closedby drawer: 24rem");
     await hide("drawer-cb");
     await show("drawer-start-cb");
-    await page.waitForTimeout(500);
+    await settle();
     assert.ok(Math.abs((await rect(page, "drawer-start-cb-panel")).left) < 1, "closedby drawer at the start");
     await hide("drawer-start-cb");
     await show("wide-cb");
-    await page.waitForTimeout(400);
+    await settle();
     const wideCb = await rect(page, "wide-cb-panel");
     assert.ok(wideCb.width > 700 && wideCb.width <= 64 * rootSize + 1, `closedby wide ${wideCb.width}`);
     await hide("wide-cb");
     await show("full-cb");
-    await page.waitForTimeout(400);
+    await settle();
     const fullCb = await rect(page, "full-cb-panel");
     assert.ok(Math.abs(fullCb.width - vw) < 1 && Math.abs(fullCb.height - vh) < 1, `closedby full screen ${JSON.stringify(fullCb)}`);
     await page.close();
