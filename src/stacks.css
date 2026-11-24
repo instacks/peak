@@ -102,6 +102,30 @@
   overflow: visible !important;
 }
 
+/*
+ * Text stacks. Stacks 6 (beta 77) writes a Text stack's first paragraph as bare text and only the
+ * following ones as <p style="text-align:left" class="stacks-align-left">, and its own CSS has
+ * .stacks_in > p { margin-top: 0 }. So a one-paragraph Text stack had no space below it (the next
+ * stack touched it) and the second paragraph sat right under the first.
+ *
+ * A Text stack that doesn't end in a block gets a paragraph's space below it. The margin is on its
+ * .out wrapper, which Stacks doesn't style, at zero specificity: a Peak layout's margin reset on
+ * its items still wins, and nothing is added when the stack is the last thing in its container.
+ */
+:where(.out:not(:last-child):has(> .stacks_in.text_stack):not(:has(> .stacks_in > :is(p, ul, ol, dl, blockquote, pre, table, figure, h1, h2, h3, h4, h5, h6):last-child))) {
+  margin-block-end: var(--pico-typography-spacing-vertical);
+}
+
+/*
+ * The first <p> follows the bare first paragraph: give it the space between paragraphs. CSS can't
+ * see the bare text before it, but the same bug writes a stray attribute named "," on these <p>s,
+ * so [\,] matches exactly them: a first paragraph that really is a <p> (Stacks 5, or Stacks once
+ * fixed) gets no space above it.
+ */
+.stacks_in.text_stack > p[\,]:first-of-type {
+  margin-block-start: var(--pico-typography-spacing-vertical) !important;
+}
+
 /* Stacks' display: block would show a hidden stack */
 @media (width < 576px) {
   .stacks_in.peak-hide-below-sm {

@@ -410,4 +410,32 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.ok(px(await style(page, "s-hero", "paddingTop")) > 0, "a hero stack keeps its padding");
     await page.close();
   });
+
+  test(`${file}: Stacks 6 text stacks (first paragraph bare) are spaced like paragraphs`, async () => {
+    const page = await open(file);
+    const g = await page.evaluate(() => {
+      const r = (id) => document.getElementById(id).getBoundingClientRect();
+      const spacing = parseFloat(getComputedStyle(document.getElementById("t1")).getPropertyValue("--pico-typography-spacing-vertical"));
+      const probe = document.createElement("div");
+      document.getElementById("t1").append(probe);
+      probe.style.blockSize = "var(--pico-typography-spacing-vertical)";
+      const px = probe.getBoundingClientRect().height;
+      probe.remove();
+      return {
+        px: px || spacing,
+        afterOne: r("t2-out").top - r("t1-out").bottom,
+        // The bare paragraph is one line: the <p> starts a line height plus the spacing below the top
+        between: r("t2-p").top - r("t2").top - parseFloat(getComputedStyle(document.getElementById("t2")).lineHeight),
+        afterTwo: r("after-text").top - r("t2-out").bottom,
+        cluster: [r("tc1").top, r("tc2").top, r("t-cluster").height, r("tc1").height],
+      };
+    });
+    await page.close();
+    assert.ok(g.px > 0);
+    assert.ok(Math.abs(g.afterOne - g.px) < 1, `space below a one-paragraph text stack: ${g.afterOne} vs ${g.px}`);
+    assert.ok(Math.abs(g.between - g.px) < 1, `space between the bare paragraph and the next: ${g.between} vs ${g.px}`);
+    assert.ok(g.afterTwo < g.px * 1.5, `no doubled space below a stack that ends in a <p>: ${g.afterTwo}`);
+    assert.equal(g.cluster[0], g.cluster[1], "text stacks in a row line up");
+    assert.ok(Math.abs(g.cluster[2] - g.cluster[3]) < 1, "and get no margin there");
+  });
 }
