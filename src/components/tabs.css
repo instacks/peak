@@ -11,12 +11,16 @@
  *
  * The grid needs one column per tab plus a filler, and CSS can't count children, so :has() sets
  * the count up to 8 tabs.
+ *
+ * The tab columns are `auto`, not `max-content`, and labels may wrap: when the labels don't fit
+ * on one line (a phone, a wide font) they wrap between words instead of widening the grid, and
+ * the panel that spans it, past the page (B37).
  */
 @supports selector(::details-content) {
   .peak-tabs {
     --_peak-tabs: 1;
     display: grid;
-    grid-template-columns: repeat(var(--_peak-tabs), max-content) 1fr;
+    grid-template-columns: repeat(var(--_peak-tabs), auto) 1fr;
     margin-block-end: var(--pico-spacing);
   }
 
@@ -60,7 +64,7 @@
     padding: calc(var(--pico-spacing) * 0.5) var(--pico-spacing);
     border-block-end: calc(var(--pico-border-width) * 2) solid transparent;
     line-height: var(--pico-line-height);
-    white-space: nowrap;
+    text-wrap: balance;
   }
 
   .peak-tabs > details > summary::after {
