@@ -187,6 +187,8 @@ highlighted source; `<peak-inputs>` and the customizer are generated from `token
 - Versions follow semver for the public API above. `release.yml` publishes when a `v*` tag that
   matches `package.json` is pushed (a prerelease such as `1.1.0-beta.1` goes to the `next`
   dist-tag), after the CI tests pass, through npm trusted publishing (no token in the repository).
+  **Currently switched off:** the publish job in `release.yml` is commented out because the npm
+  step doesn't work yet; a tag only runs the tests until it's fixed and uncommented.
 - To release: bump `version` in `package.json` and `package-lock.json` (`npm version x.y.z
   --no-git-tag-version`), commit, then tag `vx.y.z` on main and push the tag.
 - `npm pack --dry-run` lists what ships: `dist/` and `tokens.json` (plus README, LICENSE).

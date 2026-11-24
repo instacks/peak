@@ -18,31 +18,33 @@ jobs:
   test:
     uses: ./.github/workflows/ci.yml
 
-  publish:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
-      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10
-      - run: npm install --global npm@11
-      - run: npm ci
-      - name: The tag matches package.json
-        run: |
-          version="$(node -p 'require("./package.json").version')"
-          test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME, package.json $version"; exit 1; }
-      # prepublishOnly builds dist/. A prerelease (1.1.0-beta.1) goes to the "next" dist-tag, so a
-      # plain `npm install` keeps getting the latest stable version.
-      - name: Publish
-        run: |
-          version="$(node -p 'require("./package.json").version')"
-          case "$version" in
-            *-*) npm publish --tag next ;;
-            *) npm publish ;;
-          esac
+  # Publishing is switched off for now: the npm step doesn't work at the moment. Until it's fixed,
+  # a pushed v* tag only runs the tests. To turn it back on, uncomment the job below.
+  # publish:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22
+  #         registry-url: https://registry.npmjs.org
+  #     # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10
+  #     - run: npm install --global npm@11
+  #     - run: npm ci
+  #     - name: The tag matches package.json
+  #       run: |
+  #         version="$(node -p 'require("./package.json").version')"
+  #         test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME, package.json $version"; exit 1; }
+  #     # prepublishOnly builds dist/. A prerelease (1.1.0-beta.1) goes to the "next" dist-tag, so a
+  #     # plain `npm install` keeps getting the latest stable version.
+  #     - name: Publish
+  #       run: |
+  #         version="$(node -p 'require("./package.json").version')"
+  #         case "$version" in
+  #           *-*) npm publish --tag next ;;
+  #           *) npm publish ;;
+  #         esac
