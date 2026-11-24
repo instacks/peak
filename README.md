@@ -236,7 +236,8 @@ Code blocks that scroll get a shade along each edge with more code beyond it (CS
 
 Text colors: `.peak-text-primary`, `-secondary`, `-contrast`, `-muted`, `-success`, `-danger`,
 `-info`. Alignment by writing direction: `.peak-text-start`, `-center`, `-end`; margin resets
-`.peak-mt-0` and `.peak-mb-0`. Headings get balanced line breaks, letter-spacing from `--peak-heading-tracking` (h1 4/3
+`.peak-mt-0` and `.peak-mb-0`; image fit `.peak-fit-cover` / `.peak-fit-contain` in a box of
+`--peak-ratio`. Headings get balanced line breaks, letter-spacing from `--peak-heading-tracking` (h1 4/3
 of it, `.peak-display` 5/3) and Blades' per-level line heights around `--peak-heading-line-height`.
 Optional weights for h1 (`--peak-display-weight`), h4–h6 (`--peak-subheading-font-weight`) and
 buttons (`--peak-button-font-weight`) fall back to the heading or body weight while unset.

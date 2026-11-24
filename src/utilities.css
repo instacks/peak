@@ -153,6 +153,27 @@
 }
 
 /*
+ * Image fit: the image fills a box of a set shape, --peak-ratio (1 for a square, 16 / 9…), cropped
+ * (.peak-fit-cover) or whole with space around it (.peak-fit-contain), centered either way. The
+ * box's ratio can't come from the width and height attributes: once the image loads, the browser
+ * uses the image's own proportions. Without --peak-ratio the box keeps those proportions.
+ */
+.peak-fit-cover,
+.peak-fit-contain {
+  aspect-ratio: var(--peak-ratio, auto);
+  block-size: auto;
+  object-position: center;
+}
+
+.peak-fit-cover {
+  object-fit: cover;
+}
+
+.peak-fit-contain {
+  object-fit: contain;
+}
+
+/*
  * Hidden on screen, still read by screen readers. Positioned against the nearest positioned
  * ancestor, often the page: at its own place in a scrolling table (a column header far to the
  * right), it would make the whole page scroll sideways, so it's pinned to the inline start.

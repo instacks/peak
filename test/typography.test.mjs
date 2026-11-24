@@ -203,6 +203,28 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
+  test(`${file}: image fit: a box of the set ratio, never distorted, still fluid`, async () => {
+    const page = await open(file);
+    await page.waitForFunction(() => [...document.images].every((i) => i.complete));
+    const r = await page.evaluate(() =>
+      Object.fromEntries(
+        ["fit-cover", "fit-contain", "fit-none", "fit-narrow"].map((id) => {
+          const el = document.getElementById(id);
+          const b = el.getBoundingClientRect();
+          return [id, { w: Math.round(b.width), h: Math.round(b.height), fit: getComputedStyle(el).objectFit, pos: getComputedStyle(el).objectPosition }];
+        }),
+      ),
+    );
+    assert.deepEqual([r["fit-cover"].w, r["fit-cover"].h], [160, 160], "a 2:1 image in a square box");
+    assert.equal(r["fit-cover"].fit, "cover");
+    assert.equal(r["fit-cover"].pos, "50% 50%");
+    assert.deepEqual([r["fit-contain"].w, r["fit-contain"].h], [320, 180], "16 / 9 box, whatever the height attribute says");
+    assert.equal(r["fit-contain"].fit, "contain");
+    assert.deepEqual([r["fit-none"].w, r["fit-none"].h], [160, 80], "no ratio: the image's own proportions");
+    assert.deepEqual([r["fit-narrow"].w, r["fit-narrow"].h], [100, 100], "the box shrinks with its column, keeping its ratio");
+    await page.close();
+  });
+
   test(`${file}: alignment utilities follow the writing direction; margin resets beat components`, async () => {
     const page = await open(file);
     const a = await page.evaluate(() => {
