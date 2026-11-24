@@ -113,6 +113,12 @@
         <div class="out" id="stacks_out_9"><div class="stacks_in stack_stack in peak-card" id="s-card-3"><div class="out"><div class="stacks_in text_stack"><p style="text-align:left" class="stacks-align-left">A card stack</p></div></div></div></div>
       </div></div>
       <div class="out"><div class="stacks_in stack_stack in peak-cluster" id="s-cluster"><div class="out"><div class="stacks_in text_stack"><p>a</p></div></div><div class="out"><div class="stacks_in text_stack"><p>b</p></div></div></div></div>
+      <!-- Text stacks as Stacks 6 (beta 77) writes them: the first paragraph bare, the next ones in <p> (with its stray ,="" attribute) -->
+      <div class="out" id="t1-out"><div class="stacks_in text_stack" id="t1">One bare paragraph with <strong>bold</strong> words.</div></div>
+      <div class="out" id="t2-out"><div class="stacks_in text_stack" id="t2">First paragraph, bare.
+<p style="text-align:left" ,="" class="stacks-align-left" id="t2-p">Second paragraph.</p></div></div>
+      <p id="after-text">After the text stacks</p>
+      <div class="out"><div class="stacks_in stack_stack in peak-cluster" id="t-cluster"><div class="out" id="tc1"><div class="stacks_in text_stack">a</div></div><div class="out" id="tc2"><div class="stacks_in text_stack">b</div></div></div></div>
       <div class="out"><div class="stacks_in stack_stack in peak-hero" id="s-hero"><div class="out"><div class="stacks_in html_stack"><h1>Stacks hero</h1></div></div></div></div>
     </main>
   </body>
