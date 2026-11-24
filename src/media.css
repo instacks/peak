@@ -10,7 +10,7 @@
  * (Highlight, CanvasText) are kept by the browser in this mode.
  */
 @media (forced-colors: active) {
-  :is(article, .peak-card, [popover], dialog > article, .peak-badge, .peak-avatar) {
+  :is(article:not(.peak-prose), .peak-card, [popover], dialog > article, .peak-badge, .peak-avatar) {
     border: 1px solid CanvasText;
   }
 
@@ -52,6 +52,17 @@
     background-color: CanvasText;
   }
 
+  .peak-card.featured {
+    border: 2px solid Highlight;
+  }
+
+  /* The stars are a gradient behind transparent text: drawn in system colors, not forced flat */
+  .peak-rating {
+    --_peak-rating-fill: CanvasText;
+    --peak-border-strong: GrayText;
+    forced-color-adjust: none;
+  }
+
   /*
    * The full-width backgrounds of bands and headers are border images, which this mode keeps
    * (unlike shadows): a fill behind the system's text colors. The header keeps a rule below.
@@ -81,7 +92,7 @@
     display: none;
   }
 
-  :is(article, .peak-card, .peak-callout, .peak-toast) {
+  :is(article:not(.peak-prose), .peak-card, .peak-callout, .peak-toast) {
     box-shadow: none;
     border: 1px solid var(--peak-border);
   }
@@ -91,12 +102,17 @@
     border-image-source: none;
   }
 
-  :is(article, .peak-card, .peak-callout, figure, pre, blockquote, tr, img) {
+  :is(article:not(.peak-prose), .peak-card, .peak-callout, figure, pre, blockquote, tr, img) {
     break-inside: avoid;
   }
 
   :is(h1, h2, h3, h4, h5, h6) {
     break-after: avoid;
+  }
+
+  /* Printing without backgrounds would drop the stars' fill and leave transparent text */
+  .peak-rating::before {
+    print-color-adjust: exact;
   }
 
   .peak-prose a[href^="http"]::after {

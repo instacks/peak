@@ -6,9 +6,10 @@ blog index and post, shop listing and product page), each checked at 390px and 1
 and dark in Chromium (Safari wasn't available). They found B24–B36 (`docs/PLAN.md` §5; all fixed
 in `src/` with tests except the B33 note) and added a few small APIs (`--peak-media-min`,
 `.site-footer-nav.stacked`, `.peak-hide-below-*`/`-from-*`, sidebar-nav group labels, the
-current link chip), so the next release is a minor one. Not built, logged in PLAN §7.3: charts,
-a compact button, a highlighted card, a quantity stepper, a product gallery, a star rating, an
-article that isn't a card.
+current link chip), so the next release is a minor one. Follow-up (1.3.0): `article.peak-prose`,
+fields in clusters, `.peak-card.featured` and `.peak-rating` were built and the examples use
+them; an icon button and a scroll-snap row are deferred, charts and a +/− stepper won't be
+built (PLAN §7.3).
 
 Decided in step 1: examples are not counted as documentation by the class/input coverage tests
 (`all` in `test/docs.test.mjs` holds the docs pages only). Besides `<style data-peak-theme>`, the

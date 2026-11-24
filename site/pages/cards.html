@@ -6,7 +6,11 @@ description: An article is a card. Peak adds linked cards, full-bleed images, ho
 ---
 
 <h2>Basic card</h2>
-<p>Blades draws every <code>&lt;article&gt;</code> as a card, with optional header and footer bands.</p>
+<p>
+  Blades draws every <code>&lt;article&gt;</code> as a card, with optional header and footer bands.
+  An article of running text, such as a blog post, takes <code>.peak-prose</code> and is no card
+  (see <a href="typography.html#prose">Prose</a>).
+</p>
 <peak-example>
   <article>
     <header><small>Content</small> <span class="peak-badge accent">New</span></header>
@@ -27,12 +31,18 @@ description: An article is a card. Peak adds linked cards, full-bleed images, ho
 </peak-example>
 
 <h2>Variants</h2>
-<p><code>.outline</code> draws a border instead of the shadow; <code>.flat</code> is a sunken surface without either.</p>
+<p>
+  <code>.outline</code> draws a border instead of the shadow; <code>.flat</code> is a sunken surface
+  without either; <code>.featured</code> rings the card in the primary color, for the one to pick in
+  a row (the popular plan in a pricing table). On an <code>&lt;article&gt;</code>, add
+  <code>.peak-card</code> with the variant.
+</p>
 <peak-example>
   <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
     <div class="peak-card"><h4>Default</h4><p>Surface and shadow.</p></div>
     <div class="peak-card outline"><h4>Outline</h4><p>A border.</p></div>
     <div class="peak-card flat"><h4>Flat</h4><p>Sunken, no shadow.</p></div>
+    <article class="peak-card featured"><h4>Featured <span class="peak-badge accent">Popular</span></h4><p>A primary ring.</p></article>
   </div>
 </peak-example>
 

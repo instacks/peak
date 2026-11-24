@@ -79,6 +79,12 @@
       </p>
       <!-- A status column in a table that is too wide for its box: the table scrolls, the label stays whole -->
       <div class="overflow-auto" style="inline-size: 14rem"><table><tbody><tr><td>A customer with a long name</td><td>23 November 2026</td><td><span class="peak-badge warning" id="badge-table">Refunded</span></td></tr></tbody></table></div>
+      <div class="peak-grid-auto" id="featured-row"><article class="peak-card outline" id="plain-plan"><p>Starter</p></article><article class="peak-card featured" id="featured-plan"><p>Team</p></article></div>
+      <!-- Fields in a row keep their own width -->
+      <form><label class="peak-cluster" id="field-row">Quantity <input type="number" value="1" min="1" id="field-qty" /> Sort <select id="field-sort"><option>Newest</option><option>Price, low to high</option></select></label></form>
+      <form><label id="field-block">Name <input id="field-full" /></label></form>
+      <!-- An article of running text: not a card, its header and footer not bands -->
+      <article class="peak-prose" id="prose-article"><header id="prose-header"><h1>Post</h1></header><img id="prose-img" alt="" width="640" height="400" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'/%3E" /><h2 id="prose-h2">Section</h2><p>Text.</p><footer id="prose-footer">Tags</footer></article>
       <!-- A long label in a narrow card (the Stacks probe found it running out of the card) -->
       <article id="narrow-card" style="inline-size: 12rem">
         <header>Category <span class="peak-badge accent dot" id="badge-long">A long badge label that cannot fit on one line here</span></header>

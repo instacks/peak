@@ -22,6 +22,7 @@
 @import "./components/stats.css" layer(peak.components);
 @import "./components/steps.css" layer(peak.components);
 @import "./components/avatar.css" layer(peak.components);
+@import "./components/rating.css" layer(peak.components);
 @import "./nav.css" layer(peak.components);
 @import "./starting-style.css" layer(peak.components);
 @import "./utilities.css" layer(peak.utilities);

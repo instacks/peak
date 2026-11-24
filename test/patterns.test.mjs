@@ -426,6 +426,57 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
+  test(`${file}: rating: filled up to the value, from the inline start, clamped to five stars`, async () => {
+    const page = await open(file);
+    await page.evaluate(() => document.getElementById("rating-2").scrollIntoView({ block: "center" }));
+    await page.evaluate(colorHelpers);
+    const colors = await page.evaluate(() => {
+      const el = document.getElementById("rating-2");
+      const rgb = (v) => {
+        const c = resolveColor(v, el);
+        return [c.r, c.g, c.b];
+      };
+      return { fill: rgb("var(--_peak-rating-fill)"), empty: rgb("var(--peak-border-strong)") };
+    });
+    const near = (a, b) => a.every((v, i) => Math.abs(v - b[i]) <= 12);
+    // The middle of star n, measured along the glyphs, at the vertical middle of the line
+    const star = async (id, n) => {
+      const r = await rect(page, id);
+      return pixel(page, Math.round(r.left + (r.width * (n - 0.5)) / 5), Math.round(r.top + r.height * 0.55));
+    };
+    assert.ok(near(await star("rating-2", 1), colors.fill), `first star filled: ${await star("rating-2", 1)} vs ${colors.fill}`);
+    assert.ok(near(await star("rating-2", 5), colors.empty), `last star empty: ${await star("rating-2", 5)} vs ${colors.empty}`);
+    assert.ok(near(await star("rating-rtl", 5), colors.fill), "right to left, the rightmost star is filled");
+    assert.ok(near(await star("rating-rtl", 1), colors.empty), "and the leftmost empty");
+    assert.ok(near(await star("rating-over", 5), colors.fill), "a value over 5 fills all five");
+    await page.close();
+  });
+
+  for (const colorScheme of ["light", "dark"]) {
+    test(`${file}: ${colorScheme}: the stars' fill has 3:1 on the page and on cards, across the warning inputs`, async () => {
+      const page = await open(file, { colorScheme });
+      await page.evaluate(colorHelpers);
+      const low = await page.evaluate(() => {
+        const el = document.getElementById("rating-2");
+        const out = [];
+        for (let hue = 0; hue < 360; hue += 30) {
+          for (const chroma of [0, 0.1, 0.25]) {
+            document.documentElement.style.setProperty("--peak-warning-hue", hue);
+            document.documentElement.style.setProperty("--peak-status-chroma", chroma);
+            out.push({ hue, chroma, fill: resolveColor("var(--_peak-rating-fill)", el), bg: resolveColor("var(--peak-bg)", el), surface: resolveColor("var(--peak-surface)", el) });
+          }
+        }
+        return out;
+      });
+      const failing = low
+        .map((x) => ({ ...x, bg: contrast(x.fill, x.bg), surface: contrast(x.fill, x.surface) }))
+        .filter((x) => x.bg < 3 || x.surface < 3)
+        .map((x) => `hue ${x.hue} chroma ${x.chroma}: ${x.bg.toFixed(2)} / ${x.surface.toFixed(2)}`);
+      assert.deepEqual(failing, []);
+      await page.close();
+    });
+  }
+
   test(`${file}: footer columns: a heading above stacked links; a plain footer nav is a row`, async () => {
     const page = await open(file);
     // The list items: Pico pads nav links and pulls them out by the same amount

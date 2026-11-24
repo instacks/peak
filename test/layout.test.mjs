@@ -260,6 +260,78 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     });
   }
 
+  for (const colorScheme of ["light", "dark"]) {
+    test(`${file}: ${colorScheme}: a featured card is ringed in the primary color, at 3:1 or more`, async () => {
+      const page = await open(file, { colorScheme });
+      await page.evaluate(colorHelpers);
+      const r = await page.evaluate(() => {
+        const f = document.getElementById("featured-plan");
+        const shadow = getComputedStyle(f).boxShadow;
+        const ring = shadow.match(/^(.*?\)) 0px 0px 0px ([\d.]+)px/);
+        return {
+          shadow,
+          ringColor: ring && resolveColor(ring[1]),
+          ringWidth: ring && parseFloat(ring[2]),
+          primary: resolveColor("var(--peak-primary)", f),
+          bg: resolveColor("var(--peak-bg)", f),
+          sizes: [f, document.getElementById("plain-plan")].map((e) => e.getBoundingClientRect().height),
+        };
+      });
+      assert.ok(r.ringColor, `a ring first: ${r.shadow}`);
+      assert.deepEqual([r.ringColor.r, r.ringColor.g, r.ringColor.b], [r.primary.r, r.primary.g, r.primary.b]);
+      assert.ok(r.ringWidth >= 2, `ring ${r.ringWidth}px`);
+      assert.match(r.shadow, /px, \S+\(/, "and the card shadow after it");
+      assert.ok(contrast(r.ringColor, r.bg) >= 3, `ring contrast ${contrast(r.ringColor, r.bg).toFixed(2)} (WCAG 1.4.11)`);
+      assert.ok(Math.abs(r.sizes[0] - r.sizes[1]) < 0.5, "no layout change in the row");
+      await page.close();
+    });
+  }
+
+  test(`${file}: fields in a cluster keep their own width; elsewhere they are full width`, async () => {
+    const page = await open(file);
+    const r = await page.evaluate(() => {
+      const w = (id) => document.getElementById(id).getBoundingClientRect().width;
+      return { row: w("field-row"), qty: w("field-qty"), sort: w("field-sort"), full: w("field-full"), block: w("field-block"), rem: parseFloat(getComputedStyle(document.documentElement).fontSize) };
+    });
+    assert.ok(r.qty < r.row / 3 && r.qty >= 5 * r.rem - 0.5, `quantity ${r.qty} of ${r.row}, at least 5rem`);
+    assert.ok(r.sort < r.row / 2, `select ${r.sort} of ${r.row}`);
+    assert.ok(Math.abs(r.full - r.block) < 0.5, "outside a cluster a field is still full width");
+    await page.close();
+  });
+
+  test(`${file}: an article with .peak-prose is running text, not a card`, async () => {
+    const page = await open(file);
+    const r = await page.evaluate(() => {
+      const cs = (id) => getComputedStyle(document.getElementById(id));
+      const box = (id) => document.getElementById(id).getBoundingClientRect();
+      return {
+        padding: cs("prose-article").paddingTop,
+        shadow: cs("prose-article").boxShadow,
+        bg: cs("prose-article").backgroundColor,
+        headerBg: cs("prose-header").backgroundColor,
+        headerBorder: cs("prose-header").borderBottomStyle,
+        headerTop: box("prose-header").top - box("prose-article").top,
+        footerBorder: cs("prose-footer").borderTopStyle,
+        footerLeft: box("prose-footer").left - box("prose-article").left,
+        imgLeft: box("prose-img").left - box("prose-article").left,
+        imgWidth: box("prose-img").width,
+        articleWidth: box("prose-article").width,
+        maxWidth: cs("prose-article").maxWidth,
+      };
+    });
+    assert.equal(r.padding, "0px");
+    assert.equal(r.shadow, "none");
+    assert.equal(r.bg, "rgba(0, 0, 0, 0)", "no card background");
+    assert.equal(r.headerBg, "rgba(0, 0, 0, 0)", "the header is no band");
+    assert.equal(r.headerBorder, "none");
+    assert.equal(r.headerTop, 0, "no negative margin above the header");
+    assert.equal(r.footerBorder, "none");
+    assert.equal(r.footerLeft, 0, "no negative margin beside the footer");
+    assert.ok(r.imgLeft >= 0 && r.imgWidth <= r.articleWidth + 0.5, "a first image doesn't bleed out");
+    assert.notEqual(r.maxWidth, "none", "still a prose column");
+    await page.close();
+  });
+
   test(`${file}: a linked card is one click target; other links stay on top; it lifts on hover`, async () => {
     const page = await open(file);
     await page.evaluate(() => document.getElementById("linked").scrollIntoView({ block: "center" }));

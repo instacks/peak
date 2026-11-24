@@ -170,6 +170,19 @@
 }
 
 /*
+ * Fields in a row keep their own width instead of Pico's 100%: a quantity, a sort order, a short
+ * filter. Sized to their content where field-sizing is supported (Chromium), with a floor so an
+ * empty or one-digit field stays a usable target; elsewhere the browser's default width.
+ */
+.peak-cluster > :is(input:not([type="checkbox"], [type="radio"], [type="range"]), select, textarea) {
+  flex: none;
+  inline-size: auto;
+  min-inline-size: 5rem;
+  max-inline-size: 100%;
+  field-sizing: content;
+}
+
+/*
  * Column grid: at most --peak-cols equal columns (default 3), none narrower than --peak-grid-min.
  * With less room it drops to fewer columns by itself (auto-fill), so it needs no breakpoint.
  */

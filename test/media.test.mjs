@@ -141,6 +141,13 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.keyboard.press("Tab");
     assert.equal(await style(page, "button", "outlineStyle"), "solid", "visible focus");
     assert.equal(await style(page, "band", "borderImageSource"), "none", "no band fill behind the system colors");
+    assert.equal(await style(page, "prose-article", "borderTopStyle"), "none", "a prose article isn't boxed");
+    assert.equal(await style(page, "featured-card", "borderTopWidth"), "2px", "a featured card keeps a stronger border than the others");
+    const rating = await page.evaluate(() => {
+      const el = document.getElementById("rating");
+      return { adjust: getComputedStyle(el).forcedColorAdjust, fill: getComputedStyle(el).getPropertyValue("--_peak-rating-fill").trim(), empty: getComputedStyle(el).getPropertyValue("--peak-border-strong").trim() };
+    });
+    assert.deepEqual(rating, { adjust: "none", fill: "CanvasText", empty: "GrayText" }, "stars in system colors, not forced flat");
     assert.equal(await style(page, "header", "borderImageSource"), "none");
     assert.equal(await style(page, "header", "borderBottomStyle"), "solid", "the header keeps a rule");
     assert.equal(await style(page, "current-page", "backgroundColor"), await page.evaluate(() => {

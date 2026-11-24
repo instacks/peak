@@ -95,6 +95,23 @@ description: Layouts that adapt to the space they get, not to the viewport. None
     <span class="peak-badge success dot">Saved 2 min ago</span>
   </div>
 </peak-example>
+<p>
+  Fields in a cluster keep their own width instead of filling the line: sized to their content
+  where the browser supports <code>field-sizing</code>, at least 5rem. Put the label text and the
+  field in a <code>&lt;label class="peak-cluster"&gt;</code> for a short field beside its label.
+</p>
+<peak-example>
+  <form onsubmit="return false">
+    <label class="peak-cluster" style="--peak-gap: 0.5rem">
+      Quantity <input type="number" name="qty" value="1" min="1" max="9">
+    </label>
+    <div class="peak-cluster" style="--peak-gap: 0.5rem">
+      <label for="cluster-sort">Sort by</label>
+      <select id="cluster-sort" name="sort"><option>Newest</option><option>Price, low to high</option></select>
+      <button type="submit" class="secondary">Apply</button>
+    </div>
+  </form>
+</peak-example>
 <peak-example>
   <div class="peak-cluster justify-between" style="--peak-gap: 0.5rem">
     <strong>Left</strong>

@@ -62,18 +62,6 @@ uses: typography.html grids.html navigation.html elements.html callouts.html bad
     </ul>
   </nav>
 
-  <header class="peak-prose peak-section">
-    <hgroup>
-      <p>Process</p>
-      <h1>What a year of sketchbooks taught us about planning</h1>
-    </hgroup>
-    <p class="peak-lead">We kept one sketchbook per project for twelve months. The plans were wrong; the margins were where the useful ideas lived.</p>
-    <div class="peak-media center" style="--peak-media-min: 8rem">
-      <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 3rem">NH</span>
-      <div><strong>Noor Haddad</strong><br><small class="peak-text-muted"><time datetime="2026-11-18">18 November 2026</time> · 9 min read</small></div>
-    </div>
-  </header>
-
   <div class="peak-with-sidebar sticky" style="--peak-sticky-offset: 5rem">
     <aside>
       <nav class="peak-sidebar-nav" aria-labelledby="on-this-page">
@@ -88,7 +76,18 @@ uses: typography.html grids.html navigation.html elements.html callouts.html bad
       </nav>
     </aside>
 
-    <div class="peak-prose">
+    <article class="peak-prose">
+      <header>
+        <hgroup>
+          <p>Process</p>
+          <h1>What a year of sketchbooks taught us about planning</h1>
+        </hgroup>
+        <p class="peak-lead">We kept one sketchbook per project for twelve months. The plans were wrong; the margins were where the useful ideas lived.</p>
+        <div class="peak-media center" style="--peak-media-min: 8rem">
+          <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 3rem">NH</span>
+          <div><strong>Noor Haddad</strong><br><small class="peak-text-muted"><time datetime="2026-11-18">18 November 2026</time> · 9 min read</small></div>
+        </div>
+      </header>
       <p>
         At the start of the year we made one rule for the studio: every project gets its own
         sketchbook, and nothing about the project is planned anywhere else. No boards, no
@@ -164,29 +163,29 @@ uses: typography.html grids.html navigation.html elements.html callouts.html bad
         <li>Star what surprises you, and read the stars once a week.</li>
       </ol>
 
-      <hr>
+      <footer>
+        <nav aria-label="Tags">
+          <p class="peak-cluster" style="--peak-gap: 0.5rem">
+            <a class="peak-chip" href="#">Process</a>
+            <a class="peak-chip" href="#">Planning</a>
+            <a class="peak-chip" href="#">Sketchbooks</a>
+          </p>
+        </nav>
 
-      <nav aria-label="Tags">
-        <p class="peak-cluster" style="--peak-gap: 0.5rem">
-          <a class="peak-chip" href="#">Process</a>
-          <a class="peak-chip" href="#">Planning</a>
-          <a class="peak-chip" href="#">Sketchbooks</a>
-        </p>
-      </nav>
-
-      <div class="peak-card flat">
-        <div class="peak-media center">
-          <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 4rem">NH</span>
-          <div>
-            <h2 class="peak-h4">Noor Haddad</h2>
-            <p>Noor runs the studio's furniture projects and keeps the margins file. Before that, they built stage sets for a touring theater.</p>
+        <div class="peak-card flat">
+          <div class="peak-media center">
+            <span class="peak-avatar" role="img" aria-label="Noor Haddad" style="--peak-avatar-size: 4rem">NH</span>
+            <div>
+              <h2 class="peak-h4">Noor Haddad</h2>
+              <p>Noor runs the studio's furniture projects and keeps the margins file. Before that, they built stage sets for a touring theater.</p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </footer>
+    </article>
   </div>
 
-  <nav class="peak-grid-auto peak-section" aria-label="Previous and next article">
+  <nav class="peak-grid-auto" aria-label="Previous and next article">
     <article>
       <small class="peak-text-muted">Previous</small>
       <p class="peak-mb-0"><a class="peak-card-link" href="blog.html">Choosing paper that survives a field trip</a></p>

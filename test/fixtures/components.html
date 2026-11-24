@@ -71,6 +71,18 @@
           </div>
         </li>
       </ul>
+      <!-- A scroll box: an open menu hides once its trigger scrolls out of it (position-visibility) -->
+      <div style="overflow-y: auto; height: 4rem" id="scroll-box">
+        <ul>
+          <li>
+            <button id="scroll-trigger" popovertarget="scroll-menu">In a scroll box</button>
+            <ul id="scroll-menu" popover>
+              <li><a href="#">One</a></li><li><a href="#">Two</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div style="height: 20rem"></div>
+      </div>
       <div style="transform: translateX(0)">
         <ul>
           <li>
