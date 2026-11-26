@@ -1,0 +1,226 @@
+---
+title: Icons
+group: Components
+order: 9
+description: Any single-color SVG, drawn in the text color. One file per icon follows links, hover, the text colors and the color scheme.
+---
+
+<h2>Icons</h2>
+<p>
+  <code>.peak-icon</code> draws the SVG set in <code>--peak-icon</code>. The SVG is a mask over a box
+  filled with <code>currentColor</code>: its shape shows, its own colors don't. So an icon takes the
+  color of the text around it (a link's color and its hover color, a
+  <a href="utilities.html#text-colors"><code>.peak-text-*</code></a> color, the dark scheme) from one
+  file, without an inline <code>&lt;svg&gt;</code> in the markup or a copy per color.
+</p>
+<peak-example>
+  <p>
+    <a href="#icons"><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7'/%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Write to us</a> ·
+    <span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> +49 30 1234567
+  </p>
+</peak-example>
+<p>
+  The element is empty; a <code>&lt;span&gt;</code> fits anywhere text does. The icons on this page are
+  from <a href="https://lucide.dev">Lucide</a> (ISC license), written as data URIs; any single-color
+  set works, and so do your own files (see <a href="#svg-files">SVG files</a>).
+</p>
+
+<h2>Sizes</h2>
+<p>
+  An icon is 1.25em square, so it scales with the text around it: in a heading it's heading-sized.
+  <code>.sm</code> makes it 1em, <code>.lg</code> 1.75em and <code>.xl</code> 2.5em;
+  <code>--peak-icon-size</code> sets any other size. It's centered on the text's x-height
+  (<code>vertical-align: middle</code>) and never shrinks in a flex row.
+</p>
+<peak-example>
+  <p>
+    <span class="peak-icon sm" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Small"></span>
+    <span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Default"></span>
+    <span class="peak-icon lg" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Large"></span>
+    <span class="peak-icon xl" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Extra large"></span>
+    <span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z'/%3E%3C/svg%3E&quot;); --peak-icon-size: 4rem" role="img" aria-label="4rem"></span>
+  </p>
+  <h4><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> A heading with an icon</h4>
+  <p><small><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> And small print with one.</small></p>
+</peak-example>
+
+<h2>Colors</h2>
+<p>
+  The icon is drawn in the current text color. Set a color on it or on its parent: a text color
+  utility, a link, a button, a callout. In a <code>data-theme="dark"</code> section the same file is
+  light.
+</p>
+<peak-example>
+  <p>
+    <span class="peak-icon lg peak-text-primary" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Primary"></span>
+    <span class="peak-icon lg peak-text-accent" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Accent"></span>
+    <span class="peak-icon lg peak-text-success" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Success"></span>
+    <span class="peak-icon lg peak-text-info" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Info"></span>
+    <span class="peak-icon lg peak-text-danger" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Danger"></span>
+    <span class="peak-icon lg peak-text-muted" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Muted"></span>
+  </p>
+  <article data-theme="dark">
+    <p><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> The same icon in a dark section, and <a href="#colors"><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7'/%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> in a link</a>.</p>
+  </article>
+</peak-example>
+
+<h2>Buttons and links</h2>
+<p>
+  In a button the icon takes the button's text color, in every variant. Put it before or after the
+  label; a space between them is the gap. An icon-only button needs its label on the button
+  (<code>aria-label</code>), and the icon stays hidden from screen readers.
+</p>
+<peak-example>
+  <div class="peak-cluster">
+    <button><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V3'/%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Download</button>
+    <button class="secondary">Next <span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='m12 5 7 7-7 7'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span></button>
+    <button class="contrast outline"><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Save</button>
+    <button class="secondary outline" aria-label="Search"><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span></button>
+  </div>
+</peak-example>
+<p>
+  A link to another site can say so with an icon after its text. A row of icon-only links, such as
+  contact links in a footer, gets a label on each link:
+</p>
+<peak-example>
+  <p><a href="https://lucide.dev">Lucide <span class="peak-icon sm" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E&quot;)" role="img" aria-label="(another site)"></span></a></p>
+  <div class="peak-cluster">
+    <a href="#buttons-and-links" aria-label="Email"><span class="peak-icon lg" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7'/%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span></a>
+    <a href="#buttons-and-links" aria-label="Phone"><span class="peak-icon lg" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span></a>
+    <a href="#buttons-and-links" aria-label="Search"><span class="peak-icon lg" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span></a>
+  </div>
+</peak-example>
+<p>
+  For an emoji, a favicon or an icon-font glyph in a link, Blades has its own pattern: see
+  <a href="elements.html#icons-in-links">Icons in links</a>.
+</p>
+
+<h2>With other components</h2>
+<p>An icon above a feature card's heading, in the primary color:</p>
+<peak-example>
+  <div class="peak-grid-auto" style="--peak-grid-min: 12rem">
+    <article>
+      <span class="peak-icon xl peak-text-primary" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span>
+      <h4>Fast</h4>
+      <p>One stylesheet and no JavaScript.</p>
+    </article>
+    <article>
+      <span class="peak-icon xl peak-text-primary" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span>
+      <h4>Private</h4>
+      <p>Nothing loads from another site.</p>
+    </article>
+    <article>
+      <span class="peak-icon xl peak-text-primary" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span>
+      <h4>Dark mode</h4>
+      <p>The icons follow the color scheme.</p>
+    </article>
+  </div>
+</peak-example>
+<p>
+  Beside text in a <a href="grids.html#media-object"><code>.peak-media</code></a>, in a
+  <a href="callouts.html">callout's</a> title and in a <a href="badges.html">badge</a>:
+</p>
+<peak-example>
+  <div class="peak-media center">
+    <span class="peak-icon xl peak-text-accent" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span>
+    <div>
+      <h4>Call us</h4>
+      <p>Weekdays from 9 to 5.</p>
+    </div>
+  </div>
+  <aside class="peak-callout warning">
+    <strong><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Heads up</strong>
+    <p>The icon takes the callout's title color.</p>
+  </aside>
+  <p>
+    <span class="peak-badge success"><span class="peak-icon sm" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Paid</span>
+    <span class="peak-badge danger"><span class="peak-icon sm" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Overdue</span>
+  </p>
+</peak-example>
+<p>Yes and no in a table, each with a text alternative:</p>
+<peak-example>
+  <div class="overflow-auto">
+    <table>
+      <thead><tr><th scope="col">Feature</th><th scope="col">Free</th><th scope="col">Pro</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Themes</td>
+          <td><span class="peak-icon peak-text-success" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Yes"></span></td>
+          <td><span class="peak-icon peak-text-success" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Yes"></span></td>
+        </tr>
+        <tr>
+          <td>Support</td>
+          <td><span class="peak-icon peak-text-muted" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E&quot;)" role="img" aria-label="No"></span></td>
+          <td><span class="peak-icon peak-text-success" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Yes"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</peak-example>
+
+<h2>Accessibility</h2>
+<ul>
+  <li>A decorative icon next to its own text gets <code>aria-hidden="true"</code>: the text says it already.</li>
+  <li>An icon that says something by itself gets <code>role="img"</code> and an <code>aria-label</code>, like the yes and no above.</li>
+  <li>An icon-only button or link gets its label on the button or link; the icon inside stays <code>aria-hidden</code>.</li>
+  <li>Don't let color alone carry the meaning: a check and a cross differ in shape, not only in color.</li>
+</ul>
+<p>
+  Icons stay visible in forced colors (Windows High Contrast), drawn in the forced text color, and
+  when a page is printed without backgrounds. See <a href="accessibility.html">Accessibility</a>.
+</p>
+
+<h2>SVG files</h2>
+<p>
+  Any SVG with one color works. Only its shape counts: every painted pixel shows in the text color,
+  transparent parts stay empty, and semi-transparent parts show partly. A stroke icon drawn with
+  <code>stroke="currentColor"</code> works as it is. A logo with several colors belongs in an
+  <code>&lt;img&gt;</code>.
+</p>
+<p>
+  <strong>As a data URI</strong>, the SVG needs no request and works everywhere, also from a page
+  opened as a file. Use single quotes inside the SVG, put it on one line, and encode
+  <code>&lt;</code>, <code>&gt;</code> and <code>#</code> as <code>%3C</code>, <code>%3E</code> and
+  <code>%23</code>. In a <code>style</code> attribute the double quotes around it are written
+  <code>&amp;quot;</code>, as on this page; in a stylesheet they're plain:
+</p>
+<peak-code lang="css">
+  .icon-check {
+    --peak-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  }
+</peak-code>
+<p>
+  <strong>As a file</strong>, write its URL root-relative or absolute
+  (<code>url(/icons/mail.svg)</code>). A browser may resolve a relative URL in a custom property
+  against the stylesheet that uses it, Peak's, rather than your page (Chromium does). And serve it
+  from the page's own site: browsers load mask images like fonts, so an SVG from another domain needs
+  CORS headers, and a page opened as a <code>file://</code> can't load one at all.
+</p>
+<p>
+  To use an icon in many places, give it a class of your own in your CSS and write the markup with
+  both classes:
+</p>
+<peak-code lang="css">
+  .icon-mail {
+    --peak-icon: url(/icons/mail.svg);
+  }
+  .icon-phone {
+    --peak-icon: url(/icons/phone.svg);
+  }
+</peak-code>
+<peak-code lang="html">
+  <a href="mailto:hello@example.com"><span class="peak-icon icon-mail" aria-hidden="true"></span> hello@example.com</a>
+</peak-code>
+
+<h2>Reference</h2>
+<div class="overflow-auto docs-table">
+  <table class="striped">
+    <thead><tr><th scope="col">Class or knob</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>.peak-icon</code></td><td>An inline box in the text color, masked by the SVG</td></tr>
+      <tr><td><code>--peak-icon</code></td><td>The SVG: <code>url()</code> with a data URI, a root-relative or an absolute URL</td></tr>
+      <tr><td><code>.sm</code>, <code>.lg</code>, <code>.xl</code></td><td>1em, 1.75em and 2.5em instead of 1.25em</td></tr>
+      <tr><td><code>--peak-icon-size</code></td><td>Any width and height (default 1.25em)</td></tr>
+    </tbody>
+  </table>
+</div>

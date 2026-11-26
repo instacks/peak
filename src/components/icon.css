@@ -1,5 +1,5 @@
 /*
- * Icon (docs: site/pages/elements.html#icons): any single-color SVG, drawn in the text color.
+ * Icon (docs: site/pages/icons.html): any single-color SVG, drawn in the text color.
  * --peak-icon takes a data URI or a root-relative/absolute URL: Chromium resolves a relative one
  * against this stylesheet, and mask images need the same origin (or CORS).
  *   <span class="peak-icon" style="--peak-icon: url(/icons/mail.svg)" aria-hidden="true"></span>

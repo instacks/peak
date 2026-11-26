@@ -116,52 +116,12 @@ description: Plain HTML, styled by Blades and themed by Peak's tokens. No classe
 <h2>Icons in links</h2>
 <p>
   Blades lays out an <code>&lt;i&gt;</code> inside a link as an icon: an emoji, a favicon image or an
-  icon-font glyph, aligned and kept out of the underline.
+  icon-font glyph, aligned and kept out of the underline. For SVG icons drawn in the text color, see
+  <a href="icons.html">Icons</a>.
 </p>
 <peak-example>
   <p><a href="#icons-in-links"><i>📦</i> Download</a> · <a href="#icons-in-links"><i>⭐</i> Star on GitHub</a></p>
 </peak-example>
-
-<h2>Icons</h2>
-<p>
-  <code>.peak-icon</code> draws any single-color SVG in the text color: the SVG is a mask, set with
-  <code>--peak-icon</code>, over a box filled with <code>currentColor</code>. So an icon follows link
-  colors, hover, the <a href="utilities.html#text-colors"><code>.peak-text-*</code></a> colors and the
-  color scheme, from one file. It's 1.25em square and scales with the text; <code>.sm</code> (1em),
-  <code>.lg</code> (1.75em) and <code>.xl</code> (2.5em) change that, as does
-  <code>--peak-icon-size</code>. It stays visible in forced colors and when printed without
-  backgrounds. The icons here are from <a href="https://lucide.dev">Lucide</a> (ISC license).
-</p>
-<peak-example>
-  <p>
-    <a href="#icons"><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7'/%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Write to us</a> ·
-    <span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> +49 30 1234567
-  </p>
-  <p>
-    <button><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V3'/%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span> Download</button>
-    <button class="secondary outline" aria-label="Download"><span class="peak-icon" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V3'/%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E&quot;)" aria-hidden="true"></span></button>
-  </p>
-  <p>
-    <span class="peak-icon sm peak-text-success" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m16 9-5.5 5.5L8 12'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Done"></span>
-    <span class="peak-icon peak-text-success" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m16 9-5.5 5.5L8 12'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Done"></span>
-    <span class="peak-icon lg peak-text-danger" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Warning"></span>
-    <span class="peak-icon xl peak-text-primary" style="--peak-icon: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7'/%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3C/svg%3E&quot;)" role="img" aria-label="Mail"></span>
-  </p>
-</peak-example>
-<p>
-  A decorative icon next to its own text gets <code>aria-hidden="true"</code>; an icon that says
-  something by itself gets <code>role="img"</code> and an <code>aria-label</code>, and an icon-only
-  button gets its label on the button. The SVG's own colors are ignored; put a multi-color logo
-  in an <code>&lt;img&gt;</code>.
-</p>
-<p>
-  The examples set the SVG as a data URI. A file works too, with two rules. Write its URL
-  root-relative or absolute (<code>url(/icons/mail.svg)</code>): a browser may resolve a relative URL
-  in a custom property against the stylesheet that uses it, Peak's, rather than your page
-  (Chromium does). And serve it from the
-  page's own site: browsers load mask images like fonts, so an SVG from another domain needs CORS
-  headers, and a page opened as a <code>file://</code> can't load one at all.
-</p>
 
 <h2>Media</h2>
 <p>Images, videos and SVGs never grow wider than their container.</p>
