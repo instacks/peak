@@ -580,7 +580,7 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     await page.close();
   });
 
-  test(`${file}: on Stacks container stacks: grid, sidebar (sticky works), media, callout`, async () => {
+  test(`${file}: on Stacks container stacks: grid, sidebar (sticky works), media, callout, last text in a box`, async () => {
     const page = await open(file);
     assert.equal(await style(page, "s-grid", "display"), "grid");
     assert.equal(await style(page, "s-sidebar", "display"), "flex");
@@ -590,6 +590,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById("s-aside").parentElement).position), "sticky");
     assert.equal(await style(page, "s-media", "display"), "flex");
     assert.ok(parseFloat(await style(page, "s-callout", "paddingTop")) > 0);
+    // The box's padding is the space below its last text: no paragraph margin on top (B39)
+    for (const id of ["s-callout-last", "p-callout-last", "p-panel-last"]) assert.equal(await style(page, id, "marginBottom"), "0px", id);
     assert.equal(await style(page, "s-hide-below", "display"), "block");
     assert.equal(await style(page, "s-hide-from", "display"), "none", "over Stacks' display: block");
     assert.notEqual(await style(page, "s-band", "borderImageSource"), "none", "the band's full-width background survives Stacks' border: 0");
