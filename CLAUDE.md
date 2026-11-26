@@ -23,7 +23,7 @@ src/media.css           peak.utilities: forced colors and print
 src/layout.css          peak.layout: section/band/hero, .peak-grid-auto/.peak-grid, cluster, sidebar, media
 src/stacks.css          peak.layout: Peak classes on Stacks 6 wrappers (.stacks_in.peak-*, !important)
 src/components/*.css    peak.components: card, badge, table, accordion, tabs, chip, callout,
-                        pagination, dialog (drawer), toast, stats, steps, avatar, rating
+                        pagination, dialog (drawer), toast, stats, steps, avatar, rating, icon
 src/js/peak-scheme.js   remembers the light/dark switch (build:js copies src/js/* to dist/)
 src/js/peak-commands.js command/commandfor and closedby="any" where the browser lacks them
 src/nav.css             peak.components: mobile menu (popover, per-breakpoint blocks), sidebar nav

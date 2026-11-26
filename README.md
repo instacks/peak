@@ -275,6 +275,9 @@ All of these work without JavaScript.
 <!-- A toast in the corner; showing it after an action needs showPopover() -->
 <div class="peak-toast success" popover="manual" role="status" id="saved">Saved.</div>
 
+<!-- An icon: any single-color SVG as a mask, drawn in the text color (.sm, .lg, .xl) -->
+<span class="peak-icon" style="--peak-icon: url(/icons/mail.svg)" aria-hidden="true"></span>
+
 <!-- Stats, steps, avatars, pagination, sidebar navigation -->
 <dl class="peak-stats"><div><dt>Downloads</dt><dd>1,284</dd></div></dl>
 <ol class="peak-steps"><li>Download</li><li aria-current="step">Install</li><li>Activate</li></ol>

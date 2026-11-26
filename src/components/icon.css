@@ -1,0 +1,41 @@
+/*
+ * Icon (docs: site/pages/elements.html#icons): any single-color SVG, drawn in the text color.
+ * --peak-icon takes a data URI or a root-relative/absolute URL: Chromium resolves a relative one
+ * against this stylesheet, and mask images need the same origin (or CORS).
+ *   <span class="peak-icon" style="--peak-icon: url(/icons/mail.svg)" aria-hidden="true"></span>
+ *   <span class="peak-icon lg" style="--peak-icon: url(…)" role="img" aria-label="Phone"></span>
+ * The SVG is a mask over a box filled with currentColor, so the icon follows link colors, hover,
+ * .peak-text-* and the color scheme without a separate file per color. The SVG's own colors don't
+ * matter, only its shape: a multi-color logo belongs in an <img>.
+ *
+ * --peak-icon-size sets the size (1.25em; .sm 1em, .lg 1.75em, .xl 2.5em), so an icon scales with
+ * the text around it. vertical-align: middle centers it on the text's x-height.
+ */
+.peak-icon {
+  display: inline-block;
+  flex: none;
+  inline-size: var(--peak-icon-size, 1.25em);
+  block-size: var(--peak-icon-size, 1.25em);
+  vertical-align: middle;
+  background-color: currentColor;
+  mask: var(--peak-icon) center / contain no-repeat;
+  /*
+   * The shape is a background: forced colors would replace it with the canvas color (the icon
+   * would vanish), and printing without backgrounds would drop it. currentColor is already the
+   * forced or printed text color, so keep it.
+   */
+  forced-color-adjust: none;
+  print-color-adjust: exact;
+}
+
+.peak-icon.sm {
+  --peak-icon-size: 1em;
+}
+
+.peak-icon.lg {
+  --peak-icon-size: 1.75em;
+}
+
+.peak-icon.xl {
+  --peak-icon-size: 2.5em;
+}
