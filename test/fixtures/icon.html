@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Icon</title>
+<link rel="stylesheet" href="../../dist/peak.css">
+<style>
+  /* A solid square and a ring: the square's center shows the fill, the ring's center shows the mask cut-out */
+  :root {
+    --square: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24'/%3E%3C/svg%3E");
+    --ring: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  }
+</style>
+</head>
+<body>
+<main class="container" style="font-size: 20px">
+  <p>Text <span class="peak-icon" id="default" style="--peak-icon: var(--square)" aria-hidden="true"></span> text</p>
+  <p><span class="peak-icon sm" id="sm" style="--peak-icon: var(--square)"></span>
+    <span class="peak-icon lg" id="lg" style="--peak-icon: var(--square)"></span>
+    <span class="peak-icon xl" id="xl" style="--peak-icon: var(--square)"></span>
+    <span class="peak-icon" id="knob" style="--peak-icon: var(--square); --peak-icon-size: 3rem"></span>
+    <span class="peak-icon xl" id="ring" style="--peak-icon: var(--ring)"></span></p>
+  <p style="color: rgb(200, 0, 0)"><span class="peak-icon xl" id="red" style="--peak-icon: var(--square)"></span></p>
+  <p><a href="#" id="link"><span class="peak-icon xl" id="in-link" style="--peak-icon: var(--square)"></span> Link</a></p>
+  <div class="peak-cluster" id="row"><button type="button" id="row-plain">Plain</button><span data-peak-anchor id="row-anchor"><button type="button" popovertarget="row-menu" id="row-trigger">Menu</button><ul id="row-menu" popover><li>One</li></ul></span></div>
+  <p><span class="peak-icon xl peak-text-success" id="success" style="--peak-icon: var(--square)"></span></p>
+  <p id="u-row">Text <a href="#" id="u-link"><span class="peak-icon" id="u-icon" style="--peak-icon: var(--square)" aria-hidden="true"></span> Write to us</a> text</p>
+  <p id="u-row-after">Text <a href="#" id="u-after">Lucide <span class="peak-icon sm" id="u-after-icon" style="--peak-icon: var(--square)"></span></a> text</p>
+  <p id="u-row-xl">Text <a href="#" id="u-link-xl"><span class="peak-icon xl" style="--peak-icon: var(--square)"></span> Write to us</a> text</p>
+  <a href="#" role="button" id="u-button"><span class="peak-icon" style="--peak-icon: var(--square)"></span> Button</a>
+  <aside><ul><li><a href="#" id="u-aside"><span class="peak-icon" style="--peak-icon: var(--square)"></span> Aside</a></li></ul></aside>
+  <details class="dropdown"><summary>Menu</summary><ul><li><a href="#" id="u-dropdown"><span class="peak-icon" style="--peak-icon: var(--square)"></span> Item</a></li></ul></details>
+  <ul popover id="u-menu"><li><a href="#" id="u-popover"><span class="peak-icon" style="--peak-icon: var(--square)"></span> Item</a></li></ul>
+</main>
+</body>
+</html>

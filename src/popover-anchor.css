@@ -34,6 +34,15 @@
   }
 }
 
+/*
+ * A [data-peak-anchor] wrapper is the layout item (a Row's item, beside other buttons). Pico gives
+ * [type="button"] a form field's margin-block-end, so a <button type="button"> trigger made its
+ * wrapper taller than the buttons beside it and lifted it out of line.
+ */
+[data-peak-anchor] > [popovertarget] {
+  margin-block-end: 0;
+}
+
 /* -------------------------------------------------------------------------------------------------
  * Hint popovers (§2.4 B), a native alternative to [data-tooltip]:
  *   <button interestfor="tip">Save</button> <span id="tip" popover="hint" role="tooltip">…</span>
