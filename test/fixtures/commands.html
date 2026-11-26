@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>peak-commands.js</title>
+<link rel="stylesheet" href="../../dist/peak.css">
+<script src="../../dist/peak-commands.js" defer></script>
+</head>
+<body>
+<main class="container">
+  <button id="open" command="show-modal" commandfor="dialog">Open</button>
+  <dialog id="dialog" closedby="any">
+    <article>
+      <header><button id="close" aria-label="Close" rel="prev" command="close" commandfor="dialog"></button><h3>Dialog</h3></header>
+      <p>Body</p>
+    </article>
+  </dialog>
+  <button id="toggle" command="toggle-popover" commandfor="pop">Toggle</button>
+  <div id="pop" popover>Popover</div>
+</main>
+</body>
+</html>

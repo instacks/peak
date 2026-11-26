@@ -24,7 +24,8 @@ src/layout.css          peak.layout: section/band/hero, .peak-grid-auto/.peak-gr
 src/stacks.css          peak.layout: Peak classes on Stacks 6 wrappers (.stacks_in.peak-*, !important)
 src/components/*.css    peak.components: card, badge, table, accordion, tabs, chip, callout,
                         pagination, dialog (drawer), toast, stats, steps, avatar, rating
-src/js/peak-scheme.js   the only script: remembers the light/dark switch (build:js copies it to dist/)
+src/js/peak-scheme.js   remembers the light/dark switch (build:js copies src/js/* to dist/)
+src/js/peak-commands.js command/commandfor and closedby="any" where the browser lacks them
 src/nav.css             peak.components: mobile menu (popover, per-breakpoint blocks), sidebar nav
 src/scoped.css          rules for the scoped build only
 src/popover-anchor.css  popovers, menus, tooltips and CSS anchor positioning
@@ -128,7 +129,7 @@ dist/                   build output (gitignored; published to npm with tokens.j
 ```bash
 npm ci                 # install (Blades + lightningcss-cli)
 npm run tokens         # regenerate src/inputs.css and the README table
-npm run build          # tokens + dist/peak(.min).css + dist/peak.scoped(.min).css + dist/peak-scheme.js
+npm run build          # tokens + dist/peak(.min).css + dist/peak.scoped(.min).css + dist/peak-scheme.js + dist/peak-commands.js
 npm test               # stale-output check + build + Chromium checks (incl. scoped and docs)
 npm run watch          # rebuild dist/peak.css on change
 npm run serve          # http://localhost:8000/index.html (serves repo root; index links dist/peak.css)

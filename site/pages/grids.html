@@ -141,12 +141,24 @@ description: Layouts that adapt to the space they get, not to the viewport. None
     <div class="peak-sidebar docs-box">.peak-sidebar at the end</div>
   </div>
 </peak-example>
+<p>
+  <code>.end</code> shows the aside after the content, beside it and below it when wrapped, while
+  the markup keeps it first. That's for page builders that write the aside's drop zone first and
+  switch sides with a setting.
+</p>
+<peak-example>
+  <div class="peak-with-sidebar end" style="--peak-sidebar-width: 12rem">
+    <aside class="docs-box">Aside first in the markup, shown at the end</aside>
+    <div class="docs-box">The content</div>
+  </div>
+</peak-example>
 
 <h2>Media object</h2>
 <p>
   <code>.peak-media</code>: an image or icon beside text. The text wraps below the image when there
   is no room for at least 16rem of it (<code>--peak-media-min</code>). <code>.center</code> centers
-  them vertically.
+  them vertically. <code>.end</code> shows the image after the text (below it when wrapped); the
+  image stays the first child.
 </p>
 <peak-example>
   <div class="peak-media">
@@ -154,6 +166,15 @@ description: Layouts that adapt to the space they get, not to the viewport. None
     <div>
       <h4>Grace Hopper</h4>
       <p>The first child keeps its size; the last takes the rest and wraps below when the row gets narrow.</p>
+    </div>
+  </div>
+</peak-example>
+<peak-example>
+  <div class="peak-media center end">
+    <span class="peak-avatar" style="--peak-avatar-size: 4rem" role="img" aria-label="Ada Lovelace">AL</span>
+    <div>
+      <h4>Ada Lovelace</h4>
+      <p>With <code>.end</code>, the avatar sits after the text.</p>
     </div>
   </div>
 </peak-example>

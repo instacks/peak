@@ -252,6 +252,16 @@
 }
 
 /*
+ * .end puts the aside after the content, beside it and when wrapped, while the markup keeps it
+ * first: a page builder that writes the aside's drop zone first can switch sides without moving
+ * the content between zones.
+ */
+.peak-with-sidebar.end > :is(aside, .peak-sidebar),
+.peak-with-sidebar.end > .out:has(> .peak-sidebar) {
+  order: 1;
+}
+
+/*
  * Sticky only while the aside is beside the content: wrapped above it, a sticky aside would slide
  * over the text the whole way down. A container query can't read --peak-sidebar-width, so it
  * switches at 45rem, where the default 16rem aside and its gap stop wrapping (like the grid spans).
@@ -292,6 +302,11 @@
 
 .peak-media.center {
   align-items: center;
+}
+
+/* .end: the image after the text (below it when wrapped); the markup keeps the image first */
+.peak-media.end > :first-child {
+  order: 1;
 }
 
 /*

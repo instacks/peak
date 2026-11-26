@@ -1,6 +1,6 @@
 {
   "name": "@instacks/peak",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A CSS-first layer on Blades CSS (a Pico CSS fork): a few --peak-* inputs generate an accessible OKLCH palette, fluid type and spacing, with layouts and components built on native popovers, dialogs, details and anchor positioning.",
   "keywords": [
     "css",
@@ -36,6 +36,7 @@
     "./scoped": "./dist/peak.scoped.min.css",
     "./scoped/unminified": "./dist/peak.scoped.css",
     "./scheme": "./dist/peak-scheme.js",
+    "./commands": "./dist/peak-commands.js",
     "./tokens.json": "./tokens.json",
     "./dist/*": "./dist/*",
     "./package.json": "./package.json"
@@ -46,7 +47,8 @@
   ],
   "sideEffects": [
     "*.css",
-    "./dist/peak-scheme.js"
+    "./dist/peak-scheme.js",
+    "./dist/peak-commands.js"
   ],
   "publishConfig": {
     "access": "public"
@@ -56,7 +58,7 @@
     "build:css": "lightningcss --bundle --browserslist src/peak.css -o dist/peak.css",
     "build:min": "lightningcss --bundle --minify --browserslist src/peak.css -o dist/peak.min.css",
     "build:scoped": "node scripts/build-scoped.mjs",
-    "build:js": "node -e \"require('fs').cpSync('src/js/peak-scheme.js', 'dist/peak-scheme.js')\"",
+    "build:js": "node -e \"for (const f of ['peak-scheme.js', 'peak-commands.js']) require('fs').cpSync('src/js/' + f, 'dist/' + f)\"",
     "build": "npm run tokens && npm run build:css && npm run build:min && npm run build:scoped && npm run build:js",
     "test": "node scripts/tokens.mjs --check && npm run build:css && npm run build:min && npm run build:scoped && npm run build:js && node --test \"test/*.test.mjs\"",
     "watch": "node --watch-path=src --watch-preserve-output scripts/watch.mjs",

@@ -66,6 +66,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const [c2, a2] = [await rect(wide, "content-2"), await rect(wide, "aside-2")];
     assert.ok(Math.abs(a2.top - c2.top) < 1 && c2.right <= a2.left, "aside after the content");
     assert.equal(await style(wide, "aside-2", "position"), "sticky");
+    const [a3, c3] = [await rect(wide, "aside-3"), await rect(wide, "content-3")];
+    assert.ok(Math.abs(a3.top - c3.top) < 1 && c3.right <= a3.left, ".end: the first-written aside shown after the content");
     await wide.close();
 
     const phone = await open(file, { width: 390 });
@@ -74,6 +76,8 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     assert.equal(await overflow(phone), 0);
     // Wrapped, a sticky aside would slide over the content while scrolling
     assert.equal(await style(phone, "aside-2", "position"), "static", "not sticky while wrapped");
+    const [a4, c4] = [await rect(phone, "aside-3"), await rect(phone, "content-3")];
+    assert.ok(a4.top >= c4.bottom, ".end: wrapped below the content");
     await phone.close();
   });
 
@@ -82,10 +86,14 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const [img, text] = [await rect(wide, "media-img"), await rect(wide, "media-text")];
     assert.ok(text.left >= img.right && Math.abs(text.top - img.top) < 1);
     assert.ok(parseFloat(await style(wide, "media", "marginBottom")) > 0, "spaced like a paragraph");
+    const [ei, et] = [await rect(wide, "media-end-img"), await rect(wide, "media-end-text")];
+    assert.ok(ei.left >= et.right && Math.abs(ei.top - et.top) < 1, ".end: the image after the text");
     await wide.close();
     const narrow = await open(file, { width: 300 });
     const [i, t] = [await rect(narrow, "media-img"), await rect(narrow, "media-text")];
     assert.ok(t.top >= i.bottom, "text wraps below");
+    const [ni, nt] = [await rect(narrow, "media-end-img"), await rect(narrow, "media-end-text")];
+    assert.ok(ni.top >= nt.bottom, ".end: the image wraps below the text");
     await narrow.close();
   });
 

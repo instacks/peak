@@ -37,9 +37,11 @@ description: A dialog element with an article inside. It fades and zooms in, fad
   <strong>Older browsers</strong>
   <p>
     <code>command</code>/<code>commandfor</code> and <code>closedby</code> reached the major browsers
-    during 2025, after Peak's baseline. For older browsers, call <code>dialog.showModal()</code> and
-    <code>dialog.close()</code> from a click handler, or load a small shim like the one these docs
-    use. Esc closes a modal dialog everywhere.
+    during 2025, after Peak's baseline. For older browsers, load Peak's
+    <code>peak-commands.js</code> (<code>@instacks/peak/commands</code>, a few lines that do
+    nothing where the browser has both; these docs load it), or call
+    <code>dialog.showModal()</code> and <code>dialog.close()</code> from your own click handler.
+    Esc closes a modal dialog everywhere.
   </p>
 </aside>
 

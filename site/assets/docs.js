@@ -1,5 +1,5 @@
-// Documentation helpers: copy buttons, the customizer, a shim for command/commandfor, and the
-// table of contents highlight. Nothing here is part of Peak.
+// Documentation helpers: copy buttons, the customizer and the table of contents highlight
+// (command/commandfor in older browsers: Peak's peak-commands.js). Nothing here is part of Peak.
 (() => {
   const KEY = "peak-docs-theme";
   const root = document.documentElement;
@@ -20,33 +20,6 @@
       // Storage blocked: the theme still applies to this page
     }
   };
-
-  // ---------------------------------------------------------------------------------------------
-  // Invoker Commands (command/commandfor) for browsers that don't have them yet
-  // ---------------------------------------------------------------------------------------------
-  if (!("command" in HTMLButtonElement.prototype)) {
-    document.addEventListener("click", (event) => {
-      const button = event.target.closest("button[commandfor]");
-      if (!button) return;
-      const target = document.getElementById(button.getAttribute("commandfor"));
-      const command = button.getAttribute("command");
-      if (!target) return;
-      if (command === "show-modal") target.showModal();
-      else if (command === "close") target.close(button.value || undefined);
-      else if (command === "request-close") (target.requestClose ?? target.close).call(target);
-      else if (command === "toggle-popover") target.togglePopover();
-      else if (command === "show-popover") target.showPopover();
-      else if (command === "hide-popover") target.hidePopover();
-    });
-  }
-
-  // closedby="any" (light dismiss) for browsers without it
-  if (!("closedBy" in HTMLDialogElement.prototype)) {
-    document.addEventListener("click", (event) => {
-      const dialog = event.target;
-      if (dialog instanceof HTMLDialogElement && dialog.open && dialog.getAttribute("closedby") === "any") dialog.close();
-    });
-  }
 
   // ---------------------------------------------------------------------------------------------
   // Copy buttons

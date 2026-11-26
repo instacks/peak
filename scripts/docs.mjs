@@ -438,6 +438,7 @@ function layout(page, pages, { body, toc }) {
 <link rel="stylesheet" href="assets/peak.min.css">
 <link rel="stylesheet" href="assets/docs.css">
 <script src="assets/peak-scheme.js"></script>
+<script src="assets/peak-commands.js" defer></script>
 ${THEME_SCRIPT}
 <script src="assets/docs.js" defer></script>
 </head>
@@ -517,7 +518,7 @@ for (const page of pages) writeFileSync(path.join(out, page.file), layout(page, 
 for (const example of examples) writeFileSync(path.join(out, "examples", example.file), renderExample(example));
 
 copyFileSync(css, path.join(out, "assets", "peak.min.css"));
-copyFileSync(path.join(root, "src", "js", "peak-scheme.js"), path.join(out, "assets", "peak-scheme.js"));
+for (const js of ["peak-scheme.js", "peak-commands.js"]) copyFileSync(path.join(root, "src", "js", js), path.join(out, "assets", js));
 for (const f of readdirSync(path.join(root, "site", "assets"))) {
   copyFileSync(path.join(root, "site", "assets", f), path.join(out, "assets", f));
 }
