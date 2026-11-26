@@ -91,6 +91,13 @@ description: Any single-color SVG, drawn in the text color. One file per icon fo
   </div>
 </peak-example>
 <p>
+  In a link, the icon and its text form an inline flex row, as Blades does for an
+  <code>&lt;i&gt;</code>: the space between them becomes a gap, so the underline starts at the
+  text, and the text stays on the line of the words around it. Such a link wraps as one box: if it
+  doesn't fit at the end of a line, it moves to the next one, and a long one wraps beside the icon.
+  Button links and links in menus, dropdowns and aside lists keep their own layout.
+</p>
+<p>
   For an emoji, a favicon or an icon-font glyph in a link, Blades has its own pattern: see
   <a href="elements.html#icons-in-links">Icons in links</a>.
 </p>

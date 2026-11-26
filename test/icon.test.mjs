@@ -1,6 +1,7 @@
 // .peak-icon (src/components/icon.css): size in em and its variants, drawn in the text color
 // through the SVG mask, and still drawn in forced colors and in print, in both builds. Also an
-// icon button's neighbour: a type="button" trigger in a [data-peak-anchor] wrapper in a row.
+// icon button's neighbour: a type="button" trigger in a [data-peak-anchor] wrapper in a row. And a
+// link's underline stops at the icon: no underlined space, the text still on the line.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { launch, fixtureUrl, pixel } from "./helpers.mjs";
@@ -77,6 +78,62 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const [a, b] = [await box(page, "row-plain"), await box(page, "row-trigger")];
     assert.ok(Math.abs(a.top - b.top) < 1 && Math.abs(a.height - b.height) < 1, `same line (${a.top}/${b.top})`);
     assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById("row-trigger")).marginBottom), "0px");
+    await page.close();
+  });
+
+  test(`${file}: in a link, the underline skips the space after the icon; the text stays on the line`, async () => {
+    const page = await open(file);
+    const m = await page.evaluate(() => {
+      const measure = (node, start, end) => {
+        const range = document.createRange();
+        range.setStart(node, start);
+        range.setEnd(node, end);
+        return range.getBoundingClientRect().toJSON();
+      };
+      const row = (id) => {
+        const p = document.getElementById(id);
+        const a = p.querySelector("a");
+        const text = [...a.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+        const at = text.textContent.search(/\S/);
+        return {
+          height: p.getBoundingClientRect().height,
+          // The words around the link and in it share a line: same top
+          outside: measure(p.firstChild, 0, 4).top,
+          inside: measure(text, at, at + 1).top,
+          // The space between the icon and the text: not rendered, so not underlined
+          space: text.textContent.trim() === text.textContent ? 0 : measure(text, at ? at - 1 : text.length - 1, at || text.length).width,
+          icon: a.querySelector(".peak-icon").getBoundingClientRect().toJSON(),
+          word: measure(text, at, at + 1),
+        };
+      };
+      return {
+        lineHeight: parseFloat(getComputedStyle(document.getElementById("u-row")).lineHeight),
+        rows: [row("u-row"), row("u-row-after"), row("u-row-xl")],
+      };
+    });
+    for (const [i, r] of m.rows.entries()) {
+      assert.equal(r.space, 0, `row ${i}: the space is not rendered`);
+      assert.ok(Math.abs(r.inside - r.outside) < 1, `row ${i}: the link's text on the line (${r.inside} vs ${r.outside})`);
+    }
+    const [plain, after] = m.rows;
+    assert.equal(plain.height, m.lineHeight, "an icon of the default size adds no height to the line");
+    assert.ok(Math.abs(plain.word.left - plain.icon.right - 5) < 1, "a 0.25em gap after the icon");
+    assert.ok(Math.abs(after.icon.left - after.word.left) > 20, "an icon after the text stays after it");
+    const iconMid = plain.icon.top + plain.icon.height / 2;
+    const textMid = plain.word.top + plain.word.height / 2;
+    assert.ok(Math.abs(iconMid - textMid) < 4, `centered on the text line (${iconMid} vs ${textMid})`);
+
+    // No link color in the gap between the icon and the text, from the top of the line to its bottom
+    const link = await rgb(page, "u-link");
+    const x = Math.round(plain.icon.right + 2);
+    for (let y = Math.round(plain.word.top); y < plain.word.bottom; y++) {
+      assert.ok(!near(await pixel(page, x, y), link, 40), `no underline in the gap at y=${y}`);
+    }
+
+    // Links laid out as blocks or buttons keep their display
+    const display = (id) => page.evaluate((id) => getComputedStyle(document.getElementById(id)).display, id);
+    assert.equal(await display("u-button"), "inline-block");
+    for (const id of ["u-aside", "u-dropdown", "u-popover"]) assert.equal(await display(id), "block", id);
     await page.close();
   });
 

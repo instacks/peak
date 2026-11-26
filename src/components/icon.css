@@ -39,3 +39,29 @@
 .peak-icon.xl {
   --peak-icon-size: 2.5em;
 }
+
+/*
+ * In a link, the space between the icon and the text is part of the link's text, so the underline
+ * ran under it. As Blades does for an <i> in a link, the link becomes an inline flex row: a
+ * flex container drops whitespace-only text, and the gap takes the space's place. Baseline
+ * alignment keeps the link's text on the line of the text around it. An empty box has no baseline
+ * (one at its bottom edge is made up), which lifted the text; a zero-width space on a line as tall
+ * as the icon gives it one, so the icon centers on the first line of the text.
+ *
+ * :where() keeps this below any rule that sets a link's display, but Peak's layer beats Blades
+ * whatever the specificity: links Pico lays out as blocks (menus, dropdowns, aside lists) and
+ * button links are left out by name. Those aren't underlined.
+ */
+:where(a:not([role="button"], aside li a, .dropdown li a, [popover] li a):has(> .peak-icon)) {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+}
+
+:where(a:not([role="button"], aside li a, .dropdown li a, [popover] li a)) > .peak-icon {
+  line-height: var(--peak-icon-size, 1.25em);
+}
+
+:where(a:not([role="button"], aside li a, .dropdown li a, [popover] li a)) > .peak-icon::before {
+  content: "\200b" / "";
+}
