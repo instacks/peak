@@ -1,5 +1,6 @@
 // .peak-icon (src/components/icon.css): size in em and its variants, drawn in the text color
-// through the SVG mask, and still drawn in forced colors and in print, in both builds.
+// through the SVG mask, and still drawn in forced colors and in print, in both builds. Also an
+// icon button's neighbour: a type="button" trigger in a [data-peak-anchor] wrapper in a row.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { launch, fixtureUrl, pixel } from "./helpers.mjs";
@@ -68,6 +69,14 @@ for (const file of ["peak.css", "peak.scoped.css"]) {
     const ring = await box(page, "ring");
     const bg = await pixel(page, Math.round(ring.right + 6), Math.round(ring.y + ring.height / 2));
     assert.ok(near(await center(page, "ring"), bg), "the ring's hole shows the page: the SVG is a mask");
+    await page.close();
+  });
+
+  test(`${file}: a <button type="button"> trigger in a [data-peak-anchor] wrapper lines up with the buttons beside it`, async () => {
+    const page = await open(file);
+    const [a, b] = [await box(page, "row-plain"), await box(page, "row-trigger")];
+    assert.ok(Math.abs(a.top - b.top) < 1 && Math.abs(a.height - b.height) < 1, `same line (${a.top}/${b.top})`);
+    assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById("row-trigger")).marginBottom), "0px");
     await page.close();
   });
 
