@@ -283,9 +283,12 @@ All of these work without JavaScript.
 <aside><nav class="peak-sidebar-nav"><ul><li><a aria-current="page">…</a></li></ul></nav></aside>
 ```
 
-One script ships for the one thing CSS can't do: `@instacks/peak/scheme` (`dist/peak-scheme.js`)
+Two small scripts ship for what CSS can't do. `@instacks/peak/scheme` (`dist/peak-scheme.js`)
 remembers a `<select class="peak-scheme">` light/dark choice across pages. Load it in `<head>`
-without `defer`; the select works for the current page without it.
+without `defer`; the select works for the current page without it. `@instacks/peak/commands`
+(`dist/peak-commands.js`) makes `command`/`commandfor` buttons and `closedby="any"` work in
+browsers that don't have them yet (they arrived in 2025); where the browser has them it does
+nothing.
 
 ## Accessibility preferences
 

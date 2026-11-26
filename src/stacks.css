@@ -126,6 +126,16 @@
   margin-block-start: var(--pico-typography-spacing-vertical) !important;
 }
 
+/*
+ * Components that trim their last child's margin (the box's padding is the space): under Stacks the
+ * last child is a stack's .out wrapper, and the margin sits on the last element inside its
+ * .stacks_in, whose overflow: hidden keeps it from collapsing through. A Text stack at the end of a
+ * callout or an accordion panel had a paragraph's margin added to the padding below it.
+ */
+:is(.peak-callout, .peak-accordion > details, [popover], .site-footer, :scope.site-footer) > .out:last-child > .stacks_in > :last-child {
+  margin-block-end: 0;
+}
+
 /* Stacks' display: block would show a hidden stack */
 @media (width < 576px) {
   .stacks_in.peak-hide-below-sm {
